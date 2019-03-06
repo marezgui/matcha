@@ -1,0 +1,33 @@
+{
+  "name": "matcha",
+  "version": "1.0.0",
+  "description": "Matcha (Tinder like)",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-rezgui/matcha.git"
+  },
+  "keywords": [
+    "react",
+    "node"
+  ],
+  "author": "marezgui",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m-rezgui/matcha/issues"
+  },
+  "homepage": "https://github.com/m-rezgui/matcha#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "pg": "^7.8.1"
+  }
+}
