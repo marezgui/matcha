@@ -4,7 +4,9 @@
   "description": "Matcha (Tinder like)",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server"
+    "client": "npm start --prefix client",
+    "server": "nodemon server",
+    "dev": "concurrently \"npm run server\" \"npm run client\" "
   },
   "repository": {
     "type": "git",
