@@ -1,8 +1,7 @@
 var { Pool } = require('pg');
 
-const CONNECTION_STRING = process.env.DATABASE_URL || 'postgresql://root:postgres@localhost:5432/weather-db';
+const CONNECTION_STRING = process.env.DATABASE_URL || 'postgresql://root:postgres@localhost:5432/matcha';
 const SSL = process.env.NODE_ENV === 'production';
-
 
 class Database {
   constructor () {

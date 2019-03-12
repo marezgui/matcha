@@ -1,5 +1,6 @@
+/*
 var express = require('express');
-var Weather = require('../models/Weather');
+var Weather = require('../models/weather');
 
 var router = express.Router();
 
@@ -14,3 +15,4 @@ router.get('/:city', (req, res) => {
 });
 
 module.exports = router;
+*/

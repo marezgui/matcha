@@ -1,5 +1,5 @@
 var express = require('express');
-var Cities = require('../models/cities');
+var Cities = require('../models/Cities');
 
 var router = express.Router();
 

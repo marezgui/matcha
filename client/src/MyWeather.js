@@ -14,9 +14,9 @@ import {
   Col
 } from 'reactstrap';
 
-import Weather from './Weather';
+import Weather from './components/Weather';
 
-class App extends Component {
+class MyWeather extends Component {
   constructor(props) {
     super(props);
   
@@ -113,4 +113,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default MyWeather;
