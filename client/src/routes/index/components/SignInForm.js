@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class SignInForm extends Component {
     constructor() {
@@ -29,6 +30,19 @@ class SignInForm extends Component {
 
         console.log('The form was submitted with the following data:');
         console.log(this.state);
+        
+        if (this.state.login.length > 0) {
+            console.log('API data:');
+            axios.get('/api/users/' + this.state.login)
+                .then(res => {
+                    const user = res.data[0];
+                    console.log(user.login);
+                    console.log(user.password);
+                    if (this.state.password === user.password) {
+                        console.log('connected !');
+                    }
+                });
+        }
     }
 
     render() {

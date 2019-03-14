@@ -10,7 +10,8 @@ import Index from './routes/index/index';
 const routing = (
   <Router>
     <div>
-      <Route path="/" component={Index} />
+      <Route exact path="/" component={Index} />
+      <Route path="/sign-up" component={Index} />
     </div>
   </Router>
 )
