@@ -1,3 +1,5 @@
+/* Create database named 'matcha' AND execute the following code */
+
 CREATE TABLE users (
 	id serial PRIMARY KEY,
 	firstName varchar (255) NOT NULL,

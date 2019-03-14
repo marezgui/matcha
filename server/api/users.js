@@ -1,10 +1,10 @@
-var express = require('express');
-var Users = require('../models/Users');
-
-var router = express.Router();
+const	express = require('express'),
+		Users = require('../models/Users'),
+		router = express.Router();
 
 router.get('/', (req, res) => {
-  Users.retrieveAll((err, Users) => {
+  let user = "jdoe";
+  Users.getUser(user, (err, Users) => {
     if (err)
       return res.json(err);
     return res.json(Users);

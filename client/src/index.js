@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
+import './styles/index.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import WeatherPage from './MyWeather';
-import Register from './components/Register';
+import Index from './routes/index/index';
 
 const routing = (
   <Router>
     <div>
-      <Route path="/weather" component={WeatherPage} />
-      <Route path="/register" component={Register} />
+      <Route path="/" component={Index} />
     </div>
   </Router>
 )
