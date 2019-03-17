@@ -1,3 +1,7 @@
+// ##################################################
+// Gestion des actions (requettes) de la table USERS
+// ##################################################
+
 const db = require('../database');
 
 class Users {
@@ -8,7 +12,16 @@ class Users {
             callback(res);
         });
     }
-/*
+
+    static getUsers(callback){
+        db.query()
+    }
+
+
+
+
+
+    /*
     static insert (firstName, callback) {
         db.query('INSERT INTO users (firstName) VALUES ($1)', [firstName], (err, res) => {
             if (err.error)
