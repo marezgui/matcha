@@ -7,6 +7,8 @@ CREATE TABLE users (
 	mail varchar(255) NOT NULL,
 	login varchar(255) NOT NULL,
 	password varchar(255) NOT NULL,
+	-- rajout de la ligne sexe de l'utilisateur {homme, femme}
+	-- rajout de la ligne interesse par {homme, femme} 
 	notifications smallint NOT NULL DEFAULT 1,
 	registrationDate TIMESTAMP NOT NULL DEFAULT NOW(),
 	activate smallint DEFAULT NULL,

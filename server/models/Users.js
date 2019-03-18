@@ -13,10 +13,26 @@ class Users {
         });
     }
 
-    static getUsers(callback){
-        db.query()
+    static getUsersMen(callback){
+        db.query('SELECT * FROM users Where sexe = "homme" ', (err, res) => {
+            if (err.error)
+                return callback(err);
+            callback(res);
+        });
     }
 
+
+    static getUsersWomen(callback){
+        db.query('SELECT * FROM users Where sexe = "femme" ', (err, res) => {
+            if (err.error)
+                return callback(err);
+            callback(res);
+        });
+    }
+
+    static addUser(data, callback) {
+        // ici yassin
+    }
 
 
 
