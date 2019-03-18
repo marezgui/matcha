@@ -51,16 +51,14 @@ class SignInForm extends Component {
             <form className="FormFields" onSubmit={this.handleSubmit}>
             <div className="FormField">
                 <label className="FormField__Label" htmlFor="login">Login</label>
-                <input type="text" id="login" className="FormField__Input" placeholder="Enter your login" name="login" value={this.state.login} onChange={this.handleChange} />
+                <input type="text" id="login" className="FormField__Input" placeholder="Entrer votre login" name="login" value={this.state.login} onChange={this.handleChange} />
               </div>
-
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="password">Password</label>
-                <input type="password" id="password" className="FormField__Input" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
+                <label className="FormField__Label" htmlFor="password">Mot de passe</label>
+                <input type="password" id="password" className="FormField__Input" placeholder="Entrer votre mot de passe" name="password" value={this.state.password} onChange={this.handleChange} />
               </div>
-
               <div className="FormField">
-                  <button className="FormField__Button mr-20" >Sign In</button> <Link to="/sign-up" className="FormField__Link">Restore (change link)</Link>
+                  <button className="FormField__Button mr-20" >Se connecter</button> <Link to="/sign-up" className="FormField__Link">Vous n'etes pas inscrit ?</Link>
               </div>
             </form>
           </div>

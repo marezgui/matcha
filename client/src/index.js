@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './styles/index.css';
 
-import Index from './routes/index/index';
+import Index from './routes/index';
 
 const routing = (
   <Router>
