@@ -60,6 +60,7 @@ class SignUpForm extends Component {
             break;
           case "password2":
             formErrors.password2 = value.password === value.password2 ? '' : "Les mots de passe sont differents";
+            break;
           default:
             break;
         }

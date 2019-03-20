@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use('/api/weather', require('./api/weather')); // OpenWeatherMap
 app.use('/api/users', require('./api/users'));
 
 /* Production */

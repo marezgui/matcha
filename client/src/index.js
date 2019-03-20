@@ -4,12 +4,16 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import './styles/index.css';
 
 import Index from './routes/index';
+import Profile from './routes/profile';
+
+
 
 const routing = (
   <Router>
     <div>
       <Route exact path="/" component={Index} />
       <Route path="/sign-up" component={Index} />
+      <Route path="/profile" component={Profile}/>
     </div>
   </Router>
 )

@@ -21,7 +21,6 @@ class Users {
         });
     }
 
-
     static getUsersWomen(callback){
         db.query('SELECT * FROM users Where sexe = "femme" ', (err, res) => {
             if (err.error)
@@ -31,10 +30,8 @@ class Users {
     }
 
     static addUser(data, callback) {
-        // ici yassin
+        
     }
-
-
 
 
     /*
@@ -45,7 +42,7 @@ class Users {
             callback(res);
         });
     }
-*/
+    */
 }
 
 module.exports = Users;
