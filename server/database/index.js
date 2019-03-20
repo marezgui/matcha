@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 // ##################################################
 // Connexion a la base de donne
 // ##################################################
 const { Pool } = require('pg');
+=======
+require('dotenv').load()
+>>>>>>> refs/remotes/origin/master
 
-const CONNECTION_STRING = process.env.DATABASE_URL || 'postgresql://root:postgres@localhost:5432/matcha';
+const { Pool } = require('pg');
+const CONNECTION_STRING = process.env.DATABASE_URL;
 const SSL = process.env.NODE_ENV === 'production';
 
 class Database {
@@ -17,7 +22,6 @@ class Database {
       console.error('Unexpected error on idle PostgreSQL client.', err);
       process.exit(-1);
     });
-
   }
 
   query (query, ...args) {
@@ -35,7 +39,6 @@ class Database {
         callback({}, res.rows);
       });
     });
-
   }
 
   end () {
