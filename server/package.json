@@ -1,0 +1,16 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^6.2.0",
+    "esm": "^3.2.20",
+    "express": "^4.16.4",
+    "pg": "^7.8.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

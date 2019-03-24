@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-// ##################################################
-// Connexion a la base de donne
-// ##################################################
-const { Pool } = require('pg');
-=======
-require('dotenv').load()
->>>>>>> refs/remotes/origin/master
+import { Pool } from 'pg'
+import dotenv from 'dotenv'
+dotenv.load()
 
-const { Pool } = require('pg');
 const CONNECTION_STRING = process.env.DATABASE_URL;
 const SSL = process.env.NODE_ENV === 'production';
 
@@ -24,7 +18,7 @@ class Database {
     });
   }
 
-  query (query, ...args) {
+   query (query, ...args) {
     this._pool.connect((err, client, done) => {
       if (err) throw err;
       const params = args.length === 2 ? args[0] : [];
@@ -46,4 +40,4 @@ class Database {
   }
 }
 
-module.exports = new Database();
+export let db = new Database();
