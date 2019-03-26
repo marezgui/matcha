@@ -5,9 +5,7 @@ const router = express.Router()
 
 router.get('/:login', (req, res) => {
   Users.getUser(req.params.login, (err, Users) => {
-    if (err)
-      return res.json(err)
-    return res.json(Users)
+    err ? res.json(err) : res.json(Users)
   })
 })
 
