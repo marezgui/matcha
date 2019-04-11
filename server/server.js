@@ -1,22 +1,25 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import { db } from './database'
-import usersRoutes from './api/users'
 import dotenv from 'dotenv'
 
 dotenv.load()
 
 const	ENV = process.env.NODE_ENV;
 const	PORT = process.env.PORT || 8080;
-const	app = express();
+const	server = express();
 
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(bodyParser.json());
+server.use(express.json());
+server.use(express.urlencoded({extended: true}));
+server.use(bodyParser.json());
 
-app.use('/api/users', usersRoutes);
 
-app.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
+// dans ce fichier on va mettre toutes les routes
+import router from './api/router'
+
+server.use(router());
+
+server.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
 
 db.query('SELECT NOW()', (err, res) => {
 	if (err.error)
@@ -24,4 +27,4 @@ db.query('SELECT NOW()', (err, res) => {
 	console.log(`PostgreSQL connected: ${res[0].now}.`);
 });
 
-export default app
+export default server
