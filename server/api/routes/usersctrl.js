@@ -46,9 +46,6 @@ export const adduser = async (req, res) => {
 		return res.status(400).json({ 'error': 'password invalid (must length 4 - 8 and include 1 number at least)' });
 	}
 
-
-
-
 	// Fuck j ai mis hyper longtemps a reussir a faire ce verifuser
 	const verifuser = util.promisify(mod.verifuser)
 	const hash = util.promisify(bcrypt.hash)

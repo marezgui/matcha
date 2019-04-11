@@ -3,6 +3,7 @@ import express from 'express'
 //liste des routes
 import * as usersCtrl from './routes/usersctrl'
 
+//fonction router
 const router = () => {
 
 	const routerApp = express.Router()			// le router
