@@ -1,7 +1,12 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import passport from 'passport'
 import { db } from './database'
 import dotenv from 'dotenv'
+
+/*	Utile que si on veux gerer les sessions
+	import cookiesession from 'cookie-session'
+*/
 
 dotenv.load()
 
@@ -9,15 +14,38 @@ const	ENV = process.env.NODE_ENV;
 const	PORT = process.env.PORT || 8080;
 const	server = express();
 
+/*
+	//	Utile que si on veux gerer les sessions
+	//	cette fonction va cree un cookie apres les ide de l'user
+
+server.use(cookiesession({
+	name: "Matcha-cookie",
+	maxAge: 24 * 60 * 60 * 1000,
+	keys: ["process.env.COOKIEKEY"], // La cle du cookie est dans le .env
+	httpOnly: true,
+	sameSite: 'lax'
+	//	secure: true	// Ne marche que si https
+}))
+*/
+
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 server.use(bodyParser.json());
 
+server.use(passport.initialize());
 
-// dans ce fichier on va mettre toutes les routes
-import router from './api/router'
+/*
+	//	Utile que si on veux gerer les sessions
 
-server.use(router());
+	server.use(passport.session());
+
+	//	L'ordre des fonctions est important,
+	//	on utilise session apres avoir initiliser passport
+*/
+
+//	Lien des routes
+import routerApp from './api/router'
+server.use(routerApp);
 
 server.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
 

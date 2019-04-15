@@ -1,15 +1,15 @@
 import { db } from './../../database'
 import uniqid from 'uniqid'
 
-export const getallusers = (request, response) => {
+export const getallusers = (callback) => {
 	db.query('SELECT * FROM users ORDER BY id ASC', (err, res) => {
 		if (err.error)
-			return response.status(500).json(err.error);
-		response.status(200).json(res)
+			callback(err.error, null)
+		callback(null, res)
 	})
   }
 
-export const verifuser = (request, response, callback) => {
+export const verifuser = (request, callback) => {
 	const { mail } = request.body
 	db.query('SELECT * FROM users WHERE mail = $1', [mail], (err, res) => {
 		var data
@@ -46,7 +46,7 @@ export	const adduser = (request, response) => {
 	}
 
 
-export const checkkey = (key, response, callback) => {
+export const checkkey = (key, callback) => {
 		db.query('SELECT * FROM users WHERE confirmkey = $1', [key], (err, res) => {
 		var data
 		if (err.error) {
@@ -83,18 +83,16 @@ export const activeuser = (id, response) => {
 })
 }
 
-export const getuser = (request, response, callback) => {
-	const id = parseInt(request.params.id)
+export const getuser = (id, callback) => {
 	db.query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
 	if (err.error) {
 		callback(err, null)
 	}
-	response.status(200).json(res[0])
+	callback(null, res[0])
 })
 }
 
-export const getuserbymail = (request, response, callback) => {
-	var mail = request.body.mail;
+export const getuserbymail = (mail, callback) => {
 	db.query('SELECT * FROM users WHERE mail = $1', [mail], (err, res) => {
 	if (err.error) {
 		callback(err, null)
@@ -103,39 +101,40 @@ export const getuserbymail = (request, response, callback) => {
 })
 }
 
-export	const edituser = (request, response, callback) => {
-		const id = parseInt(request.params.id)
-		const { name, email } = request.body
+export const getuserbyid = (id, callback) => {
+	db.query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
+	if (err.error) {
+		callback(err, null)
+	}
+	callback(null, res[0])
+})
+}
 
-		db.query('UPDATE users SET name = $1, email = $2 WHERE id = $3',
-		[name, email, id],
+export	const edituser = (request, callback) => {
+		const { mail, login, password, firstName, lastName,
+		bio, genre, dateOfBirth, orientation } = request.body
+		const id = parseInt(request.params.id)
+
+		db.query('UPDATE users SET (mail, login, password, firstName, lastName,\
+			bio, genre, dateOfBirth, orientation, confirmkey) \
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+		[mail, login, password, firstName, lastName,
+			bio, genre, dateOfBirth, orientation, confirmkey],
+
 		(err, res) => {
 			if (err.error) {
 				callback(err, null)
 			}
-			response.status(200).json({ "message" : `User modified with ID: ${id}`})
+			callback(null, "User modified")
 		}
-		)
-	}
+	)
+}
 
-export	const deluser = (request, response, callback) => {
-		const id = parseInt(request.params.id)
-
+export	const deluser = (id, callback) => {
 		db.query('DELETE FROM users WHERE id = $1', [id], (err, res) => {
 		if (err.error) {
 			callback(err, null)
 		}
-		response.status(200).json({ "message" : `User deleted with ID: ${id}`})
-		})
-	}
-
-	export	const login = (request, response, callback) => {
-		const id = parseInt(request.params.id)
-
-		db.query('DELETE FROM users WHERE id = $1', [id], (err, res) => {
-		if (err.error) {
-			callback(err, null)
-		}
-		response.status(200).json({ "message" : `User deleted with ID: ${id}`})
+		callback(null, "ok")
 		})
 	}
