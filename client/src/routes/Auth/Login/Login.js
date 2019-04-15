@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Input from '../../../components/UI/Input/Input'
+import Button from '../../../components/UI/Button/Button'
 import axios from 'axios'
 
 class Login extends Component {
@@ -17,7 +19,8 @@ class Login extends Component {
         });
     }
 
-	submitLogin = (e) => {
+	submitLogin = (event) => {
+		event.preventDefault()
 		console.log('submited')
 		if (this.state.login.length > 0) {
             console.log('API data:');
@@ -35,41 +38,14 @@ class Login extends Component {
 
 	render() {
 		return (
-			<div className="inner-container">
-				<div className="header">
-				Login
-				</div>
-				<div className="box">
-
-				<div className="input-group">
-						<label htmlFor="login">Login</label>
-						<input
-						type="text"
-						name="login"
-						className="login-input"
-						placeholder="Login"
-						value={this.state.login}
-						onChange={this.handleChange}/>
-				</div>
-
-				<div className="input-group">
-						<label htmlFor="password">Password</label>
-						<input
-						type="password"
-						name="password"
-						className="login-input"
-						placeholder="Password"
-						value={this.state.password}
-						onChange={this.handleChange}/>
-				</div>
-
-				<button
-						type="button"
-						className="login-btn"
-						onClick={this.submitLogin}>
-						Login 
-				</button>
-				</div>
+			<div  className="inner-container">
+				<div className="header"> Login </div>
+				<form onSubmit={this.submitLogin} className="box">
+					{/*<label htmlFor="login">Login</label>*/}
+					<Input inputtype="input" label='Login' type="text" name="login" placeholder="Login" value={this.state.login} onChange={this.handleChange}/>
+					<Input inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange}/>
+					<Button > Login </Button>
+				</form>
 			</div>
 		);
 	}

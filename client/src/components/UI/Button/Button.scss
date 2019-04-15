@@ -1,0 +1,25 @@
+$theme: #417cef;
+
+.Button {
+    padding: 2px 30px;
+    border: 0;
+    font-size: 18px;
+    border-radius: 3px;
+    font-family: Oxygen, sans-serif;
+    background-color: rgba(15, 15, 15, 0.03);
+    margin-top: 20px;
+    border: 2px solid $theme;
+    transition: background-color 0.3s ease-out;
+    cursor: pointer;
+}
+
+.Button:hover,
+.Button:focus {
+    background-color: $theme;
+    color: white;
+}
+
+.Button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
