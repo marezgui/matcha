@@ -35,4 +35,7 @@ const sendmail = async (mailto, mailsubject, mailtext, mailhtml) => {
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
 
+///
+///		Vi vous ne receez [as el mail c'est aue votre service de mail le supprime car il crois que c st un spam
+///
 export default sendmail
