@@ -4,7 +4,8 @@ import passport from 'passport'
 import { db } from './database'
 import dotenv from 'dotenv'
 
-/*	Utile que si on veux gerer les sessions
+/*
+	Utile que si on veux gerer les sessions
 	import cookiesession from 'cookie-session'
 */
 
@@ -13,6 +14,12 @@ dotenv.load()
 const	ENV = process.env.NODE_ENV;
 const	PORT = process.env.PORT || 8080;
 const	server = express();
+
+/*
+	Si vous voulez tester les mails :
+	import sendmail from './api/utils/mail.utils'
+	sendmail('ton mail', 'sujet', 'mail format txt', '<strong>mail format html</strong>')
+*/
 
 /*
 	//	Utile que si on veux gerer les sessions

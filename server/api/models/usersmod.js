@@ -1,6 +1,5 @@
 import { db } from './../../database'
 import uniqid from 'uniqid'
-import sendmail from './api/utils/mail.utils'
 
 export const getallusers = (callback) => {
 	db.query('SELECT * FROM users ORDER BY id ASC', (err, res) => {
@@ -44,7 +43,6 @@ export	const adduser = (request, response) => {
 									"confirmkey" : confirmkey })
 
 		})
-		sendmail(mail, 'Confirmer cotre compte', 'Voici votre cle de confirmation : ' + confirmkey, 'Voici votre cle de confirmation : ' + confirmkey)
 	}
 
 

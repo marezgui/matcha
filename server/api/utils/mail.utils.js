@@ -11,7 +11,8 @@ const sendmail = async (mailto, mailsubject, mailtext, mailhtml) => {
   let transporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
-    secure: false, // true for 465, false for other ports
+	secure: false, // true for 465, false for other ports
+	tls: {rejectUnauthorized: false},
     auth: {
       user: testAccount.user, // generated ethereal user
       pass: testAccount.pass // generated ethereal password
@@ -33,6 +34,7 @@ const sendmail = async (mailto, mailsubject, mailtext, mailhtml) => {
   // Preview only available when sending through an Ethereal account
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  return
 }
 
 ///
