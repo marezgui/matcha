@@ -2,7 +2,7 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 
 const Profile = () => {
-    return <div>Salut les gens</div>
+    return <div>Connexion reussi (/logout pour ce deconnecter)</div>
 }
 
 export default Profile;

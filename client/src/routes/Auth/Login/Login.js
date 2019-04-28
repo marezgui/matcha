@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import {Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 import Input from '../../../components/UI/Input/Input'
 import Button from '../../../components/UI/Button/Button'
-import axios from 'axios'
+import Spinner from '../../../components/UI/Spinner/Spinner'
+import * as actions from '../../../store/actions/index'
 
 class Login extends Component {
 
@@ -14,42 +17,58 @@ class Login extends Component {
         let value = e.target.value;
         let name = e.target.name;
 
+		//console.log(this.state.login);
         this.setState({
           [name]: value
         });
     }
 
 	submitLogin = (event) => {
-		event.preventDefault()
-		console.log('submited')
-		if (this.state.login.length > 0) {
-            console.log('API data:');
-            axios.get('/api/users/' + this.state.login)
-                .then(res => {
-                    const user = res.data[0];
-                    console.log(user.login);
-                    console.log(user.password);
-                    if (this.state.password === user.password) { // bcrypt
-                        console.log('connected !');
-                    }
-        	});
-		}
+		event.preventDefault();
+		this.props.onAuth(this.state.login, this.state.password);
 	}
 
 	render() {
-		return (
-			<div  className="inner-container">
-				<div className="header"> Login </div>
-				<form onSubmit={this.submitLogin} className="box">
+		let form = (
+			<form onSubmit={this.submitLogin} className="box">
 					{/*<label htmlFor="login">Login</label>*/}
 					<Input inputtype="input" label='Login' type="text" name="login" placeholder="Login" value={this.state.login} onChange={this.handleChange}/>
 					<Input inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange}/>
 					<Button > Login </Button>
-				</form>
+			</form>
+		)
+
+		if (this.props.loading) {
+            form = <Spinner /> 
+		}
+
+		let authRedirect = null;
+        if (this.props.isAuthenticated) {
+            authRedirect = <Redirect to='/profile' /> // Change Redirect to the good page
+        }
+
+		return (
+			<div  className="inner-container">
+				<div className="header"> Login </div>
+				{form}
+				{authRedirect}
 			</div>
 		);
 	}
 }
 
-export default Login
+const mapStateToProps = (state) => {
+    return {
+		loading: state.auth.loading,
+		isAuthenticated: state.auth.token != null
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onAuth: (email, password) => dispatch(actions.auth(email, password))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
 

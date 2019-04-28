@@ -24,7 +24,7 @@ class Register extends Component {
 		this.setState({errors: errors})
 	}
 	
-	checkValidity = (e, min, max, regex) => {
+	checkValidity = (e, min, max) => {
 		const inputName = e.target.name
 		const inputValue = e.target.value
 		const newValueState = {...this.state.value}
@@ -33,7 +33,9 @@ class Register extends Component {
 		this.setState({value: newValueState})
 		this.clearError(inputName)
 
-		let reg = new RegExp(regex)
+
+		const regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+		//let reg = new RegExp(regex) // pattern.test()
 		//console.log(regex)
 		//console.log(reg.test(inputValue))
 
@@ -41,7 +43,7 @@ class Register extends Component {
 			this.addError(inputName, "Cannot be empty!")
 		else if (inputValue.length < min)
 			this.addError(inputName, min + " characters min.")
-		else if (reg.test(inputValue))
+		else if (!regex.test(inputValue))
 			this.addError(inputName, "no match")
 		else if (inputValue.length > max)
 		this.addError(inputName, max + " characters max.")
@@ -58,7 +60,7 @@ class Register extends Component {
 			<form className="box" onSubmit={this.submitRegister}>
 				<Input error={this.state.errors.login} inputtype="input" label="Login" type="text" name="login" placeholder="Login" onChange={(e) => this.checkValidity(e, 3, 15)}/>
 
-				<Input error={this.state.errors.firstName} inputtype="input" label="First name" type="text" name="firstName" placeholder="First name" onChange={(e) => this.checkValidity(e, 2, 15, '/^[A-Z][A-Z]*(?:-[A-Z]+)*$/i')}/>
+				<Input error={this.state.errors.firstName} inputtype="input" label="First name" type="text" name="firstName" placeholder="First name" onChange={(e) => this.checkValidity(e, 2, 15)}/>
 
 				<Input error={this.state.errors.lastName} inputtype="input" label="Last name" type="text" name="lastName" placeholder="Last name" onChange={(e) => this.checkValidity(e, 2, 15)}/>
 				
@@ -84,46 +86,3 @@ class Register extends Component {
 }
 
 export default Register
-
-  /*onLoginChange = (e) => {
-		this.clearError("login")
-		const login = e.target.value
-		this.setState((prevState) => ({
-			value: {
-					...prevState.value,
-					login: login
-			}
-		}))
-		if (login === "") {
-			this.addError("login", "Login Cannot be empty!")
-		}
-  }
-  
-  onEmailChange = (e) => {
-		this.clearError("email")
-		const email = e.target.value
-		this.setState((prevState) => ({
-			value: {
-					...prevState.value,
-					email: email
-			}
-		}))
-		if (email === "") {
-			this.addError("email", "Email Cannot be empty!")
-		}
-  }
-  
-  onPasswordChange = (e) => {
-		this.clearError("password")
-		const password = e.target.value
-		this.setState((prevState) => ({
-			value: {
-					...prevState.value,
-					password: password
-			}
-		}))
-		if (password === "") {
-			this.addError("password", "Password Cannot be empty!")
-		}
-		console.log(e.target.name)
-	}*/
