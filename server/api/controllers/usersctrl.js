@@ -40,12 +40,16 @@ export const adduser = async (req, res) => {
 	if (!PASSWORD_REGEX.test(password))
 		return res.status(400).json({ 'error': 'password invalid (must length 4 - 8 and include 1 number at least)' });
 
+	const verifuserpseudo = util.promisify(mod.verifuserpseudo)
+	let resultuserpseudo = await verifuserpseudo(req)
+							.then(data => {return data})
+							.catch(err => { console.error(`[Error]: ${err}`)});
 	const verifuser = util.promisify(mod.verifuser)
 	const hash = util.promisify(bcrypt.hash)
 	let resultuser = await verifuser(req)
 							.then(data => {return data})
 							.catch(err => { console.error(`[Error]: ${err}`)});
-	if (resultuser === 1)
+	if ((resultuser === 1) || (resultuserpseudo === 1))
 		return res.status(201).json({ "message" : "USER EXIST"})
 	else {
 		req.body.password = await hash(password, 5)
