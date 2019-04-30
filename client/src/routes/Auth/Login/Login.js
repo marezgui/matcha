@@ -7,20 +7,14 @@ import Spinner from '../../../components/UI/Spinner/Spinner'
 import * as actions from '../../../store/actions/index'
 
 class Login extends Component {
-
 	state = {
 		login: '',
 		password: ''
 	}
 
-	handleChange = (e) => {
-        let value = e.target.value;
-        let name = e.target.name;
-
-		//console.log(this.state.login);
-        this.setState({
-          [name]: value
-        });
+	checkValidity = (e) => {
+		let value = e.target.value;
+		this.setState( {[e.target.name]: value} );
     }
 
 	submitLogin = (event) => {
@@ -31,9 +25,12 @@ class Login extends Component {
 	render() {
 		let form = (
 			<form onSubmit={this.submitLogin} className="box">
-					{/*<label htmlFor="login">Login</label>*/}
-					<Input inputtype="input" label='Login' type="text" name="login" placeholder="Login" value={this.state.login} onChange={this.handleChange}/>
-					<Input inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange}/>
+					<Input inputtype="input" label='Login' type="text" name="login" placeholder="Login" value={this.state.login} onChange={this.checkValidity}/>
+					<Input inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.checkValidity}/>
+					
+					{this.props.error 
+					&& <center><p style={{color: 'red'}}>{this.props.error.message}</p></center>}
+					
 					<Button > Login </Button>
 			</form>
 		)
@@ -60,7 +57,8 @@ class Login extends Component {
 const mapStateToProps = (state) => {
     return {
 		loading: state.auth.loading,
-		isAuthenticated: state.auth.token != null
+		isAuthenticated: state.auth.token != null,
+		error: state.auth.error
     }
 }
 
@@ -71,4 +69,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
-

@@ -1,8 +1,15 @@
-import React from 'react';
-// import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import Layout from '../../hoc/Layout/Layout';
 
-const Profile = () => {
-    return <div>Connexion reussi (/logout pour ce deconnecter)</div>
+class Profile extends Component {
+    render () {
+        return (
+            <Layout>
+                <div>Connexion reussi (<NavLink to='/logout'> Se deconnecter </NavLink>)</div>
+            </Layout>
+        )
+    }
 }
 
 export default Profile;

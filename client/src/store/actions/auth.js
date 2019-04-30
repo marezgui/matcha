@@ -40,8 +40,7 @@ export const auth = (mail, password) => {
             console.log("Connected", response.data)
         })
         .catch((err) => {
-            dispatch(authFail(err.response.data.error));
-            console.log(err.response.data.error)
+            dispatch(authFail(err.response.data)); // data.error{}
         });
     }
 }
@@ -57,6 +56,5 @@ export const authCheckState = () => {
             const userId = localStorage.getItem('userId');
             dispatch(authSuccess(token, userId));
         }
-
     }
 }

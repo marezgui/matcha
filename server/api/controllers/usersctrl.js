@@ -10,31 +10,24 @@ import * as op from '../utils/passport.utils'
 
 // Constants
 const EMAIL_REGEX     = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX  = /^(?=.*\d).{4,8}$/;
+const PASSWORD_REGEX  = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 
 // FONCTIONS
 
 export const adduser = async (req, res) => {
-	var firstName = req.body.firstName;
-	var lastName = req.body.lastName;
-	var mail = req.body.mail;
-	var login = req.body.login;
-	var password = req.body.password;
-	var bio = req.body.bio;
-	var genre = req.body.genre;
-	var dateOfBirth = req.body.dateOfBirth;
-	var orientation = req.body.orientation;
+	const { email, login, password, firstName, lastName,
+		bio, genre, dateOfBirth, orientation } = req.body
 //	var location  = req.body.location;
 //	var photo = req.body.photo;
 
-	if (!(mail || login || password || firstName || lastName
+	if (!(email || login || password || firstName || lastName
 		|| bio || genre || dateOfBirth || orientation))
 		return res.status(400).json({ 'error': 'missing parameters' });
 
 	if (login.length >= 13 || login.length <= 4)
 		return res.status(400).json({ 'error': 'wrong username (must be length 5 - 12)' });
 
-	if (!EMAIL_REGEX.test(mail))
+	if (!EMAIL_REGEX.test(email))
 		return res.status(400).json({ 'error': 'email is not valid' });
 
 	if (!PASSWORD_REGEX.test(password))
@@ -86,15 +79,15 @@ export const getme = (req, res) =>{
 }
 
 export const login = async (req, res) => {
-		if(req.body.mail && req.body.password){
-		  var mail = req.body.mail;
+		if(req.body.email && req.body.password){
+		  var email = req.body.email;
 		}
 		else
 			return res.status(401).json({message:"Empty form"});
 
 		// usually this would be a database call:
 		const getuserbymail = util.promisify(mod.getuserbymail)
-		let user = await getuserbymail(mail)
+		let user = await getuserbymail(email)
 									.then(data => {return data})
 									.catch(err => { console.error(`[Error]: ${err}`)})
 

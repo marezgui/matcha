@@ -10,8 +10,8 @@ export const getallusers = (callback) => {
   }
 
 export const verifuser = (request, callback) => {
-	const { mail } = request.body
-	db.query('SELECT * FROM users WHERE mail = $1', [mail], (err, res) => {
+	const { email } = request.body
+	db.query('SELECT * FROM users WHERE mail = $1', [email], (err, res) => {
 		var data
 		if (err.error) {
 			callback(err, null)
@@ -27,14 +27,14 @@ export const verifuser = (request, callback) => {
 }
 
 export	const adduser = (request, response) => {
-		const { mail, login, password, firstName, lastName,
+		const { email, login, password, firstName, lastName,
 				bio, genre, dateOfBirth, orientation } = request.body
 		let confirmkey = uniqid("confirmmail-")
 
 		db.query('INSERT INTO users (mail, login, password, firstName, lastName,\
 										bio, genre, dateOfBirth, orientation, confirmkey) \
 										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)'
-					, [mail, login, password, firstName, lastName,
+					, [email, login, password, firstName, lastName,
 						bio, genre, dateOfBirth, orientation, confirmkey], (err, res) => {
 		if (err.error) {
 			console.log(err)
@@ -92,8 +92,8 @@ export const getuser = (id, callback) => {
 })
 }
 
-export const getuserbymail = (mail, callback) => {
-	db.query('SELECT * FROM users WHERE mail = $1', [mail], (err, res) => {
+export const getuserbymail = (email, callback) => {
+	db.query('SELECT * FROM users WHERE mail = $1', [email], (err, res) => {
 	if (err.error) {
 		callback(err, null)
 	}
@@ -111,14 +111,14 @@ export const getuserbyid = (id, callback) => {
 }
 
 export	const edituser = (request, callback) => {
-		const { mail, login, password, firstName, lastName,
+		const { email, login, password, firstName, lastName,
 		bio, genre, dateOfBirth, orientation } = request.body
 		const id = parseInt(request.params.id)
 
 		db.query('UPDATE users SET (mail, login, password, firstName, lastName,\
 			bio, genre, dateOfBirth, orientation, confirmkey) \
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-		[mail, login, password, firstName, lastName,
+		[email, login, password, firstName, lastName,
 			bio, genre, dateOfBirth, orientation, confirmkey],
 
 		(err, res) => {
