@@ -26,6 +26,23 @@ export const verifuser = (request, callback) => {
 	})
 }
 
+export const verifuserpseudo = (request, callback) => {
+	const { login } = request.body
+	db.query('SELECT * FROM users WHERE username = $1', [login], (err, res) => {
+		var data
+		if (err.error) {
+			callback(err, null)
+		}
+		if (res[0] === undefined){
+			data = 0
+		}
+		else{
+			data = 1
+		}
+		callback(null, data)
+	})
+}
+
 export	const adduser = (request, response) => {
 		const { email, login, password, firstName, lastName,
 				bio, genre, dateOfBirth, orientation } = request.body
