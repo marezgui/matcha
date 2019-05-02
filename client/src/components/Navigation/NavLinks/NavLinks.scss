@@ -4,13 +4,14 @@
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid black;
+    //border: 1px solid black;
     width: 100%;
 }
 
 .NavLinks li a {
     box-sizing: border-box;
-    color: rgb(227, 86, 88);
+    font-weight: bold;
+    color: rgb(202, 8, 19);
     font-size: 1.2em;
 }
 
