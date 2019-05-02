@@ -1,10 +1,11 @@
-import Auth from './routes/Auth/Auth';
-import Profile from './routes/Profile/Profile';
-import Logout from './routes/Auth/Logout/Logout';
 import React, { Component } from 'react';
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import * as actions from './store/actions'
+import Auth from './routes/Auth/Auth';
+import Profile from './routes/Profile/Profile';
+import People from './routes/People/People';
+import Logout from './routes/Auth/Logout/Logout';
 
 class App extends Component {
     componentDidMount () {
@@ -23,9 +24,10 @@ class App extends Component {
       if (this.props.isAuthenticated) {
         routes = (
           <Switch>
+            <Route path="/people" component={People} />
             <Route path="/profile" component={Profile} />
             <Route path="/logout" component={Logout} />
-            <Redirect to='/profile' />
+            <Redirect to='/people' />
           </Switch>
         );
       }

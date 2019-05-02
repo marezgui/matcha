@@ -1,0 +1,37 @@
+.NavIcons {
+    list-style: none;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.NavIcons li a {
+    box-sizing: border-box;
+}
+
+@media (min-width: 680px) {
+    .NavIcons {
+        flex-flow: row;
+        height: 100%;
+        position: relative;
+    }
+
+    .NavIcons {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .NavIcons li {
+        margin: 15px;
+    }
+
+    .NavIcons li:hover .Dropdown {
+        display: block;
+    }
+}

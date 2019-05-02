@@ -1,37 +1,66 @@
 import React, { Component } from 'react'
 import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
+import * as actions from '../../../store/actions/index'
+import { checkInputValidity } from '../../../utils/input'
 import Input from '../../../components/UI/Input/Input'
 import Button from '../../../components/UI/Button/Button'
 import Spinner from '../../../components/UI/Spinner/Spinner'
-import * as actions from '../../../store/actions/index'
 
 class Login extends Component {
 	state = {
-		login: '',
-		password: ''
+		email: '',
+		password: '',
+		errors: {},
+		formIsValid: false
 	}
 
-	checkValidity = (e) => {
-		let value = e.target.value;
-		this.setState( {[e.target.name]: value} );
+	addError = (field, msg) => {
+		const errors = {...this.state.errors}
+		errors[field] = msg
+    	this.setState({errors: errors})
+  	}
+
+  	clearError = (field) => {
+		const errors = {...this.state.errors}
+		delete errors[field]
+		this.setState({errors: errors})
+	}
+
+	checkValidity = (e, min, max) => {
+		const name = e.target.name
+		const value = e.target.value
+		const error = checkInputValidity(name, value, min, max);
+
+		this.setState({formIsValid: false});
+		this.clearError(name);
+
+		if (error) {
+			this.addError(name, error)
+		}
+
+		this.setState( {[name]: value}, () => {
+			if (this.state.email && this.state.password && Object.getOwnPropertyNames(this.state.errors).length === 0) {
+			 	this.setState({formIsValid: true});
+			}
+		})
     }
 
 	submitLogin = (event) => {
 		event.preventDefault();
-		this.props.onAuth(this.state.login, this.state.password);
+		this.props.onAuth(this.state.email, this.state.password);
 	}
 
 	render() {
 		let form = (
 			<form onSubmit={this.submitLogin} className="box">
-					<Input inputtype="input" label='Login' type="text" name="login" placeholder="Login" value={this.state.login} onChange={this.checkValidity}/>
-					<Input inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.checkValidity}/>
+					<Input error={this.state.errors.email} inputtype="input" label="Email" type="email" name="email" placeholder="Email" value={this.state.email} onChange={(e) => this.checkValidity(e, null, 40)}/>
+					<Input error={this.state.errors.password} inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={(e) => this.checkValidity(e, 6, 50)}/>
 					
 					{this.props.error 
 					&& <center><p style={{color: 'red'}}>{this.props.error.message}</p></center>}
 					
-					<Button > Login </Button>
+					<Button disabled={!this.state.formIsValid}> Login </Button>
 			</form>
 		)
 

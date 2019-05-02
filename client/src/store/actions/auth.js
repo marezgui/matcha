@@ -29,11 +29,11 @@ export const logout = () => {
     }
 }
 
-export const auth = (mail, password) => {
+export const auth = (email, password) => {
     return (dispatch) => {
         dispatch(authStart());
 
-        axios.post('users/login', {mail, password})
+        axios.post('users/login', {email, password})
         .then((response) => {
             localStorage.setItem('token', response.data.token);
             dispatch(authSuccess(response.data.token, 13)); //Change userId

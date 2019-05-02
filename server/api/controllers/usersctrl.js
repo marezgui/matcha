@@ -22,16 +22,16 @@ export const adduser = async (req, res) => {
 
 	if (!(email || login || password || firstName || lastName
 		|| bio || genre || dateOfBirth || orientation))
-		return res.status(400).json({ 'error': 'missing parameters' });
+		return res.status(400).json({ 'error': 'Missing parameters.' });
 
-	if (login.length >= 13 || login.length <= 4)
-		return res.status(400).json({ 'error': 'wrong username (must be length 5 - 12)' });
+	if (login.length >= 15 || login.length <= 3)
+		return res.status(400).json({ 'error': 'Invalid login. (must be length 3 - 15)' });
 
 	if (!EMAIL_REGEX.test(email))
-		return res.status(400).json({ 'error': 'email is not valid' });
+		return res.status(400).json({ 'error': 'Invalid email.' });
 
 	if (!PASSWORD_REGEX.test(password))
-		return res.status(400).json({ 'error': 'password invalid (must length 4 - 8 and include 1 number at least)' });
+		return res.status(400).json({ 'error': 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
 
 	const verifuserpseudo = util.promisify(mod.verifuserpseudo)
 	let resultuserpseudo = await verifuserpseudo(req)
@@ -43,7 +43,7 @@ export const adduser = async (req, res) => {
 							.then(data => {return data})
 							.catch(err => { console.error(`[Error]: ${err}`)});
 	if ((resultuser === 1) || (resultuserpseudo === 1))
-		return res.status(201).json({ "message" : "USER EXIST"})
+		return res.status(400).json({ "error" : "USER EXIST"})
 	else {
 		req.body.password = await hash(password, 5)
 									.then(data => {return data})
@@ -102,7 +102,7 @@ export const login = async (req, res) => {
 		console.log(passwdcmp)
 		if (user.activate === false)
 		{
-			return res.status(209).json({ 'error': 'User not activate' });
+			return res.status(403).json({ message: `Your account is not activated yet. ${user.mail}` });
 		}
 		if(passwdcmp === true) {
 		  // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
@@ -110,7 +110,7 @@ export const login = async (req, res) => {
 		  var token = jwt.sign(payload, op.opts.secretOrKey );
 		  res.json({message: "ok", token: token});
 		} else {
-		  res.status(401).json({message:"passwords did not match"});
+		  res.status(401).json({message:"passwords did not match."});
 		}
 	}
 

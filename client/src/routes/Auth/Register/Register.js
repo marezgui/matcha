@@ -11,6 +11,7 @@ class Register extends Component {
 		errors: {},
 		formIsValid: false,
 		loading: false,
+		registered: false,
 		serverError: null
 	}
 
@@ -46,21 +47,11 @@ class Register extends Component {
 	}
 
 	checkFormValidity = () => {
-		let error = false;
-		let length = 0;
+		let error = Object.getOwnPropertyNames(this.state.errors).length;
+		let length = Object.getOwnPropertyNames(this.state.values).length;
 
 		this.setState({formIsValid: false});
 
-		for (let prop in this.state.values) {
-			length++;
-		}
-
-		for (let prop in this.state.errors) {
-			if (this.state.errors[prop]) {
-				error = true;
-			}
-		}
-		
 		if (!error && length === 5) {
 			this.setState({formIsValid: true});
 		}
@@ -69,11 +60,15 @@ class Register extends Component {
 	submitRegister = (e) => {
 		e.preventDefault();
 
+		this.setState({loading: true});
+
 		axios.post('users', this.state.values)
         .then((response) => {
-            console.log("Registered", response.data);
+			this.setState({loading: false});
+			this.setState({registered: true});
         })
         .catch((err) => {
+			this.setState({loading: false});
 			this.setState({serverError: err.response.data.error})
         });
 	}
@@ -81,15 +76,15 @@ class Register extends Component {
 	render() {
 		let form = (
 			<form className="box" onSubmit={this.submitRegister}>
-				<Input error={this.state.errors.login} inputtype="input" label="Login" type="text" name="login" placeholder="Login" onChange={(e) => this.checkInputValidity(e, 3, 15)} /> {/*onChange={() => this.onChange('login', this.state.values.login)}*/}
+				<Input error={this.state.errors.login} inputtype="input" label="Login" type="text" name="login" placeholder="Login" value={this.state.values.login || ''} onChange={(e) => this.checkInputValidity(e, 3, 15)} /> {/*onChange={() => this.onChange('login', this.state.values.login)}*/}
 
-				<Input error={this.state.errors.firstName} inputtype="input" label="First name" type="text" name="firstName" placeholder="First name" onChange={(e) => this.checkInputValidity(e, 2, 15)}/>
+				<Input error={this.state.errors.firstName} inputtype="input" label="First name" type="text" name="firstName" placeholder="First name" value={this.state.values.firstName || ''} onChange={(e) => this.checkInputValidity(e, 2, 15)}/>
 
-				<Input error={this.state.errors.lastName} inputtype="input" label="Last name" type="text" name="lastName" placeholder="Last name" onChange={(e) => this.checkInputValidity(e, 2, 15)}/>
+				<Input error={this.state.errors.lastName} inputtype="input" label="Last name" type="text" name="lastName" placeholder="Last name" value={this.state.values.lastName || ''} onChange={(e) => this.checkInputValidity(e, 2, 15)}/>
 				
-				<Input error={this.state.errors.email} inputtype="input" label="Email" type="email" name="email" placeholder="Email" onChange={(e) => this.checkInputValidity(e, null, 40)}/>
+				<Input error={this.state.errors.email} inputtype="input" label="Email" type="email" name="email" placeholder="Email" value={this.state.values.email || ''} onChange={(e) => this.checkInputValidity(e, null, 40)}/>
 
-				<Input error={this.state.errors.password} inputtype="password" label="Password" type="password" name="password" placeholder="Password" onChange={(e) => this.checkInputValidity(e, 6, 50)}/>
+				<Input error={this.state.errors.password} inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.values.password || ''} onChange={(e) => this.checkInputValidity(e, 6, 50)}/>
 
 				{this.state.serverError
 					&& <center><p style={{color: 'red'}}>{this.state.serverError}</p></center>}
@@ -100,6 +95,18 @@ class Register extends Component {
 
 		if (this.state.loading) {
 			form = <Spinner />
+		}
+
+		if (this.state.registered) {
+			form = (
+				<div>
+					<br />
+					<center>
+						<p>Congratulations, you are registered.</p>
+						<p>Please check your mail to activate your account.</p>
+					</center>
+				</div>
+			)
 		}
 
 		return (

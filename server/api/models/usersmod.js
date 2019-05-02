@@ -28,7 +28,7 @@ export const verifuser = (request, callback) => {
 
 export const verifuserpseudo = (request, callback) => {
 	const { login } = request.body
-	db.query('SELECT * FROM users WHERE username = $1', [login], (err, res) => {
+	db.query('SELECT * FROM users WHERE login = $1', [login], (err, res) => {
 		var data
 		if (err.error) {
 			callback(err, null)

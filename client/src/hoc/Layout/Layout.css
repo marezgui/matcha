@@ -10,10 +10,3 @@
     flex-direction: column;
     justify-content: center;
 }
-
-.Content { 
-    margin-top: 16px;
-    font-size: 4em;
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid black;
-}

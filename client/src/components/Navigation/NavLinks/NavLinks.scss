@@ -1,0 +1,48 @@
+.NavLinks {
+    list-style: none;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.NavLinks li a {
+    box-sizing: border-box;
+    color: rgb(227, 86, 88);
+    font-size: 1.2em;
+}
+
+@media (min-width: 680px) {
+    .NavLinks {
+        height: 100%;
+        //width: 25%;
+    }
+
+    .NavLinks {
+        height: 100%;
+        flex-flow: row;
+    }
+    
+    .NavLinks li {
+        margin: 0;
+        height: 100%;
+    }
+    
+    .NavLinks li a {
+        height: 100%;
+        padding: 10px 15px;
+        width: auto;
+        box-sizing: border-box;
+        display: block;
+    }
+    
+    .NavLinks li a:hover,
+    .NavLinks li a:active,
+    .NavLinks li a.active {
+        background-color: rgba(255, 99, 71, 0.1); // Tomato
+        border-bottom: 2px solid #40a4c8;
+        color: #40a4c8;
+    }
+}
