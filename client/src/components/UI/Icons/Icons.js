@@ -2,12 +2,12 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../../../assets/images/matcha.png'
 
-const style = {'font-size': '2em', 'color': 'rgb(227, 86, 88)'};
+const style = {'font-size': '2em', 'color': 'rgb(202, 8, 19)'};
 
 export const Logo = (props) => (
     <div {...props}>
-        <NavLink to="" >
-            <img alt="Logo" src={logo} style={{ 'width': '220px', 'height': '50px', 'margin': '5px'}}/>
+        <NavLink to="/people" >
+            <img alt="Logo" src={logo} style={{ 'width': '250px', 'height': '60px', 'margin': '5px'}}/>
         </NavLink>
     </div>
 )
