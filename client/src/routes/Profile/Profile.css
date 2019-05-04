@@ -1,7 +1,7 @@
 .bloc {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 60%;
     margin:auto;
     border: 2px grey solid;
 
@@ -14,21 +14,9 @@
 .box-content {
     width: 80%;
     margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.Input{     
-    width: 40%;
 }
 
 .btn-radio {
-    display: flex;
     border: 1px solid grey;
     border-radius: 6px;
-}
-
-legend {
-    background-color: grey;
 }
