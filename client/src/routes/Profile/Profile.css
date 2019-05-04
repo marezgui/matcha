@@ -1,5 +1,24 @@
 .bloc {
-    width: 60%;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
     margin:auto;
-    border: 2px black solid;
+    border: 2px grey solid;
+
+}
+
+.box-title {
+    background-color: lightgrey;
+}
+
+.box-content {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.Input{     
+    width: 40%;
 }

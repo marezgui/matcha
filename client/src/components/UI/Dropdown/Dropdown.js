@@ -2,7 +2,7 @@ import React from 'react'
 import './Dropdown.scss'
 
 const dropdown = (props) => (
-  <div class="Dropdown">
+  <div className="Dropdown">
     {props.children}
   </div>
 )

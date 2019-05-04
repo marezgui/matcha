@@ -5,7 +5,7 @@ import { Menu, Logo } from '../../UI/Icons/Icons';
 import './Toolbar.scss';
 
 const toolbar = (props) => (
-    <header class="Toolbar">
+    <header className="Toolbar">
         <Menu className="Menu" onClick={props.openSideDrawer}/>
         <Logo className="Logo"/>
 
