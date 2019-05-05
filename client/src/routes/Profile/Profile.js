@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Layout from '../../hoc/Layout/Layout';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
-import { Col, Row, Container } from 'reactstrap';
+import { Col, Row, Container, FormGroup, Label, CustomInput } from 'reactstrap';
 
 import './Profile.css';
 
@@ -61,11 +61,19 @@ class Profile extends Component {
                         localisation
                  */}
                     <Input inputtype="textarea" label="Biographie" type="text" name="bio" placeholder="Decrivez-vous en quelques mots" />
-                    <fieldset className="btn-radio">
+                    <FormGroup>
+                        <Label for="Radio-genre">Genre</Label>
+                        <CustomInput type="radio" id="genre-homme" name="genre" label="Homme" />
+                        <CustomInput type="radio" id="genre-femme" name="genre" label="Femme" />
+                    </FormGroup>
+
+                    {/* <fieldset className="btn-radio">
                         <legend>Genre</legend>
                         <Input inputtype="input" type="radio" label="Homme" name="genre" value="Homme" />
                         <Input inputtype="input" type="radio" label="Femme" name="genre" value="Femme" />
-                    </fieldset>
+                    </fieldset> */}
+                    {/* ############ ici pour la suite ############ */}
+                    
                     <Input label="Notification par mail" type="checkbox" name="notifications" />
                     <fieldset className="btn-radio">
                         <legend>Orientation:</legend>
@@ -82,6 +90,8 @@ class Profile extends Component {
                 <Container>
                     <Row>
                         <Col>{PersonelInfo}</Col>
+                    </Row>
+                    <Row>
                         <Col>{ProfilInfo}</Col>
                     </Row>
                 </Container>

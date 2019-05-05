@@ -1,8 +1,9 @@
 .bloc {
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 90%;
     margin:auto;
+    margin-top: 20px;
     border: 2px grey solid;
 
 }
@@ -14,6 +15,7 @@
 .box-content {
     width: 80%;
     margin: auto;
+    margin-bottom: 15px;
 }
 
 .btn-radio {
