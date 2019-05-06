@@ -27,61 +27,69 @@ class Profile extends Component {
     render() {
         const PersonelInfo = (
             <div className="bloc">
-                <h3 className="box-title">Informations Personnel</h3>
-                <form className="box-content" onSubmit={this.editPerso}>
-                    <Container>
-                        <Row>
-                            <Col><Input inputtype="input" label="First Name" type="text" name="firstName" placeholder="First Name" /></Col>
-                            <Col><Input inputtype="input" label="Last Name" type="text" name="lastname" placeholder="Last Name" /></Col>
-                            <Col><Input inputtype="input" label="Date of birth" type="date" name="dateOfBirth" placeholder="Date of birth" /></Col>
-                        </Row>
-                        <Row>
-                            <Col><Input inputtype="input" label="Email" type="mail" name="email" placeholder="Email" /></Col>
-                            <Col><Input inputtype="input" label="Login" type="text" name="login" placeholder="Login" /></Col>
-                        </Row>
-                        <Row>
-                            <Col><Input inputtype="input" label="Password" type="password" name="password" placeholder="Password" /></Col>
-                            <Col><Input inputtype="input" label="Confirme Password" type="password" name="password1" placeholder="Password" /></Col>
-                        </Row>
-                        <Button >Modifier</Button>
-                    </Container>
-                </form>
+                <div className="box-title">
+                    <h3 ><i className="fas fa-address-book"></i> Informations Personnel</h3>
+                </div>
+                <div className="box-content">
+                    <form className="box-content" onSubmit={this.editPerso}>
+                        <Container>
+                            <Row>
+                                <Col><Input inputtype="input" label="First Name" type="text" name="firstName" placeholder="First Name" /></Col>
+                                <Col><Input inputtype="input" label="Last Name" type="text" name="lastname" placeholder="Last Name" /></Col>
+                                <Col><Input inputtype="input" label="Date of birth" type="date" name="dateOfBirth" placeholder="Date of birth" /></Col>
+                            </Row>
+                            <Row>
+                                <Col><Input inputtype="input" label="Email" type="mail" name="email" placeholder="Email" /></Col>
+                                <Col><Input inputtype="input" label="Login" type="text" name="login" placeholder="Login" /></Col>
+                            </Row>
+                            <Row>
+                                <Col><Input inputtype="input" label="Password" type="password" name="password" placeholder="Password" /></Col>
+                                <Col><Input inputtype="input" label="Confirme Password" type="password" name="password1" placeholder="Password" /></Col>
+                            </Row>
+                            <Button >Modifier</Button>
+                        </Container>
+                    </form>
+                </div>
             </div>
         )
 
         const ProfilInfo = (
             <div className="bloc">
-                <h3 className="box-title">Profile</h3>
+                <div className="box-title">
+                    <h3 >Profile</h3>
+                </div>
                 <form className="box-content" onSubmit={this.editProfil}>
-                    {/* 
-                        bigraphie
-                        genre
-                        notification
-                        orientation
-                        localisation
-                 */}
-                    <Input inputtype="textarea" label="Biographie" type="text" name="bio" placeholder="Decrivez-vous en quelques mots" />
-                    <FormGroup>
-                        <Label for="Radio-genre">Genre</Label>
-                        <CustomInput type="radio" id="genre-homme" name="genre" label="Homme" />
-                        <CustomInput type="radio" id="genre-femme" name="genre" label="Femme" />
-                    </FormGroup>
-
-                    {/* <fieldset className="btn-radio">
-                        <legend>Genre</legend>
-                        <Input inputtype="input" type="radio" label="Homme" name="genre" value="Homme" />
-                        <Input inputtype="input" type="radio" label="Femme" name="genre" value="Femme" />
-                    </fieldset> */}
-                    {/* ############ ici pour la suite ############ */}
-                    
-                    <Input label="Notification par mail" type="checkbox" name="notifications" />
-                    <fieldset className="btn-radio">
-                        <legend>Orientation:</legend>
-                        <Input inputtype="input" type="radio" label="Hommes" name="orientation" value="Homme" />
-                        <Input inputtype="input" type="radio" label="Femmes" name="orientation" value="Femme" />
-                        <Input inputtype="input" type="radio" label="Bisexuel" name="orientation" value="Bisexuel" />
-                    </fieldset>
-
+                    <Container>
+                        <Row>
+                            <Col><Input inputtype="textarea" rows="20" label="Biographie" type="text" name="bio" placeholder="Decrivez-vous en quelques mots" /></Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    <Label for="Radio-genre" className="label-form">Genre</Label>
+                                    <Row>
+                                        <Col><CustomInput type="radio" id="genre-homme" name="genre" label="Homme" /></Col>
+                                        <Col><CustomInput type="radio" id="genre-femme" name="genre" label="Femme" /></Col>
+                                    </Row>
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Label for="Radio-genre" className="label-form">Orientation</Label>
+                                    <Row>
+                                        <Col><CustomInput type="radio" id="orientation-homme" name="orientation" label="Homme" /></Col>
+                                        <Col><CustomInput type="radio" id="orientation-femme" name="orientation" label="Femme" /></Col>
+                                        <Col><CustomInput type="radio" id="orientation-bisexuel" name="orientation" label="Bisexuel" /></Col>
+                                    </Row>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <FormGroup>
+                                <Col><CustomInput type="switch" id="notification" name="notification" label="Recevoir les notifications par mail" /></Col>
+                            </FormGroup>
+                        </Row>
+                    </Container>
                 </form>
             </div>
         )
