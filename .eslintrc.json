@@ -19,6 +19,25 @@
         "react"
     ],
     "rules": {
-    },
-    "parser": "babel-eslint"
+        "react/prop-types": 0,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "strict": "off",
+        "object-curly-newline": ["error", { "consistent": true }],
+        "comma-dangle": ["error", {
+          "arrays": "always-multiline",
+          "objects": "always-multiline",
+          "imports": "ignore",
+          "exports": "ignore",
+          "functions": "ignore"
+        }],
+        "global-require": "off",
+        "import/no-dynamic-require": "off",
+        "padded-blocks": "off",
+        "function-paren-newline": ["error", "consistent"],
+        "no-confusing-arrow": ["error", {"allowParens": true}],
+        "no-nested-ternary": "off",
+        "no-console": "off",
+        "implicit-arrow-linebreak": "off"
+      },
+      "parser": "babel-eslint"
 }

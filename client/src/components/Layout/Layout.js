@@ -1,36 +1,36 @@
-import React, { Component }from 'react'
-import Toolbar from '../Navigation/Toolbar/Toolbar'
-import SideDrawer from '../Navigation/SideDrawer/SideDrawer'
-import './Layout.css'
-
+import React, { Component } from 'react';
+import Toolbar from '../Navigation/Toolbar/Toolbar';
+import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
+import './Layout.css';
 
 class Layout extends Component {
-	state = {
-		showSideDrawer: false
-	}
+  state = {
+    showSideDrawer: false,
+  };
 
-	sideDrawerClosedHandler = () => {
-		this.setState({showSideDrawer: false})
-	}
+  sideDrawerClosedHandler = () => {
+    this.setState({ showSideDrawer: false });
+  };
 
-	openSideDrawerHandler = () => {
-		this.setState((prevState) => {
-			return {showSideDrawer: !prevState.showSideDrawer}
-		})
-	}
+  openSideDrawerHandler = () => {
+    this.setState(prevState => ({ showSideDrawer: !prevState.showSideDrawer }));
+  };
 
-	render() {
-		return (
-			<>
-				<Toolbar openSideDrawer={this.openSideDrawerHandler} isSideDrawerOpen={this.state.showSideDrawer} />
-				<SideDrawer open={this.state.showSideDrawer} closed={this.sideDrawerClosedHandler}/>
-				
-				<section className="Content" >
-					{ this.props.children }
-				</section>
-			</>
-		)
-	}
-};
+  render() {
+    const { showSideDrawer } = this.state;
+    const { children } = this.props;
 
-export default Layout
+    return (
+      <>
+        <Toolbar openSideDrawer={this.openSideDrawerHandler} isSideDrawerOpen={showSideDrawer} />
+        <SideDrawer open={showSideDrawer} closed={this.sideDrawerClosedHandler} />
+
+        <section className="Content">
+          {children}
+        </section>
+      </>
+    );
+  }
+}
+
+export default Layout;

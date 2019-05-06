@@ -1,30 +1,29 @@
-import React from 'react'
-import './PasswordState.css'
+import React from 'react';
+import './PasswordState.css';
 
-const passwordState= (props) => {
+const passwordState = ({ value }) => {
+  let pwdWeak = false;
+  let pwdMedium = false;
+  let pwdStrong = false;
 
-    let pwdWeak = false
-    let pwdMedium = false
-    let pwdStrong = false
+  if (0) { // Change the 0
+    pwdWeak = true;
+  } else if (value > 8) {
+    pwdWeak = true;
+    pwdMedium = true;
+  } else if (value > 12) {
+    pwdWeak = true;
+    pwdMedium = true;
+    pwdStrong = true;
+  }
 
-    if (0) {
-        pwdWeak = true
-    } else if (props.value > 8) {
-        pwdWeak = true
-        pwdMedium = true
-    } else if (props.value > 12) {
-        pwdWeak = true
-        pwdMedium = true
-        pwdStrong = true
-    }
-        
-    return (
-        <div className="password-state" >
-            <div className={"pwd pwd-weak " + (pwdWeak ? "show" : "")}></div>
-            <div className={"pwd pwd-medium " + (pwdMedium ? "show" : "")}></div>
-            <div className={"pwd pwd-strong " + (pwdStrong ? "show" : "")}></div>
-        </div>
-    )
-}
+  return (
+    <div className="password-state">
+      <div className={`pwd pwd-weak ${pwdWeak ? 'show' : ''}`} />
+      <div className={`pwd pwd-weak ${pwdMedium ? 'show' : ''}`} />
+      <div className={`pwd pwd-weak ${pwdStrong ? 'show' : ''}`} />
+    </div>
+  );
+};
 
-export default passwordState
+export default passwordState;

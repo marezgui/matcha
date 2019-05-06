@@ -1,3 +1,9 @@
+.Logo {
+    width: 250px;
+    height: 60px;
+    margin: 5px;
+}
+
 .Icons {
     font-size: 2em;
     color: rgb(202, 8, 19);

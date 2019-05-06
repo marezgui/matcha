@@ -1,14 +1,10 @@
-import React from 'react'
+import React from 'react';
+import './Button.scss';
 
-import './Button.scss'
+const button = ({ disabled, clicked, children }) => (
+  <button className="Button" type="submit" disabled={disabled} onClick={clicked}>
+    {children}
+  </button>
+);
 
-const button = (props) => (
-    <button
-        disabled={props.disabled}
-        className="Button"
-        onClick={props.clicked}>
-        {props.children} 
-    </button>
-)
-
-export default button
+export default button;

@@ -1,121 +1,176 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import { checkInputValidity } from '../../../utils/input'
-import Input from '../../../components/UI/Input/Input'
-import Button from '../../../components/UI/Button/Button'
-import Spinner from '../../../components/UI/Spinner/Spinner'
+import React, { Component } from 'react';
+import axios from 'axios';
+import { checkInputValidity } from '../../../utils/input';
+import Input from '../../../components/UI/Input/Input';
+import Button from '../../../components/UI/Button/Button';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 class Register extends Component {
-	state = {
-		values: {},
-		errors: {},
-		formIsValid: false,
-		loading: false,
-		registered: false,
-		serverError: null
-	}
+  state = {
+    values: {},
+    errors: {},
+    formIsValid: false,
+    loading: false,
+    registered: false,
+    serverError: null,
+  };
 
-	addError = (field, msg) => {
-		const errors = {...this.state.errors}
-		errors[field] = msg
-    	this.setState({errors: errors})
-  	}
+  addError = (field, msg) => {
+    const { errors } = this.state;
 
-  	clearError = (field) => {
-		const errors = {...this.state.errors}
-		delete errors[field]
-		this.setState({errors: errors})
-	}
+    errors[field] = msg;
+    this.setState({ errors });
+  };
 
-	checkInputValidity = async (e, min, max) => {
-		const name = e.target.name
-		const value = e.target.value
+  clearError = (field) => {
+    const { errors } = this.state;
 
-		this.clearError(name)
+    delete errors[field];
+    this.setState({ errors });
+  };
 
-		const error = checkInputValidity(name, value, min, max);
+  checkInputValidity = async (e, min, max) => {
+    const { name, value } = e.target;
+    const { values } = this.state;
 
-		if (error) {
-			this.addError(name, error)
-		}
+    this.clearError(name);
 
-		const newValues = {...this.state.values}
-		newValues[name] = value
-		this.setState({values: newValues}, () => {
-			this.checkFormValidity()
-		})
-	}
+    const error = checkInputValidity(name, value, min, max);
 
-	checkFormValidity = () => {
-		let error = Object.getOwnPropertyNames(this.state.errors).length;
-		let length = Object.getOwnPropertyNames(this.state.values).length;
+    if (error) {
+      this.addError(name, error);
+    }
 
-		this.setState({formIsValid: false});
+    const newValues = { ...values };
+    newValues[name] = value;
+    this.setState({ values: newValues }, () => {
+      this.checkFormValidity();
+    });
+  };
 
-		if (!error && length === 5) {
-			this.setState({formIsValid: true});
-		}
-	}
+  checkFormValidity = () => {
+    const { errors, values } = this.state;
+    const error = Object.getOwnPropertyNames(errors).length;
+    const filled = Object.getOwnPropertyNames(values).length;
 
-	submitRegister = (e) => {
-		e.preventDefault();
+    this.setState({ formIsValid: false });
 
-		this.setState({loading: true});
+    if (!error && filled === 5) {
+      this.setState({ formIsValid: true });
+    }
+  };
 
-		axios.post('users', this.state.values)
-        .then((response) => {
-			this.setState({loading: false});
-			this.setState({registered: true});
-        })
-        .catch((err) => {
-			this.setState({loading: false});
-			this.setState({serverError: err.response.data.error})
-        });
-	}
+  submitRegister = (e) => {
+    e.preventDefault();
 
-	render() {
-		let form = (
-			<form className="box" onSubmit={this.submitRegister}>
-				<Input error={this.state.errors.login} inputtype="input" label="Login" type="text" name="login" placeholder="Login" value={this.state.values.login || ''} onChange={(e) => this.checkInputValidity(e, 3, 15)} /> {/*onChange={() => this.onChange('login', this.state.values.login)}*/}
+    const { values } = this.state;
+    this.setState({ loading: true });
 
-				<Input error={this.state.errors.firstName} inputtype="input" label="First name" type="text" name="firstName" placeholder="First name" value={this.state.values.firstName || ''} onChange={(e) => this.checkInputValidity(e, 2, 15)}/>
+    axios
+      .post('users', values)
+      .then(() => {
+        this.setState({ loading: false });
+        this.setState({ registered: true });
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
+        this.setState({ serverError: err.response.data.error });
+      });
+  };
 
-				<Input error={this.state.errors.lastName} inputtype="input" label="Last name" type="text" name="lastName" placeholder="Last name" value={this.state.values.lastName || ''} onChange={(e) => this.checkInputValidity(e, 2, 15)}/>
-				
-				<Input error={this.state.errors.email} inputtype="input" label="Email" type="email" name="email" placeholder="Email" value={this.state.values.email || ''} onChange={(e) => this.checkInputValidity(e, null, 40)}/>
+  render() {
+    const { values, errors, serverError, formIsValid, loading, registered } = this.state;
 
-				<Input error={this.state.errors.password} inputtype="password" label="Password" type="password" name="password" placeholder="Password" value={this.state.values.password || ''} onChange={(e) => this.checkInputValidity(e, 6, 50)}/>
+    let form = (
+      <form className="box" onSubmit={this.submitRegister}>
+        <Input
+          error={errors.login}
+          inputtype="input"
+          label="Login"
+          type="text"
+          name="login"
+          placeholder="Login"
+          value={values.login || ''}
+          onChange={e => this.checkInputValidity(e, 3, 15)}
+        />
 
-				{this.state.serverError
-					&& <center><p style={{color: 'red'}}>{this.state.serverError}</p></center>}
+        <Input
+          error={errors.firstName}
+          inputtype="input"
+          label="First name"
+          type="text"
+          name="firstName"
+          placeholder="First name"
+          value={values.firstName || ''}
+          onChange={e => this.checkInputValidity(e, 2, 15)}
+        />
 
-				<Button disabled={!this.state.formIsValid}> Register </Button>
-			</form>
-		)
+        <Input
+          error={errors.lastName}
+          inputtype="input"
+          label="Last name"
+          type="text"
+          name="lastName"
+          placeholder="Last name"
+          value={values.lastName || ''}
+          onChange={e => this.checkInputValidity(e, 2, 15)}
+        />
 
-		if (this.state.loading) {
-			form = <Spinner />
-		}
+        <Input
+          error={errors.email}
+          inputtype="input"
+          label="Email"
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={values.email || ''}
+          onChange={e => this.checkInputValidity(e, null, 40)}
+        />
 
-		if (this.state.registered) {
-			form = (
-				<div>
-					<br />
-					<center>
-						<p>Congratulations, you are registered.</p>
-						<p>Please check your mail to activate your account.</p>
-					</center>
-				</div>
-			)
-		}
+        <Input
+          error={errors.password}
+          inputtype="password"
+          label="Password"
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={values.password || ''}
+          onChange={e => this.checkInputValidity(e, 6, 50)}
+        />
 
-		return (
-			<div className="inner-container">
-				<div className="header"> Register </div>
-				{form}
-			</div>
-		)
-	}
+        {serverError && (
+          <center>
+            <p style={{ color: 'red' }}>{serverError}</p>
+          </center>
+        )}
+
+        <Button disabled={!formIsValid}> Register </Button>
+      </form>
+    );
+
+    if (loading) {
+      form = <Spinner />;
+    }
+
+    if (registered) {
+      form = (
+        <div>
+          <br />
+          <center>
+            <p>Congratulations, you are registered.</p>
+            <p>Please check your mail to activate your account.</p>
+          </center>
+        </div>
+      );
+    }
+
+    return (
+      <div className="inner-container">
+        <div className="header"> Register </div>
+        {form}
+      </div>
+    );
+  }
 }
 
-export default Register
+export default Register;
