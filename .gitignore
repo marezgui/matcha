@@ -65,5 +65,6 @@ typings/
 
 # Other
 TODO
+.vscode/
 .DS_Store
 ._.DS_Store

@@ -1,25 +1,25 @@
-import React from 'react'
+import React from 'react';
 import NavLinks from '../NavLinks/NavLinks';
 import NavIcons from '../NavIcons/NavIcons';
-import './SideDrawer.css'
-import Backdrop from '../../UI/Backdrop/Backdrop'
+import Backdrop from '../../UI/Backdrop/Backdrop';
+import './SideDrawer.css';
 
-const sideDrawer = (props) => {
-    let attachedClasses = ['SideDrawer', 'Close']
+const sideDrawer = ({ open, closed }) => {
+  let attachedClasses = ['SideDrawer', 'Close'];
 
-    if (props.open) {
-        attachedClasses = ['SideDrawer', 'Open']
-    }
+  if (open) {
+    attachedClasses = ['SideDrawer', 'Open'];
+  }
 
-    return (
-        <>
-            <Backdrop show={props.open} clicked={props.closed}/>
-            <div className={attachedClasses.join(' ')}>
-                <NavLinks />
-                <NavIcons />
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      <Backdrop show={open} clicked={closed} />
+      <div className={attachedClasses.join(' ')}>
+        <NavLinks />
+        <NavIcons />
+      </div>
+    </>
+  );
+};
 
-export default sideDrawer
+export default sideDrawer;

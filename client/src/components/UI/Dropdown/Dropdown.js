@@ -1,10 +1,6 @@
-import React from 'react'
-import './Dropdown.scss'
+import React from 'react';
+import './Dropdown.scss';
 
-const dropdown = (props) => (
-  <div className="Dropdown">
-    {props.children}
-  </div>
-)
+const dropdown = ({ children }) => <div className="Dropdown">{children}</div>;
 
-export default dropdown
+export default dropdown;

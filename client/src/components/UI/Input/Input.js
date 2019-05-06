@@ -1,36 +1,46 @@
-import React, {Component}from 'react'
-import './Input.scss'
-import PasswordState from './PasswordState/PasswordState'
+import React, { Component } from 'react';
+import PasswordState from './PasswordState/PasswordState';
+import './Input.scss';
 
 class Input extends Component {
-    render() {
-        let inputElement = null
-        let error = null
-    
-        switch ( this.props.inputtype ) {
-            case ('input'):
-                inputElement = <input className="InputElement" {...this.props}/>
-                break
-            case ('textarea'):
-                inputElement = <textarea className="InputElement" {...this.props}/>
-                break
-            default:
-                inputElement = <input className="InputElement" {...this.props}/>
-        }
-        
-        if (this.props.error) {
-            error = <small className="danger-error"> {this.props.error} </small>
-        }
+  state = {
 
-        return (
-            <div className="Input" >
-                <label className="Label"> {this.props.label} </label>
-                {inputElement}
-                {error}
-                {(this.props.inputtype === "password" && !error) ? <PasswordState /> : null}
-            </div>
-        )
+  }
+
+  render() {
+    const { inputtype, error, label } = this.props;
+    let inputElement = null;
+    let errorMessage = null;
+
+    switch (inputtype) {
+      case 'input':
+        inputElement = <input className="InputElement" {...this.props} />;
+        break;
+      case 'textarea':
+        inputElement = <textarea className="InputElement" {...this.props} />;
+        break;
+      default:
+        inputElement = <input className="InputElement" {...this.props} />;
     }
+
+    if (error) {
+      errorMessage = <small className="danger-error">{error}</small>;
+    }
+
+    return (
+      <div className="Input">
+        <label className="Label">
+          {label}
+        </label>
+        {inputElement}
+        {errorMessage}
+
+        {inputtype === 'password' && !error ? (
+          <PasswordState />
+        ) : null}
+      </div>
+    );
+  }
 }
 
-export default Input
+export default Input;
