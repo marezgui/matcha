@@ -6,7 +6,7 @@ import './Toolbar.scss';
 
 const toolbar = (props) => (
     <header className="Toolbar">
-        <Menu className="Menu" onClick={props.openSideDrawer}/>
+        <Menu onClick={props.openSideDrawer}/>
         <Logo className="Logo"/>
 
         <nav className="DesktopOnly">
@@ -14,7 +14,7 @@ const toolbar = (props) => (
         </nav>
 
         <nav className="DesktopOnly">
-            <NavIcons />
+            <NavIcons isSideDrawerOpen={props.isSideDrawerOpen} />
         </nav>
     </header>
 )

@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import Badge from '@material-ui/core/Badge';
 import logo from '../../../assets/images/matcha.png'
-
-const style = {'fontSize': '2em', 'color': 'rgb(202, 8, 19)'};
+import './Icons.css'
 
 export const Logo = (props) => (
     <div {...props}>
@@ -13,25 +13,29 @@ export const Logo = (props) => (
 )
 
 export const Menu = (props) => (
-    <span style={style} {...props}>
+    <span className="Menu Icons" {...props}>
         <i className="fas fa-bars"></i>
     </span>
 )
 
 export const Chat = (props) => (
-    <span style={style} {...props}>
-        <i className="fas fa-envelope"></i>
+    <span className="Icons" >
+        <Badge badgeContent={props.badge} color="primary" > { /* variant="dot" */ }
+            <i className="far fa-envelope"></i>
+        </Badge>
     </span>
 )
 
 export const Alert = (props) => (
-    <span style={style} {...props}>
-        <i className="fas fa-bell"></i>
+    <span className="Icons" >
+        <Badge badgeContent={props.badge} color="primary">
+            <i className="far fa-bell"></i>
+        </Badge>
     </span>
 )
 
 export const Account = (props) => (
-    <span style={style} {...props}>
+    <span className="Icons" >
         <i className="far fa-user-circle"></i>
     </span>
 )
