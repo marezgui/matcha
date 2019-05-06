@@ -6,7 +6,7 @@
     margin-top: 20px;
     border: 2px grey solid;
     border-radius: 20px;
-    background-color: lightgrey;
+    background-color: white;
 
 }
 
@@ -42,4 +42,8 @@
 textarea {
     overflow: auto;
     resize: none;
+}
+
+.Content {
+    background-color: lightgray
 }
