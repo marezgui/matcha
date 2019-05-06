@@ -1,15 +1,25 @@
 .bloc {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    
     margin:auto;
     margin-top: 20px;
     border: 2px grey solid;
+    border-radius: 20px;
+    background-color: lightgrey;
 
 }
 
 .box-title {
-    background-color: lightgrey;
+    background-color: rgb(202, 8, 19);
+    border-top-left-radius: 19px;
+    border-top-right-radius: 19px;
+}
+
+.box-title h3{
+    margin-left: 10px;
+    color: white;
+
 }
 
 .box-content {
@@ -21,4 +31,15 @@
 .btn-radio {
     border: 1px solid grey;
     border-radius: 6px;
+}
+
+.label-form {
+    font-family: Oxygen, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+textarea {
+    overflow: auto;
+    resize: none;
 }
