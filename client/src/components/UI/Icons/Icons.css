@@ -1,0 +1,12 @@
+.Icons {
+    font-size: 2em;
+    color: rgb(202, 8, 19);
+}
+
+.Icons > span > span {
+    background-color: #40a4c8;
+}
+
+.Menu {
+    cursor: grab;
+}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Layout from '../../hoc/Layout/Layout';
+import Layout from '../../components/Layout/Layout';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import { Col, Row, Container, FormGroup, Label, CustomInput } from 'reactstrap';

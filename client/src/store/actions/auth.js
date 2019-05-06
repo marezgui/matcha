@@ -7,11 +7,11 @@ export const authStart = () => {
     };
 };
 
-export const authSuccess = (token, userId) => {
+export const authSuccess = (token, user) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         token,
-        userId
+        user
     }
 }
 
@@ -34,10 +34,18 @@ export const auth = (email, password) => {
         dispatch(authStart());
 
         axios.post('users/login', {email, password})
-        .then((response) => {
-            localStorage.setItem('token', response.data.token);
-            dispatch(authSuccess(response.data.token, 13)); //Change userId
-            console.log("Connected", response.data)
+        .then(async (res) => {
+            let token = res.data.token;
+            let user = await getUser(token);
+
+            console.log(user)
+
+            if (user) {
+                localStorage.setItem('token', token);
+                dispatch(authSuccess(token, user));
+            } else {
+                dispatch(authFail({message: "Can't get user informations, please try later."}))
+            }
         })
         .catch((err) => {
             dispatch(authFail(err.response.data)); // data.error{}
@@ -46,15 +54,34 @@ export const auth = (email, password) => {
 }
 
 
+const getUser = async (token) => {
+    let user = false;
+
+    await axios.get('users/me', { headers: { 'Authorization': `bearer ${token}` }})
+    .then((res) => {
+        user = res.data;
+    })
+    .catch((err) => {
+        user = false;
+    })
+
+    return user;
+}
+
 export const authCheckState = () => {
-    return (dispatch) => {
+    return async (dispatch) => {
         const token = localStorage.getItem('token');
 
         if (!token) {
             dispatch(logout());
         } else {
-            const userId = localStorage.getItem('userId');
-            dispatch(authSuccess(token, userId));
+            const user = await getUser(token);
+            
+            if (!user) {
+                dispatch(logout());
+            } else {
+                dispatch(authSuccess(token, user));
+            }
         }
     }
 }

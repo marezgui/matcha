@@ -10,12 +10,16 @@
 
 .NavIcons li a {
     box-sizing: border-box;
+    text-decoration: none;
 }
 
 @media (min-width: 680px) {
     .NavIcons {
         flex-flow: row;
         height: 100%;
+    }
+
+    .NavIcons > li {
         position: relative;
     }
 
