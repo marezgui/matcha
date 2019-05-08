@@ -34,24 +34,4 @@ usersRoute.route('/me')
   .get(checklog, usersCtrl.getme) // get user informations of token user
   .delete(checklog, usersCtrl.deluser); // delete user
 
-// Edit Use
-usersRoute.route('/edit/mail')
-  .put(checklog, usersCtrl.edituserMail);
-usersRoute.route('/edit/username')
-  .put(checklog, usersCtrl.edituserUsername);
-usersRoute.route('/edit/password')
-  .put(checklog, usersCtrl.edituserPassword);
-usersRoute.route('/edit/firstName')
-  .put(checklog, usersCtrl.edituserFirstName);
-usersRoute.route('/edit/lastName')
-  .put(checklog, usersCtrl.edituserLastName);
-usersRoute.route('/edit/bio')
-  .put(checklog, usersCtrl.edituserBio);
-usersRoute.route('/edit/genre')
-  .put(checklog, usersCtrl.edituserGenre);
-usersRoute.route('/edit/orientation')
-  .put(checklog, usersCtrl.edituserOrientation);
-usersRoute.route('/edit/dateOfBirth')
-  .put(checklog, usersCtrl.edituserDateOfBirth);
-
 export default usersRoute;

@@ -2,6 +2,7 @@ import express from 'express';
 
 // Pour les users
 import usersRoute from './routes/usersroutes';
+import editUsersRoute from './routes/editusersroutes';
 
 const routerApp = express.Router();
 
@@ -13,6 +14,7 @@ routerApp.route('/') // la racine
   });
 
 routerApp.use('/api/users/', usersRoute);
+routerApp.use('/api/edit/', editUsersRoute);
 
 // Pour les likes (EXEMPLE)
 // import likesRoute from './routes/likesroutes'
