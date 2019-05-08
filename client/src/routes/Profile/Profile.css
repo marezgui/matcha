@@ -39,11 +39,7 @@
     font-weight: 600;
 }
 
-textarea {
+.input-text {
     overflow: auto;
     resize: none;
-}
-
-.Content {
-    background-color: lightgray
 }
