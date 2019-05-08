@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
+import {
+  createStore, applyMiddleware, combineReducers, compose,
+} from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import authReducer from './store/reducers/auth';
@@ -18,7 +20,7 @@ const rootReducer = combineReducers({
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk)),
 );
 
 ReactDOM.render(
@@ -27,5 +29,5 @@ ReactDOM.render(
       <App />
     </BrowserRouter>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
