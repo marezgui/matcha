@@ -1,15 +1,12 @@
-import express from 'express';
 import bcrypt from 'bcrypt';
 import util from 'util';
 import jwt from 'jsonwebtoken';
 // Passport pour le login/logout -> req.user
-import passport from 'passport';
 import * as mod from '../models/usersmod';
-import * as jwtUtils from '../utils/jwt.utils';
 import * as op from '../utils/passport.utils';
 
 // Constants
-const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 
 // FONCTIONS
@@ -17,11 +14,11 @@ const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 export const adduser = async (req, res) => {
   const { email, login, password, firstName, lastName,
     bio, genre, dateOfBirth, orientation } = req.body;
-  //	var location  = req.body.location;
-  //	var photo = req.body.photo;
+  // var location  = req.body.location;
+  // var photo = req.body.photo;
 
   if (!(email || login || password || firstName || lastName
-		|| bio || genre || dateOfBirth || orientation)) { return res.status(400).json({ error: 'Missing parameters.' }); }
+  || bio || genre || dateOfBirth || orientation)) { return res.status(400).json({ error: 'Missing parameters.' }); }
 
   if (login.length >= 15 || login.length <= 3) { return res.status(400).json({ error: 'Invalid login. (must be length 3 - 15)' }); }
 
@@ -72,7 +69,7 @@ export const getme = (req, res) => res.status(200).send(req.user);
 
 export const login = async (req, res) => {
   if (req.body.email && req.body.password) {
-		  var email = req.body.email;
+    var email = req.body.email;
   } else { return res.status(401).json({ message: 'Empty form' }); }
 
   // usually this would be a database call:
@@ -90,16 +87,16 @@ export const login = async (req, res) => {
     return res.status(403).json({ message: `Your account is not activated yet. ${user.mail}` });
   }
   if (passwdcmp === true) {
-		  // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-		  const payload = { id: user.id };
-		  const token = jwt.sign(payload, op.opts.secretOrKey);
-		  res.json({ message: 'ok', token });
+    // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
+    const payload = { id: user.id };
+    const token = jwt.sign(payload, op.opts.secretOrKey);
+    res.json({ message: 'ok', token });
   } else {
-		  res.status(401).json({ message: 'passwords did not match.' });
+    res.status(401).json({ message: 'passwords did not match.' });
   }
 };
 
-//	Utile que si on utlise les cookies
+// Utile que si on utlise les cookies
 export const logout = (req, res) => {
   req.logout();
   res.redirect('/');

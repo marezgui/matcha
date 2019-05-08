@@ -1,15 +1,16 @@
-import { Pool } from 'pg'
-import dotenv from 'dotenv'
-dotenv.load()
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.load();
 
 const CONNECTION_STRING = process.env.DATABASE_URL;
 const SSL = process.env.NODE_ENV === 'production';
 
 class Database {
-  constructor () {
+  constructor() {
     this._pool = new Pool({
       connectionString: CONNECTION_STRING,
-      ssl: SSL
+      ssl: SSL,
     });
 
     this._pool.on('error', (err, client) => {
@@ -18,7 +19,7 @@ class Database {
     });
   }
 
-   query (query, ...args) {
+  query(query, ...args) {
     this._pool.connect((err, client, done) => {
       if (err) throw err;
       const params = args.length === 2 ? args[0] : [];
@@ -35,9 +36,9 @@ class Database {
     });
   }
 
-  end () {
+  end() {
     this._pool.end();
   }
 }
 
-export let db = new Database();
+export const db = new Database();

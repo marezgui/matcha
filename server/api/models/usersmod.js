@@ -40,23 +40,23 @@ export const verifuserpseudo = (request, callback) => {
   });
 };
 
-export	const adduser = (request, response) => {
+export const adduser = (request, response) => {
   const { email, login, password, firstName, lastName,
     bio, genre, dateOfBirth, orientation } = request.body;
   const confirmkey = uniqid('confirmmail-');
 
-  db.query('INSERT INTO users (mail, login, password, firstName, lastName,\
-										bio, genre, dateOfBirth, orientation, confirmkey) \
-										VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-					 [email, login, password, firstName, lastName,
-    bio, genre, dateOfBirth, orientation, confirmkey], (err, res) => {
-    if (err.error) {
-      console.log(err);
-    }
-    response.status(200).json({ message: 'User add to database',
-      confirmkey });
+  db.query(
+    'INSERT INTO users (mail, login, password, firstName, lastName, bio, genre, dateOfBirth, orientation, confirmkey) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+    [email, login, password, firstName, lastName,
+      bio, genre, dateOfBirth, orientation, confirmkey], (err, res) => {
+      if (err.error) {
+        console.log(err);
+      }
+      response.status(200).json({ message: 'User add to database',
+        confirmkey });
 
-  });
+    }
+  );
 };
 
 
@@ -121,14 +121,14 @@ export const getuserbyid = (id, callback) => {
   });
 };
 
-export	const edituser = (request, callback) => {
+export const edituser = (request, callback) => {
   const { email, login, password, firstName, lastName,
     bio, genre, dateOfBirth, orientation } = request.body;
   const id = parseInt(request.params.id);
 
   db.query('UPDATE users SET (mail, login, password, firstName, lastName,\
-			bio, genre, dateOfBirth, orientation, confirmkey) \
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+   bio, genre, dateOfBirth, orientation, confirmkey) \
+   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
   [email, login, password, firstName, lastName,
     bio, genre, dateOfBirth, orientation, confirmkey],
 
@@ -140,7 +140,7 @@ export	const edituser = (request, callback) => {
   });
 };
 
-export	const deluser = (id, callback) => {
+export const deluser = (id, callback) => {
   db.query('DELETE FROM users WHERE id = $1', [id], (err, res) => {
     if (err.error) {
       callback(err, null);
