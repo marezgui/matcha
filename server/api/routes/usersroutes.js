@@ -3,7 +3,6 @@ import express from 'express';
 
 // Passport pour le login/logout -> req.user ref: MAN
 import passport from 'passport';
-import * as op from '../utils/passport.utils';
 
 // Les fonctions que l'ont va utiliser pour les routes user
 import * as usersCtrl from '../controllers/usersctrl';
