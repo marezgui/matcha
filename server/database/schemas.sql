@@ -1,5 +1,5 @@
 /* Create database named 'matcha' AND execute the following code */
-
+/* We use camelCase */
 -- -----------------------------------------------------
 -- Schema matcha
 -- -----------------------------------------------------
@@ -21,7 +21,7 @@ CREATE TYPE ORIENTATION AS ENUM ('M', 'W', 'BI');
 DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE IF NOT EXISTS users (
-  iduser SERIAL PRIMARY KEY,
+  idUser SERIAL PRIMARY KEY,
   mail VARCHAR(255) NULL,
   password VARCHAR(255) NULL,
   username VARCHAR(255) NULL,
@@ -49,11 +49,11 @@ CREATE TABLE IF NOT EXISTS users (
 DROP TABLE IF EXISTS chat CASCADE;
 
 CREATE TABLE IF NOT EXISTS chat (
-  idchat SERIAL PRIMARY KEY,
+  idChat SERIAL PRIMARY KEY,
   userId1 INT NOT NULL,
   userId2 INT NOT NULL,
-  FOREIGN KEY (userId1) REFERENCES users (iduser),
-  FOREIGN KEY (userId2) REFERENCES users (iduser));
+  FOREIGN KEY (userId1) REFERENCES users (idUser),
+  FOREIGN KEY (userId2) REFERENCES users (idUser));
 
 
 -- -----------------------------------------------------
@@ -62,12 +62,12 @@ CREATE TABLE IF NOT EXISTS chat (
 DROP TABLE IF EXISTS matche CASCADE;
 
 CREATE TABLE IF NOT EXISTS matche (
-  idmatche  SERIAL PRIMARY KEY,
+  idMatche  SERIAL PRIMARY KEY,
   userId1 INT NOT NULL,
   userId2 INT NOT NULL,
   matcheDate TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (userId1) REFERENCES users (iduser),
-  FOREIGN KEY (userId2) REFERENCES users (iduser));
+  FOREIGN KEY (userId1) REFERENCES users (idUser),
+  FOREIGN KEY (userId2) REFERENCES users (idUser));
 
 -- -----------------------------------------------------
 -- Table likes
@@ -75,12 +75,12 @@ CREATE TABLE IF NOT EXISTS matche (
 DROP TABLE IF EXISTS likes CASCADE;
 
 CREATE TABLE IF NOT EXISTS likes (
-  idlike  SERIAL PRIMARY KEY,
+  idLike  SERIAL PRIMARY KEY,
   userId INT NOT NULL,
   likedUserId INT NOT NULL,
   matcheDate TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (userId) REFERENCES users (iduser),
-  FOREIGN KEY (likedUserId) REFERENCES users (iduser));
+  FOREIGN KEY (userId) REFERENCES users (idUser),
+  FOREIGN KEY (likedUserId) REFERENCES users (idUser));
 
 -- -----------------------------------------------------
 -- Table vues
@@ -88,11 +88,11 @@ CREATE TABLE IF NOT EXISTS likes (
 DROP TABLE IF EXISTS vues CASCADE;
 
 CREATE TABLE IF NOT EXISTS vues (
-  idvues SERIAL PRIMARY KEY,
+  idVues SERIAL PRIMARY KEY,
   userId INT NOT NULL,
   vueUserId INT NOT NULL,
-  FOREIGN KEY (userId) REFERENCES users (iduser),
-  FOREIGN KEY (vueUserId) REFERENCES users (iduser));
+  FOREIGN KEY (userId) REFERENCES users (idUser),
+  FOREIGN KEY (vueUserId) REFERENCES users (idUser));
 
 
 -- -----------------------------------------------------
@@ -101,11 +101,11 @@ CREATE TABLE IF NOT EXISTS vues (
 DROP TABLE IF EXISTS notification CASCADE;
 
 CREATE TABLE IF NOT EXISTS notification (
-  idnotification SERIAL PRIMARY KEY,
+  idNotification SERIAL PRIMARY KEY,
   userId INT NOT NULL,
   vue INT NULL,
   message VARCHAR(255) NULL,
-  FOREIGN KEY (userId) REFERENCES users (iduser));
+  FOREIGN KEY (userId) REFERENCES users (idUser));
 
 
 -- -----------------------------------------------------
@@ -114,10 +114,10 @@ CREATE TABLE IF NOT EXISTS notification (
 DROP TABLE IF EXISTS tag CASCADE;
 
 CREATE TABLE IF NOT EXISTS tag (
-  idtag SERIAL PRIMARY KEY,
+  idTag SERIAL PRIMARY KEY,
   userId INT NOT NULL,
   tag VARCHAR(255) NULL,
-  FOREIGN KEY (userId) REFERENCES users (iduser));
+  FOREIGN KEY (userId) REFERENCES users (idUser));
 
 
 -- -----------------------------------------------------
@@ -126,11 +126,11 @@ CREATE TABLE IF NOT EXISTS tag (
 DROP TABLE IF EXISTS blocked CASCADE;
 
 CREATE TABLE IF NOT EXISTS blocked (
-  idblocked SERIAL PRIMARY KEY,
+  idBlocked SERIAL PRIMARY KEY,
   userId INT NOT NULL,
   blockedUserId INT NOT NULL,
-  FOREIGN KEY (userId) REFERENCES users (iduser),
-  FOREIGN KEY (blockedUserId) REFERENCES users (iduser));
+  FOREIGN KEY (userId) REFERENCES users (idUser),
+  FOREIGN KEY (blockedUserId) REFERENCES users (idUser));
 
 -- Add users de test :
 INSERT INTO users

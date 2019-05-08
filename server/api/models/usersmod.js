@@ -126,18 +126,16 @@ export const edituser = (request, callback) => {
     bio, genre, dateOfBirth, orientation } = request.body;
   const id = parseInt(request.params.id);
 
-  db.query('UPDATE users SET (mail, login, password, firstName, lastName,\
-   bio, genre, dateOfBirth, orientation, confirmkey) \
-   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-  [email, login, password, firstName, lastName,
-    bio, genre, dateOfBirth, orientation, confirmkey],
+  db.query('UPDATE users SET (mail, login, password, firstName, lastName, bio, genre, dateOfBirth, orientation, confirmkey) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+    [email, login, password, firstName, lastName,
+      bio, genre, dateOfBirth, orientation, confirmkey],
 
-  (err, res) => {
-    if (err.error) {
-      callback(err, null);
-    }
-    callback(null, 'User modified');
-  });
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, 'User modified');
+    });
 };
 
 export const deluser = (id, callback) => {
