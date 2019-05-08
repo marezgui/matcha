@@ -62,14 +62,25 @@ CREATE TABLE IF NOT EXISTS chat (
 DROP TABLE IF EXISTS matche CASCADE;
 
 CREATE TABLE IF NOT EXISTS matche (
-  idmatche INT NOT NULL,
+  idmatche  SERIAL PRIMARY KEY,
   userId1 INT NOT NULL,
   userId2 INT NOT NULL,
-  matchDate TIMESTAMP DEFAULT NOW(),
+  matcheDate TIMESTAMP DEFAULT NOW(),
   FOREIGN KEY (userId1) REFERENCES users (iduser),
-  FOREIGN KEY (userId2) REFERENCES users (iduser),
-  PRIMARY KEY (idmatche));
+  FOREIGN KEY (userId2) REFERENCES users (iduser));
 
+-- -----------------------------------------------------
+-- Table likes
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS likes CASCADE;
+
+CREATE TABLE IF NOT EXISTS likes (
+  idlikes  SERIAL PRIMARY KEY,
+  userId INT NOT NULL,
+  likesdUserId INT NOT NULL,
+  matcheDate TIMESTAMP DEFAULT NOW(),
+  FOREIGN KEY (userId) REFERENCES users (iduser),
+  FOREIGN KEY (likesdUserId) REFERENCES users (iduser));
 
 -- -----------------------------------------------------
 -- Table vues
