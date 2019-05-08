@@ -131,9 +131,3 @@ CREATE TABLE IF NOT EXISTS blocked (
   blockedUserId INT NOT NULL,
   FOREIGN KEY (userId) REFERENCES users (idUser),
   FOREIGN KEY (blockedUserId) REFERENCES users (idUser));
-
--- Add users de test :
-INSERT INTO users
-	(firstname, lastname, mail, username, password, confirmKey)
-VALUES
-	'Doe', 'John', 'john.doe@gmail.com', 'jdoe', '$2y$10$YImWH8WPvzktL4WahZbxAOjxbHRWHyquWibbMQggw2wP7rwXSvz/u', '17832556475152554');
