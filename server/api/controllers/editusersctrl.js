@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import util from 'util';
 // Passport pour le username/logout -> req.user
 import * as mod from '../models/editusermod';
+import * as usersmod from '../models/usersmod';
 
 // Constants
 const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -218,5 +219,64 @@ export const edituserDateOfBirth = async (req, res) => {
       return;
     }
     res.status(200).json({ message: `User Edit dateOfBirth ${success}` });
+  });
+};
+
+export const removetag = (req, res) => {
+  const { tag } = req.body;
+  if (!tag) {
+    res.status(400).json({ error: 'Missing parameters.' });
+    return;
+  }
+
+  if (!VERIF_LN_REGEX.test(tag)) {
+    res.status(400).json({ error: 'Invalid tag, only lettes and numbers' });
+    return;
+  }
+  mod.removetag(req, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ message: `Tag removed ${success}` });
+  });
+};
+
+export const addtag = async (req, res) => {
+  const { tag } = req.body;
+  const { iduser } = req.user;
+
+  if (!tag) {
+    res.status(400).json({ error: 'Missing parameters.' });
+    return;
+  }
+
+  if (!VERIF_LN_REGEX.test(tag)) {
+    res.status(400).json({ error: 'Invalid tag, only lettes and numbers' });
+    return;
+  }
+  const gettaglist = util.promisify(usersmod.getusertag);
+  const taglist = await gettaglist(iduser).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+
+  // si tag est dega dans taglist on return
+  for (let i = 0; i < taglist.length; i += 1) {
+    if (tag === taglist[i].tag) {
+      res.status(400).json({ error: 'Tag exist' });
+      return;
+    }
+  }
+
+  // on verifi son nombre de tag max 5
+  if (taglist.length > 4) {
+    res.status(400).json({ error: 'You have already 5 tag' });
+    return;
+  }
+
+  mod.addtag(req, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ message: `Tag added ${success}` });
   });
 };

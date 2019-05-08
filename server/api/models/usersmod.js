@@ -90,3 +90,21 @@ export const deluser = (iduser, callback) => {
     callback(null, res);
   });
 };
+
+export const getusertag = (iduser, callback) => {
+  db.query('SELECT tag FROM tag WHERE userid = $1', [iduser], (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    callback(null, res);
+  });
+};
+
+export const getalltag = (callback) => {
+  db.query('SELECT DISTINCT tag FROM tag', (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    callback(null, res);
+  });
+};

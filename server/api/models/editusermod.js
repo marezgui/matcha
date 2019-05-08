@@ -143,3 +143,36 @@ export const edituserDateOfBirth = (request, callback) => {
       });
   }
 };
+
+
+export const addtag = (request, callback) => {
+  const { tag } = request.body;
+  const { iduser } = request.user;
+
+  if (tag) {
+    db.query('INSERT INTO tag (tag, userid) VALUES ($1, $2)',
+      [tag, iduser],
+      (err, res) => {
+        if (err.error) {
+          callback(err, null);
+        }
+        callback(null, res);
+      });
+  }
+};
+
+export const removetag = (request, callback) => {
+  const { tag } = request.body;
+  const { iduser } = request.user;
+
+  if (tag) {
+    db.query('DELETE FROM tag WHERE tag = $1 AND userid = $2',
+      [tag, iduser],
+      (err, res) => {
+        if (err.error) {
+          callback(err, null);
+        }
+        callback(null, res);
+      });
+  }
+};

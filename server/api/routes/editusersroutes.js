@@ -36,4 +36,8 @@ editUsersRoute.route('/orientation')
 editUsersRoute.route('/dateOfBirth')
   .put(checklog, usersCtrl.edituserDateOfBirth);
 
+editUsersRoute.route('/tag')
+  .post(checklog, usersCtrl.addtag)
+  .delete(checklog, usersCtrl.removetag);
+
 export default editUsersRoute;

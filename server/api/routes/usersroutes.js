@@ -34,4 +34,11 @@ usersRoute.route('/me')
   .get(checklog, usersCtrl.getme) // get user informations of token user
   .delete(checklog, usersCtrl.deluser); // delete user
 
+usersRoute.route('/alltag')
+  .get(usersCtrl.getalltag); // affiche tous les tags du site sans doublons pas besoin d'etre log
+
+usersRoute.route('/usertag')
+  .get(checklog, usersCtrl.getusertag); // affiche tous les tags de l'user connecter
+
+
 export default usersRoute;
