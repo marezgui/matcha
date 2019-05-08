@@ -1,6 +1,8 @@
 import {
-  Col, Row, Container, FormGroup, Label, CustomInput, InputGroup, InputGroupAddon, Input as InputStrap,
+  Col, Row, Container, FormGroup, Label, CustomInput, InputGroup,
+  InputGroupAddon, Input as InputStrap,
 } from 'reactstrap';
+
 import React, { Component } from 'react';
 import Layout from '../../components/Layout/Layout';
 import Input from '../../components/UI/Input/Input';
@@ -60,7 +62,7 @@ class Profile extends Component {
         <form className="box-content" onSubmit={this.editProfil}>
           <Container>
             <Row>
-              <Col><Input inputtype="textarea" rows="20" label="Biographie" type="text" name="bio" placeholder="Decrivez-vous en quelques mots" /></Col>
+              <Col><Input inputtype="textarea" rows="5" maxlength="500" name="bio" label="Biographie" placeholder="Decrivez-vous en quelques mots" className="input-text" /></Col>
             </Row>
             <Row>
               <Col>
