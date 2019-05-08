@@ -75,12 +75,12 @@ CREATE TABLE IF NOT EXISTS matche (
 DROP TABLE IF EXISTS likes CASCADE;
 
 CREATE TABLE IF NOT EXISTS likes (
-  idlikes  SERIAL PRIMARY KEY,
+  idlike  SERIAL PRIMARY KEY,
   userId INT NOT NULL,
-  likesdUserId INT NOT NULL,
+  likedUserId INT NOT NULL,
   matcheDate TIMESTAMP DEFAULT NOW(),
   FOREIGN KEY (userId) REFERENCES users (iduser),
-  FOREIGN KEY (likesdUserId) REFERENCES users (iduser));
+  FOREIGN KEY (likedUserId) REFERENCES users (iduser));
 
 -- -----------------------------------------------------
 -- Table vues
