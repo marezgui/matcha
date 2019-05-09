@@ -1,4 +1,15 @@
-.textplain {
+textarea {
     resize: none;
     overflow: auto;
+}
+
+
+
+.bloc {
+    width: 80%;
+    padding: 20px;
+    margin-top: 20px;
+    margin:auto;
+    box-shadow: 0px 7px 5px 7px lightgrey;
+    border-radius: 7px;
 }
