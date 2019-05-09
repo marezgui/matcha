@@ -4,16 +4,8 @@
 -- Schema matcha
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS matcha ;
-
--- -----------------------------------------------------
--- Schema matcha
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS matcha ;--DEFAULT CHARACTER SET utf8 ;
 --USE matcha ;
-
--- -----------------------------------------------------
--- Table "users"
--- -----------------------------------------------------
 
 CREATE TYPE GENRE AS ENUM ('M', 'W', 'O');
 CREATE TYPE ORIENTATION AS ENUM ('M', 'W', 'BI');
@@ -28,6 +20,28 @@ DROP TABLE IF EXISTS "notification" CASCADE;
 DROP TABLE IF EXISTS "tag" CASCADE;
 
 SET timezone='europe/paris';
+
+/*  Formatage des json :
+    let image = {
+      master: 'image2',
+      image1: piclarge,
+      image2: picmedium,
+      image3: picthumbnail,
+      image4: '',
+      image5: '',
+    };
+    image = JSON.stringify(image); // on a donc notre json base64 pour les images
+
+    let location = {
+      street: tmp.location.street,
+      city: tmp.location.city,
+      state: tmp.location.state,
+      postcode: tmp.location.postcode,
+      latitude: tmp.location.coordinates.latitude,
+      longitude: tmp.location.coordinates.longitude,
+    };
+    location = JSON.stringify(location); // on a donc notre location
+*/
 
 CREATE TABLE IF NOT EXISTS "users" (
   "idUser" SERIAL PRIMARY KEY,
