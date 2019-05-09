@@ -28,17 +28,3 @@ $box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
     margin: auto;
     //border: 1px solid black;
 }
-
-.Menu {
-    display: none;
-}
-
-@media (max-width: 679px) {
-    .Menu {
-        display: block;
-    }
-    
-    .DesktopOnly {
-        display: none;
-    }
-}

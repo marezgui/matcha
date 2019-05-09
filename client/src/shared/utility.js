@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/prefer-default-export
+
 const checkRegexMatch = (name, value) => {
   let regex = /^[A-Z]*(?:-[A-Z]+)*$/i; // FirstName, LastName
 
   if (name === 'login') {
     regex = /^[A-Z][A-Z0-9]*(?:[-_][A-Z0-9]+)*$/i;
-  } else if (name === 'email') {
+  } else if (name === 'mail') {
     regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
   } else if (name === 'password') {
     regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
@@ -11,7 +13,6 @@ const checkRegexMatch = (name, value) => {
   return regex.test(value);
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const checkInputValidity = (name, value, min, max) => {
   let error = null;
 
@@ -26,3 +27,8 @@ export const checkInputValidity = (name, value, min, max) => {
   }
   return error;
 };
+
+export const updateObject = (oldObject, newProperties) => ({
+  ...oldObject,
+  ...newProperties,
+});

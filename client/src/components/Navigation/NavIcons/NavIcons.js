@@ -1,16 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Chat, Alert, Account } from '../../UI/Icons/Icons';
 import Dropdown from '../../UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
-const navItems = ({ isSideDrawerOpen }) => (
+const navIcons = ({ sideDrawer, user }) => (
   <ul className="NavIcons">
     <li>
       <NavLink to="/">
         <Chat badge={1} />
+        {sideDrawer && 'Messages' }
       </NavLink>
-      {!isSideDrawerOpen && (
+      {!sideDrawer && (
         <Dropdown>
           <p>Messages</p>
         </Dropdown>
@@ -19,8 +21,9 @@ const navItems = ({ isSideDrawerOpen }) => (
     <li>
       <NavLink to="/">
         <Alert badge={1} />
+        {sideDrawer && 'Notifications' }
       </NavLink>
-      {!isSideDrawerOpen && (
+      {!sideDrawer && (
         <Dropdown>
           <p>Notifications</p>
           <p>Notifications</p>
@@ -29,9 +32,10 @@ const navItems = ({ isSideDrawerOpen }) => (
     </li>
     <li>
       <NavLink to="/profile">
-        <Account />
+        <Account data={user.firstName[0]} />
+        {sideDrawer && user.firstName }
       </NavLink>
-      {!isSideDrawerOpen && (
+      {!sideDrawer && (
         <Dropdown>
           <NavLink to="/profile"> My Account </NavLink>
           <NavLink to="/logout"> Logout </NavLink>
@@ -41,4 +45,6 @@ const navItems = ({ isSideDrawerOpen }) => (
   </ul>
 );
 
-export default navItems;
+const mapStateToProps = state => ({ user: state.auth.user });
+
+export default connect(mapStateToProps)(navIcons);

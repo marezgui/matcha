@@ -9,6 +9,11 @@
     color: rgb(202, 8, 19);
 }
 
+.Icons ul {
+    list-style: none;
+    display: flex;
+}
+
 .Icons > span > span {
     background-color: #40a4c8;
 }

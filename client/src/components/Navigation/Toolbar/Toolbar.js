@@ -1,22 +1,31 @@
 import React from 'react';
+import MediaQuery from 'react-responsive';
 import { Menu, Logo } from '../../UI/Icons/Icons';
 import NavLinks from '../NavLinks/NavLinks';
 import NavIcons from '../NavIcons/NavIcons';
 import './Toolbar.scss';
 
-const toolbar = ({ openSideDrawer, isSideDrawerOpen }) => (
-  <header className="Toolbar">
-    <Menu onClick={openSideDrawer} />
-    <Logo className="Logo" />
+const toolbar = ({ openSideDrawer, isSideDrawerOpen, desktop }) => {
 
-    <nav className="DesktopOnly">
-      <NavLinks />
-    </nav>
+  return (
+    <header className="Toolbar">
+      <MediaQuery maxWidth={679}>
+        <Menu onClick={openSideDrawer} />
+      </MediaQuery>
 
-    <nav className="DesktopOnly">
-      <NavIcons isSideDrawerOpen={isSideDrawerOpen} />
-    </nav>
-  </header>
-);
+      <Logo className="Logo" />
+
+      <MediaQuery minWidth={680}>
+        <nav>
+          <NavLinks />
+        </nav>
+
+        <nav>
+          <NavIcons />
+        </nav>
+      </MediaQuery>
+    </header>
+  );
+};
 
 export default toolbar;

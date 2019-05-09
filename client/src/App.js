@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from './store/actions';
-import Auth from './routes/Auth/Auth';
-import Profile from './routes/Profile/Profile';
-import People from './routes/People/People';
-import Logout from './routes/Auth/Logout/Logout';
+import * as actions from 'store/actions';
+import Layout from 'components/Layout/Layout';
+import Auth from 'routes/Auth/Auth';
+import Profile from 'routes/Profile/Profile';
+import People from 'routes/People/People';
+import Logout from 'routes/Auth/Logout/Logout';
 
 class App extends Component {
   componentDidMount() {
@@ -16,6 +17,17 @@ class App extends Component {
 
   render() {
     const { isAuthenticated } = this.props;
+    // eslint-disable-next-line no-shadow
+    const DefaultLayout = ({ component: Component, ...rest }) => (
+      <Route
+        {...rest}
+        render={matchProps => (
+          <Layout>
+            <Component {...matchProps} />
+          </Layout>
+        )}
+      />
+    );
 
     let routes = (
       <Switch>
@@ -28,7 +40,7 @@ class App extends Component {
     if (isAuthenticated) {
       routes = (
         <Switch>
-          <Route path="/people" component={People} />
+          <DefaultLayout path="/people" component={People} />
           <Route path="/profile" component={Profile} />
           <Route path="/logout" component={Logout} />
           <Redirect to="/people" />

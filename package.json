@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/m-rezgui/matcha#readme",
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^9.0.0",
     "concurrently": "^4.1.0",
     "eslint": "^5.12.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -36,9 +36,5 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
     "nodemon": "^1.18.10"
-  },
-  "dependencies": {
-    "react": "^16.8.6",
-    "redux": "^4.0.1"
   }
 }

@@ -1,4 +1,4 @@
-$blue_theme: #70a1ff;
+$blue_theme: #40a4c8;
 $box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
 
 .root-container {
@@ -7,6 +7,10 @@ $box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.logo-container {
+    margin-bottom: 30px;
 }
 
 .box-controller {
@@ -19,7 +23,7 @@ $box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
     height: 35px;
     -webkit-box-shadow: $box-shadow;
     box-shadow: $box-shadow;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     align-items: center;
     transition: visibility 0.5s ease-out;
 }
@@ -30,6 +34,8 @@ $box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
     height: 100%;
     line-height: 2;
     cursor: pointer;
+    color: black;
+    font-weight: 500;
 }
 
 .Active {

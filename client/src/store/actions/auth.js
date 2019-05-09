@@ -38,16 +38,14 @@ const getUser = async (token) => {
   return user;
 };
 
-export const auth = (email, password) => (dispatch) => {
+export const auth = (mail, password) => (dispatch) => {
   dispatch(authStart());
 
   axios
-    .post('users/login', { email, password })
+    .post('users/login', { mail, password })
     .then(async (res) => {
       const { token } = res.data;
       const user = await getUser(token);
-
-      console.log(user);
 
       if (user) {
         localStorage.setItem('token', token);
@@ -61,7 +59,7 @@ export const auth = (email, password) => (dispatch) => {
       }
     })
     .catch((err) => {
-      dispatch(authFail(err.response.data)); // data.error{}
+      dispatch(authFail(err.response.data.error));
     });
 };
 
@@ -71,12 +69,19 @@ export const authCheckState = () => async (dispatch) => {
   if (!token) {
     dispatch(logout());
   } else {
-    const user = await getUser(token);
+    getUser(token)
+      .then((user) => {
+        dispatch(authSuccess(token, user));
+      })
+      .catch(() => {
+        dispatch(logout());
+      });
+  }/*
+  const user = await getUser(token); // Loading...
 
-    if (!user) {
-      dispatch(logout());
-    } else {
-      dispatch(authSuccess(token, user));
-    }
-  }
+  if (!user) {
+    dispatch(logout());
+  } else {
+    dispatch(authSuccess(token, user));
+  } */
 };
