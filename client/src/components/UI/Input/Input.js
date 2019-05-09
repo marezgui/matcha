@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import PasswordState from './PasswordState/PasswordState';
 import './Input.scss';
 
 class Input extends Component {
   state = {
-
   }
 
   render() {
@@ -34,10 +32,6 @@ class Input extends Component {
         </label>
         {inputElement}
         {errorMessage}
-
-        {inputtype === 'password' && !error ? (
-          <PasswordState />
-        ) : null}
       </div>
     );
   }
