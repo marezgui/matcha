@@ -2,66 +2,27 @@ import uniqid from 'uniqid';
 import { db } from '../../database';
 
 export const getallusers = (callback) => {
-  db.query('SELECT * FROM users ORDER BY id ASC', (err, res) => {
+  db.query('SELECT * FROM "users" ORDER BY "idUser" ASC', (err, res) => {
     if (err.error) { callback(err.error, null); }
     callback(null, res);
   });
 };
 
-export const verifuser = (request, callback) => {
-  const { email } = request.body;
-  db.query('SELECT * FROM users WHERE mail = $1', [email], (err, res) => {
-    let data;
-    if (err.error) {
-      callback(err, null);
-    }
-    if (res[0] === undefined) {
-      data = 0;
-    } else {
-      data = 1;
-    }
-    callback(null, data);
-  });
-};
+export const adduser = (request, callback) => {
+  const { mail, username, password, firstName, lastName } = request.body;
+  const confirmkey = uniqid('confirmKey--');
 
-export const verifuserpseudo = (request, callback) => {
-  const { login } = request.body;
-  db.query('SELECT * FROM users WHERE login = $1', [login], (err, res) => {
-    let data;
-    if (err.error) {
-      callback(err, null);
-    }
-    if (res[0] === undefined) {
-      data = 0;
-    } else {
-      data = 1;
-    }
-    callback(null, data);
-  });
-};
-
-export const adduser = (request, response) => {
-  const { email, login, password, firstName, lastName,
-    bio, genre, dateOfBirth, orientation } = request.body;
-  const confirmkey = uniqid('confirmmail-');
-
-  db.query(
-    'INSERT INTO users (mail, login, password, firstName, lastName, bio, genre, dateOfBirth, orientation, confirmkey) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-    [email, login, password, firstName, lastName,
-      bio, genre, dateOfBirth, orientation, confirmkey], (err, res) => {
+  db.query('INSERT INTO "users" ("mail", "username", "password", "firstName", "lastName", "confirmKey") VALUES ($1, $2, $3, $4, $5, $6)',
+    [mail, username, password, firstName, lastName, confirmkey], (err) => {
       if (err.error) {
-        console.log(err);
+        callback(err, null);
       }
-      response.status(200).json({ message: 'User add to database',
-        confirmkey });
-
-    }
-  );
+      callback(null, confirmkey);
+    });
 };
 
-
-export const checkkey = (key, callback) => {
-  db.query('SELECT * FROM users WHERE confirmkey = $1', [key], (err, res) => {
+export const checkkey = (confirmKey, callback) => {
+  db.query('SELECT * FROM "users" WHERE "confirmKey" = $1', [confirmKey], (err, res) => {
     let data;
     if (err.error) {
       callback(err, null);
@@ -69,33 +30,33 @@ export const checkkey = (key, callback) => {
     if (res[0] === undefined) {
       data = -1;
     } else {
-      data = res[0].id;
+      data = res[0].idUser;
     }
     callback(null, data);
   });
 };
 
-export const activeuser = (id, response) => {
-  db.query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
+export const activeuser = (idUser, callback) => {
+  db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
-      console.log(err);
+      callback(err.error, null);
     }
     if (res[0].activate === true) {
-      response.status(200).json({ message: 'User already activate' });
+      callback('User alrady activate', null);
     } else {
-      db.query('UPDATE users SET activate=true WHERE id = $1', [id], (err, res) => {
-        if (err.error) {
-          console.log(err);
+      db.query('UPDATE users SET "activate"=true WHERE "idUser" = $1', [idUser], (err2, res2) => {
+        if (err2.error) {
+          callback(err2.error, null);
         } else {
-          response.status(200).json({ message: 'User activate' });
+          callback(null, res2);
         }
       });
     }
   });
 };
 
-export const getuser = (id, callback) => {
-  db.query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
+export const getuserbyMail = (mail, callback) => {
+  db.query('SELECT * FROM "users" WHERE "mail" = $1', [mail], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -103,8 +64,8 @@ export const getuser = (id, callback) => {
   });
 };
 
-export const getuserbymail = (email, callback) => {
-  db.query('SELECT * FROM users WHERE mail = $1', [email], (err, res) => {
+export const getuserbyIdUser = (idUser, callback) => {
+  db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -112,8 +73,8 @@ export const getuserbymail = (email, callback) => {
   });
 };
 
-export const getuserbyid = (id, callback) => {
-  db.query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
+export const getuserbyUsername = (username, callback) => {
+  db.query('SELECT * FROM "users" WHERE "username" = $1', [username], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -121,30 +82,41 @@ export const getuserbyid = (id, callback) => {
   });
 };
 
-export const edituser = (request, callback) => {
-  const { email, login, password, firstName, lastName,
-    bio, genre, dateOfBirth, orientation } = request.body;
-  const id = parseInt(request.params.id);
+export const connexionLog = (mail, callback) => {
+  const time = 'NOW()';
+  db.query('UPDATE "users" SET "connexionLog" = $1 WHERE "mail" = $2',
+    [time, mail],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
 
-  db.query('UPDATE users SET (mail, login, password, firstName, lastName,\
-   bio, genre, dateOfBirth, orientation, confirmkey) \
-   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-  [email, login, password, firstName, lastName,
-    bio, genre, dateOfBirth, orientation, confirmkey],
-
-  (err, res) => {
+export const deluser = (idUser, callback) => {
+  db.query('DELETE FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
-    callback(null, 'User modified');
+    callback(null, res);
   });
 };
 
-export const deluser = (id, callback) => {
-  db.query('DELETE FROM users WHERE id = $1', [id], (err, res) => {
+export const getusertag = (idUser, callback) => {
+  db.query('SELECT "tag" FROM "tag" WHERE "userId" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
-    callback(null, 'ok');
+    callback(null, res);
+  });
+};
+
+export const getalltag = (callback) => {
+  db.query('SELECT DISTINCT "tag" FROM "tag"', (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    callback(null, res);
   });
 };

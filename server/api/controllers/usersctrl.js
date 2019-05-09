@@ -1,59 +1,134 @@
 import bcrypt from 'bcrypt';
 import util from 'util';
 import jwt from 'jsonwebtoken';
-// Passport pour le login/logout -> req.user
+import sendmail from '../utils/mail.utils';
+// Passport pour le username/logout -> req.user
 import * as mod from '../models/usersmod';
 import * as op from '../utils/passport.utils';
 
 // Constants
-const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
+const VERIF_LN_REGEX = /^[a-zA-Z0-9_.-]*$/;
+const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
 
 // FONCTIONS
 
 export const adduser = async (req, res) => {
-  const { email, login, password, firstName, lastName,
-    bio, genre, dateOfBirth, orientation } = req.body;
-  // var location  = req.body.location;
-  // var photo = req.body.photo;
+  const { mail, username, password, firstName, lastName } = req.body;
 
-  if (!(email || login || password || firstName || lastName
-  || bio || genre || dateOfBirth || orientation)) { return res.status(400).json({ error: 'Missing parameters.' }); }
+  if (!(mail || username || password || firstName || lastName)) {
+    return res.status(400).json({ error: 'Missing parameters.' });
+  }
 
-  if (login.length >= 15 || login.length <= 3) { return res.status(400).json({ error: 'Invalid login. (must be length 3 - 15)' }); }
+  if (username.length >= 15 || username.length <= 3) {
+    return res.status(400).json({ error: 'Invalid username. (must be length 3 - 15)' });
+  }
 
-  if (!EMAIL_REGEX.test(email)) { return res.status(400).json({ error: 'Invalid email.' }); }
+  if (!MAIL_REGEX.test(mail)) {
+    return res.status(400).json({ error: 'Invalid mail.' });
+  }
 
-  if (!PASSWORD_REGEX.test(password)) { return res.status(400).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' }); }
+  if (!VERIF_L_REGEX.test(firstName)) {
+    return res.status(400).json({ error: 'Invalid Firstname, only lettes' });
+  }
 
-  const verifuserpseudo = util.promisify(mod.verifuserpseudo);
-  const resultuserpseudo = await verifuserpseudo(req)
-    .then(data => data)
-    .catch((err) => { console.error(`[Error]: ${err}`); });
-  const verifuser = util.promisify(mod.verifuser);
+  if (!VERIF_LN_REGEX.test(username)) {
+    return res.status(400).json({ error: 'Invalid Username, only lettes and numbers' });
+  }
+
+  if (!VERIF_L_REGEX.test(lastName)) {
+    return res.status(400).json({ error: 'Invalid Lastname, only lettes' });
+  }
+
+  if (!PASSWORD_REGEX.test(password)) {
+    return res.status(400).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
+  }
+
+  const getuserbyUsername = util.promisify(mod.getuserbyUsername);
+  const resultUsername = await getuserbyUsername(username).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  if (resultUsername !== undefined) {
+    return res.status(400).json({ error: 'Username Exist' });
+  }
+
+  const getuserbyMail = util.promisify(mod.getuserbyMail);
+  const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  if (resultUserMail !== undefined) {
+    return res.status(400).json({ error: 'User email already have a account' });
+  }
+
   const hash = util.promisify(bcrypt.hash);
-  const resultuser = await verifuser(req)
-    .then(data => data)
-    .catch((err) => { console.error(`[Error]: ${err}`); });
-  if ((resultuser === 1) || (resultuserpseudo === 1)) { return res.status(400).json({ error: 'USER EXIST' }); }
+  req.body.password = await hash(password, 5).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
-  req.body.password = await hash(password, 5)
-    .then(data => data)
-    .catch((err) => { console.error(`[Error]: ${err}`); });
-  return mod.adduser(req, res);
+  const getConfirmKey = util.promisify(mod.adduser);
+  const confirmKey = await getConfirmKey(req).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
+  if (confirmKey) {
+    sendmail(mail, 'Matcha confirmation mail',
+      `Hello ${firstName}, You have bee registred on MATCHA, for activate your account past this link into your webrother : http://LINK/${confirmKey} , thanks`,
+      `Hello ${firstName},</br>
+      You have bee registred on MATCHA,</br>
+      for activate your account click on this link :</br>
+      <a href="http://LINK/${confirmKey}">http://LINK/${confirmKey}</a></br>
+      Thanks,</br>
+      Matcha Team`);
+    return res.status(200).json({ message: 'Inscription done, check your mail' });
+  }
+  return res.status(400).json({ error: 'Error Add User' });
 };
+
+export const login = async (req, res) => {
+  const { mail, password } = req.body;
+  if (!(mail || password)) {
+    return res.status(401).json({ error: 'Empty form' });
+  }
+
+  const getuserbyMail = util.promisify(mod.getuserbyMail);
+  const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+
+  if (resultUserMail === undefined) {
+    return res.status(400).json({ error: 'Unknow user mail' });
+  }
+
+  const hashcmp = util.promisify(bcrypt.compare);
+  const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+
+  if (resultUserMail.activate === false) {
+    return res.status(403).json({ error: `Your account is not activated yet. ${resultUserMail.mail}` });
+  }
+
+  if (passwdcmp === true) {
+    const payload = { idUser: resultUserMail.idUser };
+    const token = jwt.sign(payload, op.opts.secretOrKey);
+    mod.connexionLog(mail, (err, success) => {
+      if (err) {
+        res.status(400).json({ error: err.error });
+        return;
+      }
+      console.log(success);
+    });
+    return res.json({ message: 'Connection Validate', token });
+  }
+  return res.status(401).json({ error: 'Passwords did not match.' });
+};
+
 
 export const confirmmail = async (req, res) => {
   const key = req.params.CONFIRMKEY;
   const checkkey = util.promisify(mod.checkkey);
-  const goodkey = await checkkey(key)
-    .then(data => data)
-    .catch((err) => { console.error(`[Error]: ${err}`); });
-  if (goodkey === -1) { return res.status(201).json({ message: 'BAD KEY' }); }
+  const goodkey = await checkkey(key).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
-  mod.activeuser(goodkey, res);
+  if (goodkey === -1) {
+    return res.status(201).json({ error: 'Key not found' });
+  }
 
+  return mod.activeuser(goodkey, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err });
+      return;
+    }
+    res.status(200).json({ message: 'User Activate', info: success });
+  });
 };
 
 export const getallusers = (req, res) => {
@@ -61,51 +136,59 @@ export const getallusers = (req, res) => {
 };
 
 export const getuser = (req, res) => {
-  const id = parseInt(req.params.id);
-  mod.getuser(id, (err, success) => res.status(200).json({ success }));
+  const idUser = Number(req.params.id);
+  return mod.getuserbyIdUser(idUser, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ user: success });
+  });
 };
+
+export const getalltag = (req, res) => mod.getalltag((err, success) => {
+  if (err) {
+    res.status(400).json({ error: err.error });
+    return;
+  }
+  res.status(200).json({ alltag: success });
+});
+
+export const getusertag = (req, res) => mod.getusertag(req.user.idUser, (err, success) => {
+  if (err) {
+    res.status(400).json({ error: err.error });
+    return;
+  }
+  res.status(200).json({ usertag: success });
+});
 
 export const getme = (req, res) => res.status(200).send(req.user);
 
-export const login = async (req, res) => {
-  if (req.body.email && req.body.password) {
-    var email = req.body.email;
-  } else { return res.status(401).json({ message: 'Empty form' }); }
+export const deluser = async (req, res) => {
+  const { mail, password } = req.body;
 
-  // usually this would be a database call:
-  const getuserbymail = util.promisify(mod.getuserbymail);
-  const user = await getuserbymail(email)
-    .then(data => data)
-    .catch((err) => { console.error(`[Error]: ${err}`); });
+  if (!(mail || password)) {
+    return res.status(401).json({ error: 'Empty form' });
+  }
+
+  const getuserbyMail = util.promisify(mod.getuserbyMail);
+  const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+
+  if (resultUserMail === undefined) {
+    return res.status(400).json({ error: 'Unknow user mail' });
+  }
 
   const hashcmp = util.promisify(bcrypt.compare);
-  const passwdcmp = await hashcmp(req.body.password, user.password)
-    .then(data => data)
-    .catch((err) => { console.error(`[Error]: ${err}`); });
-  console.log(passwdcmp);
-  if (user.activate === false) {
-    return res.status(403).json({ message: `Your account is not activated yet. ${user.mail}` });
-  }
+  const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+
   if (passwdcmp === true) {
-    // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-    const payload = { id: user.id };
-    const token = jwt.sign(payload, op.opts.secretOrKey);
-    res.json({ message: 'ok', token });
-  } else {
-    res.status(401).json({ message: 'passwords did not match.' });
+    return mod.deluser(req.user.idUser, (err, success) => {
+      if (err) {
+        res.status(400).json({ error: err.error });
+        return;
+      }
+      res.status(200).json({ message: 'User Delete', info: success });
+    });
   }
-};
-
-// Utile que si on utlise les cookies
-export const logout = (req, res) => {
-  req.logout();
-  res.redirect('/');
-};
-
-export const deluser = (req, res) => {
-  mod.deluser(req.user.id, (err, success) => res.status(200).json({ success }));
-};
-
-export const edituser = (req, res) => {
-  mod.edituser(req, (err, success) => res.status(200).json({ success }));
+  return res.status(401).json({ error: 'Passwords did not match.' });
 };

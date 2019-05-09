@@ -1,7 +1,4 @@
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-
-dotenv.load();
 
 // async..await is not allowed in global scope, must use a wrapper
 const sendmail = async (mailto, mailsubject, mailtext, mailhtml) => {

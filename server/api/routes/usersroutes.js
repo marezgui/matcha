@@ -16,26 +16,29 @@ const usersRoute = express.Router();
 // La on est deja dans le chemin de l'api
 // -> /api/users/
 
-usersRoute.route('/')
-  .get(usersCtrl.getallusers) // get all users
+usersRoute.route('/add')
   .post(usersCtrl.adduser); // add a new user return a key for confirm account
+//  .get(usersCtrl.getallusers) on l'enleve apres avoir tester car dangereux
 
 usersRoute.route('/confirmkey/:CONFIRMKEY')
   .put(usersCtrl.confirmmail); // activate account
 
 usersRoute.route('/login') // pour ce log avec passport et OBTENIR UN TOKEN
   .post(usersCtrl.login); // Token header : Authorization -> Bearer [token]
-
-usersRoute.route('logout') // Pour ce delog
-  .get(checklog, usersCtrl.logout); // utile que si on utilise les sessions
+// pas besoin de fonciton de logout avec redux
 
 usersRoute.route('/id/:id')
   .get(checklog, usersCtrl.getuser); // get user informations
 
 usersRoute.route('/me')
   .get(checklog, usersCtrl.getme) // get user informations of token user
-  .put(checklog, usersCtrl.edituser) // edit user
   .delete(checklog, usersCtrl.deluser); // delete user
+
+usersRoute.route('/alltag')
+  .get(usersCtrl.getalltag); // affiche tous les tags du site sans doublons pas besoin d'etre log
+
+usersRoute.route('/usertag')
+  .get(checklog, usersCtrl.getusertag); // affiche tous les tags de l'user connecter
 
 
 export default usersRoute;
