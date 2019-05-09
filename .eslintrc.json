@@ -19,6 +19,8 @@
         "react"
     ],
     "rules": {
+        "linebreak-style": 0,
+        "import/no-unresolved": 0,
         "react/prop-types": 0,
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "strict": "off",

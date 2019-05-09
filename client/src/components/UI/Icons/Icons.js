@@ -34,7 +34,12 @@ export const Alert = ({ badge }) => (
   </span>
 );
 
-export const Account = ({ name }) => (
-  !name ? <Avatar style={{ backgroundColor: 'grey' }}> M </Avatar>
+export const Account = ({ data }) => (
+  data.length === 1
+    ? (
+      <Avatar style={{ backgroundColor: 'grey' }}>
+        {data}
+      </Avatar>
+    )
     : null // Here mini photo use Avatar with alt&src
 );

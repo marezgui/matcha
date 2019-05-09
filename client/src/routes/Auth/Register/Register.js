@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { checkInputValidity } from '../../../utils/input';
-import Input from '../../../components/UI/Input/Input';
-import Button from '../../../components/UI/Button/Button';
-import Spinner from '../../../components/UI/Spinner/Spinner';
+import { checkInputValidity } from 'shared/utility';
+import Input from 'components/UI/Input/Input';
+import Button from 'components/UI/Button/Button';
+import Spinner from 'components/UI/Spinner/Spinner';
 
 class Register extends Component {
   state = {
@@ -67,7 +67,7 @@ class Register extends Component {
     this.setState({ loading: true });
 
     axios
-      .post('users', values)
+      .post('users/add', values)
       .then(() => {
         this.setState({ loading: false });
         this.setState({ registered: true });
@@ -84,13 +84,13 @@ class Register extends Component {
     let form = (
       <form className="box" onSubmit={this.submitRegister}>
         <Input
-          error={errors.login}
+          error={errors.username}
           inputtype="input"
-          label="Login"
+          label="Username"
           type="text"
-          name="login"
-          placeholder="Login"
-          value={values.login || ''}
+          name="username"
+          placeholder="username"
+          value={values.username || ''}
           onChange={e => this.checkInputValidity(e, 3, 15)}
         />
 
@@ -117,13 +117,13 @@ class Register extends Component {
         />
 
         <Input
-          error={errors.email}
+          error={errors.mail}
           inputtype="input"
-          label="Email"
+          label="Mail"
           type="email"
-          name="email"
-          placeholder="Email"
-          value={values.email || ''}
+          name="mail"
+          placeholder="Mail"
+          value={values.mail || ''}
           onChange={e => this.checkInputValidity(e, null, 40)}
         />
 
@@ -140,7 +140,7 @@ class Register extends Component {
 
         {serverError && (
           <center>
-            <p style={{ color: 'red' }}>{serverError}</p>
+            <p style={{ color: 'tomato' }}>{serverError}</p>
           </center>
         )}
 

@@ -36,9 +36,5 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
     "nodemon": "^1.18.10"
-  },
-  "dependencies": {
-    "react": "^16.8.6",
-    "redux": "^4.0.1"
   }
 }

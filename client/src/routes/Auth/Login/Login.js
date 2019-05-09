@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from '../../../store/actions/index';
-import { checkInputValidity } from '../../../utils/input';
-import Input from '../../../components/UI/Input/Input';
-import Button from '../../../components/UI/Button/Button';
-import Spinner from '../../../components/UI/Spinner/Spinner';
+import * as actions from 'store/actions/index';
+import { checkInputValidity } from 'shared/utility';
+import Input from 'components/UI/Input/Input';
+import Button from 'components/UI/Button/Button';
+import Spinner from 'components/UI/Spinner/Spinner';
 
 class Login extends Component {
   state = {
-    email: '',
+    mail: '',
     password: '',
     errors: {},
     formIsValid: false,
@@ -38,8 +38,8 @@ class Login extends Component {
       this.addError(name, error);
     }
 
-    this.setState(({ email, password, errors }) => {
-      if (email && password && Object.getOwnPropertyNames(errors).length === 0) {
+    this.setState(({ mail, password, errors }) => {
+      if (mail && password && Object.getOwnPropertyNames(errors).length === 0) {
         return { [name]: value, formIsValid: true };
       }
       return { [name]: value };
@@ -48,26 +48,26 @@ class Login extends Component {
 
   submitLogin = (event) => {
     event.preventDefault();
-    const { email, password } = this.state;
+    const { mail, password } = this.state;
     const { onAuth } = this.props;
 
-    onAuth(email, password);
+    onAuth(mail, password);
   };
 
   render() {
-    const { errors, email, password, formIsValid } = this.state;
+    const { errors, mail, password, formIsValid } = this.state;
     const { error, loading, isAuthenticated } = this.props;
 
     let form = (
       <form onSubmit={this.submitLogin} className="box">
         <Input
-          error={errors.email}
+          error={errors.mail}
           inputtype="input"
-          label="Email"
+          label="Mail"
           type="email"
-          name="email"
-          placeholder="Email"
-          value={email}
+          name="mail"
+          placeholder="Mail"
+          value={mail}
           onChange={e => this.checkValidity(e, null, 40)}
         />
         <Input
@@ -83,7 +83,7 @@ class Login extends Component {
 
         {error && (
           <center>
-            <p style={{ color: 'red' }}>{error.message}</p>
+            <p style={{ color: 'tomato' }}>{error}</p>
           </center>
         )}
 
@@ -117,7 +117,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onAuth: (email, password) => dispatch(actions.auth(email, password)),
+  onAuth: (mail, password) => dispatch(actions.auth(mail, password)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
