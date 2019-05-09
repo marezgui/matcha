@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import util from 'util';
 // Passport pour le username/logout -> req.user
 import * as mod from '../models/editusermod';
-import * as usersmod from '../models/usersmod';
+import { getusertag } from '../models/usersmod';
 
 // Constants
 const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -255,7 +255,7 @@ export const addtag = async (req, res) => {
     res.status(400).json({ error: 'Invalid tag, only lettes and numbers' });
     return;
   }
-  const gettaglist = util.promisify(usersmod.getusertag);
+  const gettaglist = util.promisify(getusertag);
   const taglist = await gettaglist(iduser).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
   // si tag est dega dans taglist on return

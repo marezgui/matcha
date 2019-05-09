@@ -16,9 +16,9 @@ const usersRoute = express.Router();
 // La on est deja dans le chemin de l'api
 // -> /api/users/
 
-usersRoute.route('/')
-  .get(usersCtrl.getallusers) // get all users
+usersRoute.route('/add')
   .post(usersCtrl.adduser); // add a new user return a key for confirm account
+//  .get(usersCtrl.getallusers) on l'enleve apres avoir tester car dangereux
 
 usersRoute.route('/confirmkey/:CONFIRMKEY')
   .put(usersCtrl.confirmmail); // activate account

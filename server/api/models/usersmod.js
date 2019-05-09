@@ -2,7 +2,7 @@ import uniqid from 'uniqid';
 import { db } from '../../database';
 
 export const getallusers = (callback) => {
-  db.query('SELECT * FROM users ORDER BY iduser ASC', (err, res) => {
+  db.query('SELECT * FROM "users" ORDER BY "idUser" ASC', (err, res) => {
     if (err.error) { callback(err.error, null); }
     callback(null, res);
   });
@@ -12,7 +12,7 @@ export const adduser = (request, callback) => {
   const { mail, username, password, firstName, lastName } = request.body;
   const confirmkey = uniqid('confirmKey--');
 
-  db.query('INSERT INTO users (mail, username, password, firstName, lastName, confirmkey) VALUES ($1, $2, $3, $4, $5, $6)',
+  db.query('INSERT INTO "users" ("mail", "username", "password", "firstName", "lastName", "confirmKey") VALUES ($1, $2, $3, $4, $5, $6)',
     [mail, username, password, firstName, lastName, confirmkey], (err) => {
       if (err.error) {
         callback(err, null);
@@ -22,7 +22,7 @@ export const adduser = (request, callback) => {
 };
 
 export const checkkey = (confirmKey, callback) => {
-  db.query('SELECT * FROM users WHERE confirmKey = $1', [confirmKey], (err, res) => {
+  db.query('SELECT * FROM "users" WHERE "confirmKey" = $1', [confirmKey], (err, res) => {
     let data;
     if (err.error) {
       callback(err, null);
@@ -30,21 +30,21 @@ export const checkkey = (confirmKey, callback) => {
     if (res[0] === undefined) {
       data = -1;
     } else {
-      data = res[0].iduser;
+      data = res[0].idUser;
     }
     callback(null, data);
   });
 };
 
-export const activeuser = (iduser, callback) => {
-  db.query('SELECT * FROM users WHERE iduser = $1', [iduser], (err, res) => {
+export const activeuser = (idUser, callback) => {
+  db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err.error, null);
     }
     if (res[0].activate === true) {
       callback('User alrady activate', null);
     } else {
-      db.query('UPDATE users SET activate=true WHERE iduser = $1', [iduser], (err2, res2) => {
+      db.query('UPDATE users SET "activate"=true WHERE "idUser" = $1', [idUser], (err2, res2) => {
         if (err2.error) {
           callback(err2.error, null);
         } else {
@@ -56,7 +56,7 @@ export const activeuser = (iduser, callback) => {
 };
 
 export const getuserbyMail = (mail, callback) => {
-  db.query('SELECT * FROM users WHERE mail = $1', [mail], (err, res) => {
+  db.query('SELECT * FROM "users" WHERE "mail" = $1', [mail], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -64,8 +64,8 @@ export const getuserbyMail = (mail, callback) => {
   });
 };
 
-export const getuserbyIdUser = (iduser, callback) => {
-  db.query('SELECT * FROM users WHERE iduser = $1', [iduser], (err, res) => {
+export const getuserbyIdUser = (idUser, callback) => {
+  db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -74,7 +74,7 @@ export const getuserbyIdUser = (iduser, callback) => {
 };
 
 export const getuserbyUsername = (username, callback) => {
-  db.query('SELECT * FROM users WHERE username = $1', [username], (err, res) => {
+  db.query('SELECT * FROM "users" WHERE "username" = $1', [username], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -82,8 +82,20 @@ export const getuserbyUsername = (username, callback) => {
   });
 };
 
-export const deluser = (iduser, callback) => {
-  db.query('DELETE FROM users WHERE iduser = $1', [iduser], (err, res) => {
+export const connexionLog = (mail, callback) => {
+  const time = 'NOW()';
+  db.query('UPDATE "users" SET "connexionLog" = $1 WHERE "mail" = $2',
+    [time, mail],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+export const deluser = (idUser, callback) => {
+  db.query('DELETE FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -91,8 +103,8 @@ export const deluser = (iduser, callback) => {
   });
 };
 
-export const getusertag = (iduser, callback) => {
-  db.query('SELECT tag FROM tag WHERE userid = $1', [iduser], (err, res) => {
+export const getusertag = (idUser, callback) => {
+  db.query('SELECT "tag" FROM "tag" WHERE "userId" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
@@ -101,7 +113,7 @@ export const getusertag = (iduser, callback) => {
 };
 
 export const getalltag = (callback) => {
-  db.query('SELECT DISTINCT tag FROM tag', (err, res) => {
+  db.query('SELECT DISTINCT "tag" FROM "tag"', (err, res) => {
     if (err.error) {
       callback(err, null);
     }

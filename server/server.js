@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import dotenv from 'dotenv';
 import { db } from './database';
+// import importuser from './database/importuser';
 
 // Lien des routes
 import routerApp from './api/router';
@@ -33,5 +34,13 @@ db.query('SELECT NOW()', (err, res) => {
   console.log(`PostgreSQL connected: ${res[0].now}.`);
   return res[0].now;
 });
-
+/*
+db.query('SELECT * FROM users', (err, res) => {
+  if (err.error) { console.log(err.error); return; }
+  if (res[0] === undefined) {
+    console.log('La bdd est vide on va charger des users');
+    importuser(2);
+  }
+});
+*/
 export default server;

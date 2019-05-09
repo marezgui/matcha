@@ -2,11 +2,11 @@ import { db } from '../../database';
 
 export const edituserMail = (request, callback) => {
   const { mail } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (mail) {
-    db.query('UPDATE users SET mail = $1 WHERE iduser = $2',
-      [mail, iduser],
+    db.query('UPDATE "users" SET "mail" = $1 WHERE "idUser" = $2',
+      [mail, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -18,11 +18,11 @@ export const edituserMail = (request, callback) => {
 
 export const edituserUsername = (request, callback) => {
   const { username } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (username) {
-    db.query('UPDATE users SET username = $1 WHERE iduser = $2',
-      [username, iduser],
+    db.query('UPDATE "users" SET "username" = $1 WHERE "idUser" = $2',
+      [username, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -34,11 +34,11 @@ export const edituserUsername = (request, callback) => {
 
 export const edituserPassword = (request, callback) => {
   const { password } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (password) {
-    db.query('UPDATE users SET password = $1 WHERE iduser = $2',
-      [password, iduser],
+    db.query('UPDATE "users" SET "password" = $1 WHERE "idUser" = $2',
+      [password, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -50,11 +50,11 @@ export const edituserPassword = (request, callback) => {
 
 export const edituserFirstName = (request, callback) => {
   const { firstName } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (firstName) {
-    db.query('UPDATE users SET firstname = $1 WHERE iduser = $2',
-      [firstName, iduser],
+    db.query('UPDATE "users" SET "firstName" = $1 WHERE "idUser" = $2',
+      [firstName, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -66,11 +66,11 @@ export const edituserFirstName = (request, callback) => {
 
 export const edituserLastName = (request, callback) => {
   const { lastName } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (lastName) {
-    db.query('UPDATE users SET lastName = $1 WHERE iduser = $2',
-      [lastName, iduser],
+    db.query('UPDATE "users" SET "lastName" = $1 WHERE "idUser" = $2',
+      [lastName, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -82,11 +82,11 @@ export const edituserLastName = (request, callback) => {
 
 export const edituserBio = (request, callback) => {
   const { bio } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (bio) {
-    db.query('UPDATE users SET bio = $1 WHERE iduser = $2',
-      [bio, iduser],
+    db.query('UPDATE "users" SET "bio" = $1 WHERE "idUser" = $2',
+      [bio, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -98,11 +98,11 @@ export const edituserBio = (request, callback) => {
 
 export const edituserGenre = (request, callback) => {
   const { genre } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (genre && (genre === 'M' || genre === 'W' || genre === 'O')) {
-    db.query('UPDATE users SET genre = $1 WHERE iduser = $2',
-      [genre, iduser],
+    db.query('UPDATE "users" SET "genre" = $1 WHERE "idUser" = $2',
+      [genre, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -114,11 +114,11 @@ export const edituserGenre = (request, callback) => {
 
 export const edituserOrientation = (request, callback) => {
   const { orientation } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (orientation && (orientation === 'M' || orientation === 'W' || orientation === 'BI')) {
-    db.query('UPDATE users SET orientation = $1 WHERE iduser = $2',
-      [orientation, iduser],
+    db.query('UPDATE "users" SET "orientation" = $1 WHERE "idUser" = $2',
+      [orientation, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -130,11 +130,11 @@ export const edituserOrientation = (request, callback) => {
 
 export const edituserDateOfBirth = (request, callback) => {
   const { dateOfBirth } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (dateOfBirth) {
-    db.query('UPDATE users SET dateOfBirth = $1 WHERE iduser = $2',
-      [dateOfBirth, iduser],
+    db.query('UPDATE "users" SET "dateOfBirth" = $1 WHERE "idUser" = $2',
+      [dateOfBirth, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -147,11 +147,11 @@ export const edituserDateOfBirth = (request, callback) => {
 
 export const addtag = (request, callback) => {
   const { tag } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (tag) {
-    db.query('INSERT INTO tag (tag, userid) VALUES ($1, $2)',
-      [tag, iduser],
+    db.query('INSERT INTO "tag" ("tag", "userId") VALUES ($1, $2)',
+      [tag, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -163,11 +163,11 @@ export const addtag = (request, callback) => {
 
 export const removetag = (request, callback) => {
   const { tag } = request.body;
-  const { iduser } = request.user;
+  const { idUser } = request.user;
 
   if (tag) {
-    db.query('DELETE FROM tag WHERE tag = $1 AND userid = $2',
-      [tag, iduser],
+    db.query('DELETE FROM "tag" WHERE "tag" = $1 AND "userId" = $2',
+      [tag, idUser],
       (err, res) => {
         if (err.error) {
           callback(err, null);

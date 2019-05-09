@@ -15,7 +15,7 @@ passport.use(
 
     const getuserbyIdUser = util.promisify(mod.getuserbyIdUser);
 
-    const user = await getuserbyIdUser(jwtPayload.iduser)
+    const user = await getuserbyIdUser(jwtPayload.idUser)
       .then(data => data)
       .catch((err) => { console.error(`[Error]: ${err}`); });
 

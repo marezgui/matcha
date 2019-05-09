@@ -86,6 +86,10 @@ export const login = async (req, res) => {
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
+  if (resultUserMail === undefined) {
+    return res.status(400).json({ error: 'Unknow user mail' });
+  }
+
   const hashcmp = util.promisify(bcrypt.compare);
   const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
@@ -94,8 +98,15 @@ export const login = async (req, res) => {
   }
 
   if (passwdcmp === true) {
-    const payload = { iduser: resultUserMail.iduser };
+    const payload = { idUser: resultUserMail.idUser };
     const token = jwt.sign(payload, op.opts.secretOrKey);
+    mod.connexionLog(mail, (err, success) => {
+      if (err) {
+        res.status(400).json({ error: err.error });
+        return;
+      }
+      console.log(success);
+    });
     return res.json({ message: 'Connection Validate', token });
   }
   return res.status(401).json({ error: 'Passwords did not match.' });
@@ -125,8 +136,8 @@ export const getallusers = (req, res) => {
 };
 
 export const getuser = (req, res) => {
-  const iduser = Number(req.params.id);
-  return mod.getuserbyIdUser(iduser, (err, success) => {
+  const idUser = Number(req.params.id);
+  return mod.getuserbyIdUser(idUser, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
       return;
@@ -143,7 +154,7 @@ export const getalltag = (req, res) => mod.getalltag((err, success) => {
   res.status(200).json({ alltag: success });
 });
 
-export const getusertag = (req, res) => mod.getusertag(req.user.iduser, (err, success) => {
+export const getusertag = (req, res) => mod.getusertag(req.user.idUser, (err, success) => {
   if (err) {
     res.status(400).json({ error: err.error });
     return;
@@ -155,6 +166,7 @@ export const getme = (req, res) => res.status(200).send(req.user);
 
 export const deluser = async (req, res) => {
   const { mail, password } = req.body;
+
   if (!(mail || password)) {
     return res.status(401).json({ error: 'Empty form' });
   }
@@ -162,15 +174,15 @@ export const deluser = async (req, res) => {
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
+  if (resultUserMail === undefined) {
+    return res.status(400).json({ error: 'Unknow user mail' });
+  }
+
   const hashcmp = util.promisify(bcrypt.compare);
   const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
 
-  if (resultUserMail.activate === false) {
-    return res.status(403).json({ error: `Your account is not activated yet. ${resultUserMail.mail}` });
-  }
-
   if (passwdcmp === true) {
-    return mod.deluser(req.user.iduser, (err, success) => {
+    return mod.deluser(req.user.idUser, (err, success) => {
       if (err) {
         res.status(400).json({ error: err.error });
         return;
