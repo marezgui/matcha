@@ -68,9 +68,12 @@ const importuser = async (numberuser) => {
     const photo = image;
     const dateOfBirth = tmp.dob.date;
     const location = place;
+    const score = (Math.trunc(Math.random() * (1000 - 0)));
+    const report = (Math.trunc(Math.random() * (150 - 0)));
 
-    db.query('INSERT INTO "users" ("password", "firstName", "lastName", "mail", "username", "bio", "activate", "photo", "dateOfBirth", "location") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-      [password, firstName, lastName, mail, username, bio, activate, photo, dateOfBirth, location], (err) => {
+    db.query('INSERT INTO "users" ("password", "firstName", "lastName", "mail", "username", "bio", "activate", "photo", "dateOfBirth", "location", "score", "report") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+      [password, firstName, lastName, mail, username, bio,
+        activate, photo, dateOfBirth, location, score, report], (err) => {
         if (err.error) {
           console.log(err.error);
 

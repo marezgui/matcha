@@ -21,7 +21,8 @@ DROP TABLE IF EXISTS "tag" CASCADE;
 
 SET timezone='europe/paris';
 
-/*  Formatage des json :
+/*
+    Formatage des json :
     let image = {
       master: 'image2',
       image1: piclarge,
