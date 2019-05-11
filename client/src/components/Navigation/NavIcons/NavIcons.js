@@ -1,18 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Chat, Alert, Account } from '../../UI/Icons/Icons';
-import Dropdown from '../../UI/Dropdown/Dropdown';
+import { Chat, Alert, Account } from 'components/UI/Icons/Icons';
+import Dropdown from 'components/UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
-const navIcons = ({ sideDrawer, user }) => (
+const navIcons = ({ sideDrawerComponent, user: { firstName, lastName } }) => (
   <ul className="NavIcons">
     <li>
       <NavLink to="/">
         <Chat badge={1} />
-        {sideDrawer && 'Messages' }
+        {sideDrawerComponent && <span className="textIcons">Messages</span> }
       </NavLink>
-      {!sideDrawer && (
+      {!sideDrawerComponent && (
         <Dropdown>
           <p>Messages</p>
         </Dropdown>
@@ -21,26 +21,33 @@ const navIcons = ({ sideDrawer, user }) => (
     <li>
       <NavLink to="/">
         <Alert badge={1} />
-        {sideDrawer && 'Notifications' }
+        {sideDrawerComponent && <span className="textIcons">Notifications</span> }
       </NavLink>
-      {!sideDrawer && (
+      {!sideDrawerComponent && (
         <Dropdown>
           <p>Notifications</p>
           <p>Notifications</p>
         </Dropdown>
       )}
     </li>
-    <li>
-      <NavLink to="/profile">
-        <Account data={user.firstName[0]} />
-        {sideDrawer && user.firstName }
+    <li className={sideDrawerComponent && 'SideMyAccount'}>
+      <NavLink to="/profile" className="sideProfile">
+        <Account data={firstName[0]} />
+        {sideDrawerComponent && (
+          <span style={{ paddingLeft: '10px' }}>
+            {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`}
+          </span>
+        )}
       </NavLink>
-      {!sideDrawer && (
+      {!sideDrawerComponent && (
         <Dropdown>
           <NavLink to="/profile"> My Account </NavLink>
           <NavLink to="/logout"> Logout </NavLink>
         </Dropdown>
       )}
+      {sideDrawerComponent
+        && <NavLink to="/logout" style={{ paddingTop: '10px' }}> Logout </NavLink>
+      }
     </li>
   </ul>
 );

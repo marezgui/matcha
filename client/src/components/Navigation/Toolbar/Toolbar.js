@@ -5,7 +5,7 @@ import NavLinks from '../NavLinks/NavLinks';
 import NavIcons from '../NavIcons/NavIcons';
 import './Toolbar.scss';
 
-const toolbar = ({ openSideDrawer, isSideDrawerOpen, desktop }) => {
+const toolbar = ({ openSideDrawer, isSideDrawerOpen }) => {
 
   return (
     <header className="Toolbar">

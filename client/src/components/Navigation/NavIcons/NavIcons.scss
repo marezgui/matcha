@@ -4,13 +4,44 @@
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid black;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+}
+
+.NavIcons li {
     width: 100%;
 }
 
+.NavIcons .Icons {
+    flex: 1;
+}
+
 .NavIcons li a {
+    width: 100%;
     box-sizing: border-box;
     text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.textIcons {
+    flex: 5;
+    padding: 10px 0;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: rgb(202, 8, 19);
+}
+
+.SideMyAccount {
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.SideMyAccount a {
+    color: black;
 }
 
 @media (min-width: 680px) {

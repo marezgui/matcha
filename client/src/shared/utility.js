@@ -1,5 +1,10 @@
 // eslint-disable-next-line import/prefer-default-export
 
+export const updateObject = (oldObject, newProperties) => ({
+  ...oldObject,
+  ...newProperties,
+});
+
 const checkRegexMatch = (name, value) => {
   let regex = /^[A-Z]*(?:-[A-Z]+)*$/i; // FirstName, LastName
 
@@ -28,7 +33,10 @@ export const checkInputValidity = (name, value, min, max) => {
   return error;
 };
 
-export const updateObject = (oldObject, newProperties) => ({
-  ...oldObject,
-  ...newProperties,
-});
+export const getAge = (dateOfBirth) => {
+  const dob = new Date(dateOfBirth);
+  const diffms = Date.now() - dob.getTime();
+  const age = new Date(diffms);
+
+  return Math.abs(age.getUTCFullYear() - 1970);
+};
