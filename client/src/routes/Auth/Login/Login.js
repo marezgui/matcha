@@ -108,7 +108,7 @@ class Login extends Component {
 
     return (
       <div className="inner-container">
-        <Button clicked={this.autoLog}> AutoLog </Button> {/* TO REMOVE */}
+        <Button clicked={this.autoLog}> AutoLog </Button> {/*TO REMOVE*/}
         <div className="header"> Login </div>
         {form}
         {authRedirect}

@@ -1,10 +1,20 @@
 import { Col, Row, Container, } from 'reactstrap';
 import { Button, Form, } from 'semantic-ui-react';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { updateObject } from 'shared/utility';
 import Layout from '../../components/Layout/Layout';
 import './Profile.css';
 
 class Profile extends Component {
+  state = {
+    user: [],
+  }
+
+  componentDidMount() {
+    const { user } = this.props;
+    this.setState({ user });
+  }
 
   editPerso = (e) => {
     e.preventDefault();
@@ -15,7 +25,21 @@ class Profile extends Component {
     e.preventDefault();
   };
 
+  handelChange = (e) => {
+    const { name, value } = e.target;
+    const { user } = this.state;
+    
+    const newValues = { ...user };
+    newValues[name] = value;
+    this.setState({ user: newValues });
+    console.log(`name: ${name} value: ${value}`);
+    console.log(this.state.user);
+  }
+
   render() {
+    const { user } = this.state;
+    const { firstName, lastName, username, mail, bio, dateOfBirth, genre,
+      orientation, notification } = user;
     const PersonelInfo = (
       <Form className="bloc" onSubmit={this.editPerso}>
         <h4 className="ui dividing header">Personal Information</h4>
@@ -26,6 +50,9 @@ class Profile extends Component {
           placeholder="First name"
           iconPosition="left"
           icon="user"
+          name="firstName"
+          value={firstName}
+          onChange={e => this.handelChange(e)}
         />
         <Form.Input
           fluid
@@ -34,6 +61,7 @@ class Profile extends Component {
           placeholder="Last name"
           iconPosition="left"
           icon="user"
+          value={lastName}
         />
         <Form.Input
           fluid
@@ -42,6 +70,7 @@ class Profile extends Component {
           type="date"
           iconPosition="left"
           icon="calendar alternate"
+          value={dateOfBirth}
         />
         <h4 className="ui dividing header">Account Information</h4>
         <Form.Input
@@ -52,6 +81,7 @@ class Profile extends Component {
           type="email"
           iconPosition="left"
           icon="at"
+          value={mail}
         />
         <Form.Input
           fluid
@@ -60,6 +90,7 @@ class Profile extends Component {
           placeholder="Username"
           iconPosition="left"
           icon="user"
+          value={username}
         />
         <Form.Input
           fluid
@@ -94,20 +125,21 @@ class Profile extends Component {
           maxLength="500"
           rows="5"
           style={{ resize: 'none' }}
+          value={bio}
         />
         <Form.Group grouped>
           <h5 className="ui dividing header">Genre</h5>
-          <Form.Field label="Man" control="input" type="radio" name="genre" />
-          <Form.Field label="Women" control="input" type="radio" name="genre" />
-          <Form.Field label="Other" control="input" type="radio" name="genre" />
+          <Form.Field label="Man" control="input" type="radio" name="genre" value="M" checked={genre === 'M'} />
+          <Form.Field label="Women" control="input" type="radio" name="genre" value="W" checked={genre === 'W'} />
+          <Form.Field label="Other" control="input" type="radio" name="genre" value="O" checked={genre === 'O'} />
         </Form.Group>
         <Form.Group grouped>
           <h5 className="ui dividing header">Orientation</h5>
-          <Form.Field label="Man" control="input" type="radio" name="orientation" />
-          <Form.Field label="Women" control="input" type="radio" name="orientation" />
-          <Form.Field label="Bisexuel" control="input" type="radio" name="orientation" />
+          <Form.Field label="Man" control="input" type="radio" name="orientation" value="M" checked={orientation === 'M'} />
+          <Form.Field label="Women" control="input" type="radio" name="orientation" value="W" checked={orientation === 'W'} />
+          <Form.Field label="Bisexuel" control="input" type="radio" name="orientation" value="BI" checked={orientation === 'BI'} />
         </Form.Group>
-        <Form.Checkbox toggle type="checkbox" label="Mail notification" name="notification" />
+        <Form.Checkbox toggle type="checkbox" label="Mail notification" name="notification" value="1" checked={notification === 'true'} />
         <Button type="submit">Update</Button>
       </Form>
     );
@@ -143,4 +175,8 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(Profile);
