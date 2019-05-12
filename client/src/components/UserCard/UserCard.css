@@ -1,0 +1,59 @@
+.UserCard {
+    margin-top: 10px;
+}
+
+.Like {
+    background: 0;
+    color: red;
+    border: 0;
+}
+
+.slick-dots {
+    bottom: 0;
+}
+
+.CardHeader {
+    border-bottom: 0;
+    margin: 7px;
+    box-shadow: 0px 0px 3px 0px rgba(59, 57, 57, 0.349);
+    border-radius: 15px;
+}
+
+.Status {
+    font-size: 0.7em;
+    margin-left: 10px;
+    color: rgba(161, 83, 83, 0.603);
+}
+
+.Online {
+    color: rgba(38, 173, 38, 0.788);
+}
+
+.Information {
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.9em;
+    font-style: italic;
+    padding-bottom: 5px;
+}
+
+/* ICONS */
+.fa-mars {
+    color: blue;
+    font-size: 1.3em;
+}
+
+.fa-venus {
+    color: rgb(233, 77, 103);
+    font-size: 1.3em;
+}
+
+.fa-transgender-alt {
+    font-size: 1.3em;
+    color: white;
+    background: linear-gradient(to bottom, #0066ff 34%, #ff33cc 54%);
+}
+
+.Popularity {
+    color: rgb(255, 81, 0);
+}

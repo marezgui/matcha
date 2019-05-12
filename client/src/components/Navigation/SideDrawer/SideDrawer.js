@@ -15,8 +15,8 @@ const sideDrawer = ({ open, closed }) => {
     <>
       <Backdrop show={open} clicked={closed} />
       <div className={attachedClasses.join(' ')}>
-        <NavLinks sideDrawer />
-        <NavIcons sideDrawer />
+        <NavLinks sideDrawerComponent />
+        <NavIcons sideDrawerComponent />
       </div>
     </>
   );

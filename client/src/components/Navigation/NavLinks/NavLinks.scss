@@ -4,15 +4,31 @@
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    //border: 1px solid black;
+    padding: 0;
+    width: 100%;
+}
+
+.NavLinks li {
     width: 100%;
 }
 
 .NavLinks li a {
+    width: 100%;
     box-sizing: border-box;
     font-weight: bold;
     color: rgb(202, 8, 19);
+}
+
+.NavLinks .Icons {
+    flex: 1;
+}
+
+.textLinks {
+    flex: 5;
+    padding: 0 10px;
+    font-weight: bold;
     font-size: 1.2em;
+    color: rgb(202, 8, 19);
 }
 
 @media (min-width: 680px) {
