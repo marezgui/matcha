@@ -2,7 +2,7 @@ import express from 'express';
 
 // Pour les users
 import usersRoute from './routes/usersroutes';
-// import socialRoute from './routes/socialroutes';
+import socialRoute from './routes/socialroutes';
 import editUsersRoute from './routes/editusersroutes';
 
 const routerApp = express.Router();
@@ -16,7 +16,7 @@ routerApp.route('/') // la racine
 
 routerApp.use('/api/users/', usersRoute);
 routerApp.use('/api/edit/', editUsersRoute);
-// routerApp.use('/api/social/', socialRoute);
+routerApp.use('/api/social/', socialRoute);
 // a l'interieur de social il ya les likes / matches / report / score
 
 export default routerApp;

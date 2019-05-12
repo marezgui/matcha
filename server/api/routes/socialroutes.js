@@ -16,7 +16,8 @@ const socialRoute = express.Router();
 // La on est deja dans le chemin de l'api
 // -> /api/social/
 
-socialRoute.route('/');
+socialRoute.route('/getusersforme/:count/:start')
+  .get(checklog, socialCtrl.getUsersForMe);
 
 
 export default socialRoute;

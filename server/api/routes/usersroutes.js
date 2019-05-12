@@ -39,7 +39,7 @@ usersRoute.route('/me')
 usersRoute.route('/alltag')
   .get(usersCtrl.getalltag); // affiche tous les tags du site sans doublons pas besoin d'etre log
 
-usersRoute.route('/usertag')
+usersRoute.route('/usertag/:id')
   .get(checklog, usersCtrl.getusertag); // affiche tous les tags de l'user connecter
 
 

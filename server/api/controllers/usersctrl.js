@@ -154,14 +154,16 @@ export const getalltag = (req, res) => mod.getalltag((err, success) => {
   res.status(200).json({ alltag: success });
 });
 
-export const getusertag = (req, res) => mod.getusertag(req.user.idUser, (err, success) => {
-  if (err) {
-    res.status(400).json({ error: err.error });
-    return;
-  }
-  res.status(200).json({ usertag: success });
-});
-
+export const getusertag = (req, res) => {
+  const idUser = Number(req.params.id);
+  mod.getusertag(idUser, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ usertag: success });
+  });
+};
 export const getme = (req, res) => res.status(200).send(req.user);
 
 export const deluser = async (req, res) => {
