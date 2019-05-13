@@ -2,7 +2,6 @@ import { Col, Row, Container, } from 'reactstrap';
 import { Button, Form, } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateObject } from 'shared/utility';
 import Layout from '../../components/Layout/Layout';
 import './Profile.css';
 
@@ -26,14 +25,13 @@ class Profile extends Component {
   };
 
   handelChange = (e) => {
+    console.log(e.target);
     const { name, value } = e.target;
     const { user } = this.state;
-    
     const newValues = { ...user };
     newValues[name] = value;
     this.setState({ user: newValues });
-    console.log(`name: ${name} value: ${value}`);
-    console.log(this.state.user);
+    console.log(`name = ${name} value = ${value}`);
   }
 
   render() {
@@ -62,6 +60,9 @@ class Profile extends Component {
           iconPosition="left"
           icon="user"
           value={lastName}
+          name="lastName"
+          onChange={e => this.handelChange(e)}
+
         />
         <Form.Input
           fluid
@@ -71,6 +72,9 @@ class Profile extends Component {
           iconPosition="left"
           icon="calendar alternate"
           value={dateOfBirth}
+          name="dateOfBirth"
+          onChange={e => this.handelChange(e)}
+
         />
         <h4 className="ui dividing header">Account Information</h4>
         <Form.Input
@@ -82,6 +86,9 @@ class Profile extends Component {
           iconPosition="left"
           icon="at"
           value={mail}
+          name="mail"
+          onChange={e => this.handelChange(e)}
+
         />
         <Form.Input
           fluid
@@ -91,6 +98,8 @@ class Profile extends Component {
           iconPosition="left"
           icon="user"
           value={username}
+          name="username"
+          onChange={e => this.handelChange(e)}
         />
         <Form.Input
           fluid
@@ -100,6 +109,9 @@ class Profile extends Component {
           type="password"
           iconPosition="left"
           icon="key"
+          name="password"
+          onChange={e => this.handelChange(e)}
+
         />
         <Form.Input
           fluid
@@ -109,6 +121,9 @@ class Profile extends Component {
           type="password"
           iconPosition="left"
           icon="key"
+          name="confirmPassword"
+          onChange={e => this.handelChange(e)}
+
         />
         <Button type="submit">Update</Button>
       </Form>
@@ -126,18 +141,53 @@ class Profile extends Component {
           rows="5"
           style={{ resize: 'none' }}
           value={bio}
+          name="bio"
+          onChange={e => this.handelChange(e)}
         />
         <Form.Group grouped>
           <h5 className="ui dividing header">Genre</h5>
-          <Form.Field label="Man" control="input" type="radio" name="genre" value="M" checked={genre === 'M'} />
-          <Form.Field label="Women" control="input" type="radio" name="genre" value="W" checked={genre === 'W'} />
-          <Form.Field label="Other" control="input" type="radio" name="genre" value="O" checked={genre === 'O'} />
+          <Form.Radio
+            label="Man"
+            value="M"
+            name="genre"
+            checked={genre === 'M'}
+            onChange={e => this.handelChange(e)}
+          />
+          <Form.Radio
+            label="Women"
+            value="W"
+            name="genre"
+            checked={genre === 'W'}
+            onChange={e => this.handelChange(e)}
+          />
+          <Form.Radio
+            label="Other"
+            value="O"
+            name="genre"
+            checked={genre === 'O'}
+            onChange={e => this.handelChange(e)}
+          />
         </Form.Group>
         <Form.Group grouped>
           <h5 className="ui dividing header">Orientation</h5>
-          <Form.Field label="Man" control="input" type="radio" name="orientation" value="M" checked={orientation === 'M'} />
-          <Form.Field label="Women" control="input" type="radio" name="orientation" value="W" checked={orientation === 'W'} />
-          <Form.Field label="Bisexuel" control="input" type="radio" name="orientation" value="BI" checked={orientation === 'BI'} />
+          <Form.Radio
+            label="Man"
+            name="orientation"
+            value="M"
+            checked={orientation === 'M'}
+          />
+          <Form.Radio
+            label="Women"
+            name="orientation"
+            value="W"
+            checked={orientation === 'W'}
+          />
+          <Form.Radio
+            label="Bisexuel"
+            name="orientation"
+            value="BI"
+            checked={orientation === 'BI'}
+          />
         </Form.Group>
         <Form.Checkbox toggle type="checkbox" label="Mail notification" name="notification" value="1" checked={notification === 'true'} />
         <Button type="submit">Update</Button>
