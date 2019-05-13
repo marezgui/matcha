@@ -64,6 +64,34 @@ export const getuserbyMail = (mail, callback) => {
   });
 };
 
+export const getUserBlocked = (idUser, id, callback) => {
+  db.query('SELECT "blocked" FROM "blocked" WHERE "userId" = $1 AND "blockedUserId" = $2',
+    [idUser, id],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      if (res[0]) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    });
+};
+
+
+export const testUserId = (idUser, callback) => {
+  db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    if (res[0]) {
+      callback(null, true);
+    }
+    callback(null, false);
+  });
+};
+
 export const getuserbyIdUser = (idUser, callback) => {
   db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {

@@ -11,7 +11,8 @@ import * as usersCtrl from '../controllers/editusersctrl';
 // pour le faire supprimer l'option
 const checklog = passport.authenticate('jwt', { session: false });
 
-const editUsersRoute = express.Router();
+const
+  editUsersRoute = express.Router();
 
 // La on est deja dans le chemin de l'api
 // -> /api/edit/
@@ -19,25 +20,40 @@ const editUsersRoute = express.Router();
 // Edit Use
 editUsersRoute.route('/mail')
   .put(checklog, usersCtrl.edituserMail);
+
 editUsersRoute.route('/username')
   .put(checklog, usersCtrl.edituserUsername);
+
 editUsersRoute.route('/password')
   .put(checklog, usersCtrl.edituserPassword);
+
 editUsersRoute.route('/firstName')
   .put(checklog, usersCtrl.edituserFirstName);
+
 editUsersRoute.route('/lastName')
   .put(checklog, usersCtrl.edituserLastName);
+
 editUsersRoute.route('/bio')
   .put(checklog, usersCtrl.edituserBio);
+
 editUsersRoute.route('/genre')
   .put(checklog, usersCtrl.edituserGenre);
+
 editUsersRoute.route('/orientation')
   .put(checklog, usersCtrl.edituserOrientation);
+
 editUsersRoute.route('/dateOfBirth')
   .put(checklog, usersCtrl.edituserDateOfBirth);
+
+editUsersRoute.route('/photo')
+  .put(checklog, usersCtrl.edituserPhoto);
+
+editUsersRoute.route('/location')
+  .put(checklog, usersCtrl.edituserLocation);
 
 editUsersRoute.route('/tag')
   .post(checklog, usersCtrl.addtag)
   .delete(checklog, usersCtrl.removetag);
 
-export default editUsersRoute;
+export default
+editUsersRoute;
