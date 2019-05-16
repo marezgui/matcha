@@ -106,7 +106,7 @@ export const login = async (req, res) => {
         res.status(400).json({ error: err.error });
         return;
       }
-      console.log(success);
+      console.log(`user login ${success}`);
     });
     return res.json({ message: 'Connection Validate', token });
   }
