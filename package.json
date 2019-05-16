@@ -36,5 +36,9 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
     "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "geolib": "^2.0.24",
+    "sort-json-array": "^0.1.7"
   }
 }

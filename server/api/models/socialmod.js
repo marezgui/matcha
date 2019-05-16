@@ -1,8 +1,18 @@
 import { db } from '../../database';
 
-export const getUsersForMe = (user, count, start, callback) => {
+export const getuserbyIdUser = (idUser, callback) => {
+  db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    callback(null, res[0]);
+  });
+};
+
+export const getUsersVal = (user, callback) => {
 
   let { genre, orientation } = user;
+  const { idUser } = user;
 
   if (genre === 'O') {
     genre = 'BI';
@@ -11,15 +21,46 @@ export const getUsersForMe = (user, count, start, callback) => {
   if (orientation === 'BI') {
     orientation = 'O';
   }
-
-  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 LIMIT $3 OFFSET $4',
-    [genre, orientation, count, start],
+  // AND "users"."activate" = true
+  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND  "users"."idUser" != $3 AND "users"."activate" = true',
+    [genre, orientation, idUser],
     (err, res) => {
       if (err.error) {
         callback(err, null);
       }
       callback(null, res);
     });
+};
+
+export const getUsersForMe = (user, scoreMin, scoreMax, count, start, callback) => {
+
+  let { genre, orientation } = user;
+  const { idUser } = user;
+  if (genre === 'O') {
+    genre = 'BI';
+  }
+
+  if (orientation === 'BI') {
+    orientation = 'O';
+  }
+  // AND "users"."activate" = true
+  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND "users"."score" >= $3 AND "users"."score" <= $4 AND  "users"."idUser" != $5  LIMIT $6 OFFSET $7',
+    [genre, orientation, scoreMin, scoreMax, idUser, count, start],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+export const getTagOfUsers = (id, tag, callback) => {
+  db.query('SELECT "tag"."userId" FROM "tag" WHERE "tag" = $1 AND "userId" != $2', [tag, id], (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    callback(null, res);
+  });
 };
 
 export const testUserId = (idUser, callback) => {
@@ -98,6 +139,7 @@ export const editLike = (id, val, callback) => {
     });
 };
 
+
 export const editReport = (id, val, callback) => {
   const value = Number(val);
   db.query('SELECT "users"."report" FROM "users" WHERE "idUser" = $1', [id],
@@ -170,8 +212,19 @@ export const getUserReported = (idUser, id, callback) => {
     });
 };
 
+export const getUserBlockedList = (idUser, callback) => {
+  db.query('SELECT * FROM "blocked" WHERE "userId" = $1 OR "blockedUserId" = $1',
+    [idUser],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
 export const getUserBlocked = (idUser, id, callback) => {
-  db.query('SELECT "blocked" FROM "blocked" WHERE "userId" = $1 AND "blockedUserId" = $2',
+  db.query('SELECT "blocked" FROM "blocked" WHERE ("userId" = $1 AND "blockedUserId" = $2) OR ("userId" = $2 AND "blockedUserId" = $1)',
     [idUser, id],
     (err, res) => {
       if (err.error) {

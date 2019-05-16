@@ -65,7 +65,7 @@ export const getuserbyMail = (mail, callback) => {
 };
 
 export const getUserBlocked = (idUser, id, callback) => {
-  db.query('SELECT "blocked" FROM "blocked" WHERE "userId" = $1 AND "blockedUserId" = $2',
+  db.query('SELECT "blocked" FROM "blocked" WHERE ("userId" = $1 AND "blockedUserId" = $2) OR ("userId" = $2 AND "blockedUserId" = $1)',
     [idUser, id],
     (err, res) => {
       if (err.error) {
