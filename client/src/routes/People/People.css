@@ -1,5 +1,18 @@
-.People {
+.People, .People > div {
+    width: 100%;
+}
+
+.infinite-scroll-component {
+    width: 100%;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: center;
+}
+
+.UserCard {
+    margin: 5px;
+}
+
+.LoaderContainer {
+    width: 100%;
 }

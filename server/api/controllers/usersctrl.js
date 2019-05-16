@@ -135,8 +135,15 @@ export const getallusers = (req, res) => {
   mod.getallusers((err, success) => res.status(200).json({ success }));
 };
 
-export const getuser = (req, res) => {
+export const getuser = async (req, res) => {
   const idUser = Number(req.params.id);
+
+  const userexist = util.promisify(mod.testUserId);
+  const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+
+  if (resultexist === false) {
+    return res.status(400).json({ error: 'User dosnt exist' });
+  }
   return mod.getuserbyIdUser(idUser, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
@@ -154,8 +161,16 @@ export const getalltag = (req, res) => mod.getalltag((err, success) => {
   res.status(200).json({ alltag: success });
 });
 
-export const getusertag = (req, res) => {
+export const getusertag = async (req, res) => {
   const idUser = Number(req.params.id);
+
+  const userexist = util.promisify(mod.testUserId);
+  const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+
+  if (resultexist === false) {
+    res.status(400).json({ error: 'User dosnt exist' });
+    return;
+  }
   mod.getusertag(idUser, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });

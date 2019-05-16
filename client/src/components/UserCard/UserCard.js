@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Image } from 'semantic-ui-react';
 import Slider from 'react-slick';
+import axios from 'axios';
 import Chip from '@material-ui/core/Chip';
 import { getAge } from 'shared/utility';
 import 'slick-carousel/slick/slick.css';
@@ -8,17 +9,57 @@ import 'slick-carousel/slick/slick-theme.css';
 import './UserCard.css';
 
 class UserCard extends Component {
-  state = {};
+  state = {
+    liked: false,
+  };
+
+  componentDidMount() {
+    this.getLikeStatus();
+  }
+
+  getLikeStatus = () => {
+    const { user, token } = this.props;
+    const { idUser } = user;
+
+    axios
+      .get(`social/getuserliked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        if (res.data.message === 'true') {
+          this.setState({ liked: true });
+        }
+      });
+  }
+
+  changeLikeStatus = async () => {
+    const { liked } = this.state;
+    const { user, token } = this.props;
+    const { idUser } = user;
+    const headers = { headers: { Authorization: `bearer ${token}` } };
+    await this.getLikeStatus();
+
+    if (liked) {
+      axios
+        .delete(`social/like/${idUser}`, headers)
+        .then(res => this.setState({ liked: false }));
+    } else {
+      axios
+        .post(`social/like/${idUser}`, null, headers)
+        .then(res => this.setState({ liked: true }));
+    }
+  }
 
   render() {
     const { user } = this.props;
-    const { firstName,
+    const { idUser,
+      firstName,
       bio,
       dateOfBirth,
       photo,
       score,
       genre,
-      orientation } = user;
+      orientation,
+      connexionLog,
+      location } = user;
     // const images = Array.prototype.slice.call(photo);
     const { master } = photo;
 
@@ -35,6 +76,13 @@ class UserCard extends Component {
       ],
     };
 
+    const { liked } = this.state;
+    let likeStatus = (<i className="far fa-heart" />);
+
+    if (liked) {
+      likeStatus = (<i className="fas fa-heart" />);
+    }
+
     return (
       <section className="UserCard">
         <Card>
@@ -45,23 +93,26 @@ class UserCard extends Component {
             )}
           </Slider>
           <Card.Content>
-            <Card.Header className="CardHeader">
+            <Card.Header>
+              <div className="Status">
+                <span>
+                  <i className="fas fa-circle" />
+                  {' '}
+                  offline
+                </span>
+              </div>
               <span>
-                <button type="button" className="Like">
-                  <i className="far fa-heart" />
+                <button type="button" className="Like" onClick={this.changeLikeStatus}>
+                  {likeStatus}
                 </button>
               </span>
               <span>{`${firstName.charAt(0).toUpperCase() + firstName.slice(1)}, ${getAge(dateOfBirth)} years`}</span>
-              <span className="Status">
-                <i className="fas fa-circle" />
-                 offline
-              </span>
             </Card.Header>
             <Card.Content extra>
               <p className="Information">
                 <span className="Distance">
                   <i className="fas fa-map-marker-alt" />
-                   0,6Km
+                  {` ${location.city}`}
                 </span>
                 <span>
                   {{
@@ -70,7 +121,7 @@ class UserCard extends Component {
                     O: (<i className="fas fa-transgender-alt" />),
                   }[genre]}
                   {' '}
-                  <i className="fas fa-exchange-alt" />
+                  {(<i className="fas fa-exchange-alt" />)}
                   {' '}
                   {{
                     M: (<i className="fas fa-mars" />),
@@ -92,6 +143,8 @@ class UserCard extends Component {
             </Card.Content>
             <Card.Meta>
               Biography
+              {' '}
+              {idUser}
             </Card.Meta>
             <Card.Description>
               {bio}

@@ -176,3 +176,31 @@ export const removetag = (request, callback) => {
       });
   }
 };
+
+export const editLocation = (request, callback) => {
+  const { location } = request.body;
+  const { idUser } = request.user;
+
+  db.query('UPDATE "users" SET "location" = $1 WHERE "idUser" = $2',
+    [location, idUser],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+export const editPhoto = (request, callback) => {
+  const { photo } = request.body;
+  const { idUser } = request.user;
+
+  db.query('UPDATE "users" SET "photo" = $1 WHERE "idUser" = $2',
+    [photo, idUser],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};

@@ -280,3 +280,100 @@ export const addtag = async (req, res) => {
     res.status(200).json({ message: `Tag added ${success}` });
   });
 };
+
+/*
+    Formatage des json :
+    let photo = {
+      master: 'image2',
+      image1: piclarge,
+      image2: picmedium,
+      image3: picthumbnail,
+      image4: '',
+      image5: '',
+    };
+    image = JSON.stringify(image); // on a donc notre json base64 pour les images
+*/
+
+export const edituserPhoto = async (req, res) => {
+  let { photo } = req.body;
+
+  if (typeof photo === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments photo' });
+  }
+
+  photo = JSON.parse(photo);
+  if (typeof photo.master === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments master' });
+  }
+  if (typeof photo.image1 === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments image1' });
+  }
+  if (typeof photo.image2 === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments image2' });
+  }
+  if (typeof photo.image3 === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments image3' });
+  }
+  if (typeof photo.image4 === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments image4' });
+  }
+  if (typeof photo.image5 === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments image5' });
+  }
+  return mod.editPhoto(req, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ message: `Photo edit success ${success}` });
+  });
+};
+
+/*
+    let location = {
+      street: location.street,
+      city: location.city,
+      state: location.state,
+      postcode: location.postcode,
+      latitude: locationlatitude,
+      longitude: locationongitude,
+    };
+    location = JSON.stringify(location); // on a donc notre location
+*/
+
+export const edituserLocation = async (req, res) => {
+  let { location } = req.body;
+
+  if (typeof location === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments Location' });
+  }
+
+  location = JSON.parse(location);
+
+  if (typeof location.street === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments street' });
+  }
+  if (typeof location.city === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments city' });
+  }
+  if (typeof location.state === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments state' });
+  }
+  if (typeof location.postcode === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments postcode' });
+  }
+  if (typeof location.latitude === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments latitude' });
+  }
+  if (typeof location.longitude === 'undefined') {
+    return res.status(400).json({ error: 'Missing arguments longitude' });
+  }
+
+  return mod.editLocation(req, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ message: `Location edit success ${success}` });
+  });
+};

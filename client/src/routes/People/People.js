@@ -3,36 +3,62 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserCard from 'components/UserCard/UserCard';
+import Spinner from 'components/UI/Spinner/Spinner';
 import './People.css';
 
 class People extends Component {
   state = {
     users: [],
-    count: 20,
-    start: 1,
+    count: 10,
+    start: 0,
   };
 
-  // componentDidMount() {
-  //   axios
-  //     .get('users/all')
-  //     .then(res => this.setState({ users: res.data.success }));
-  // }
+  componentDidMount() {
+    const { count, start } = this.state;
+    const { token } = this.props;
+
+    axios
+      .get(`social/getusersforme/${count}/${start}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        this.setState({ users: res.data.result });
+      });
+  }
+
+  fetchImages = () => {
+    const { users, count, start } = this.state;
+    const { token } = this.props;
+
+    this.setState({ start: start + count });
+    axios
+      .get(`social/getusersforme/${count}/${start}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        this.setState({ users: users.concat(res.data.result) });
+      });
+  };
 
   render() {
-    const { user } = this.props;
+    const { users } = this.state;
+    const { token } = this.props;
 
     return (
       <section className="People">
-        {/* <InfiniteScroll
+        <InfiniteScroll
           dataLength={users.length}
           next={this.fetchImages}
           hasMore
-          loader={<h4>Loading...</h4>}
+          loader={<div className="LoaderContainer"><Spinner /></div>}
         >
-          {console.log(users)}
-          {users.map(user => (<UserCard user={user} />))}
-        </InfiniteScroll> */}
-        <UserCard user={user} />
+          {users.map(user => (
+            <>
+              <UserCard
+                key={user.idUser}
+                user={user}
+                token={token}
+                refresh // re-render child component hack
+              />
+            </>
+          ))}
+        </InfiniteScroll>
       </section>
     );
   }
@@ -40,6 +66,7 @@ class People extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
+  token: state.auth.token,
 });
 
 export default connect(mapStateToProps)(People);
