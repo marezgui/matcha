@@ -151,6 +151,10 @@ export const getuser = async (req, res) => {
 
 export const getUserDistance = async (req, res) => {
   const idUser = Number(req.params.id);
+  if (isNaN(idUser)) {
+    res.status(400).json({ error: 'Id must be a number' });
+    return;
+  }
   const { user } = req;
   const finduser = util.promisify(mod.getuserbyIdUser);
   const resultuser = await finduser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -166,17 +170,22 @@ export const getUserDistance = async (req, res) => {
   res.status(200).json({ distance });
 };
 
-export const getalltag = (req, res) => mod.getalltag((err, success) => {
-  if (err) {
-    res.status(400).json({ error: err.error });
-    return;
+export const getalltag = async (req, res) => {
+  const findtag = util.promisify(mod.getalltag);
+  const result = [];
+  const resulttag = await findtag().then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  for (let i = 0; i < resulttag.length; i += 1) {
+    result.push(resulttag[i].tag);
   }
-  res.status(200).json({ alltag: success });
-});
+  res.status(200).json({ alltag: result });
+};
 
 export const getusertag = async (req, res) => {
   const idUser = Number(req.params.id);
-
+  if (isNaN(idUser)) {
+    res.status(400).json({ error: 'Id must be a number' });
+    return;
+  }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
 
@@ -184,13 +193,13 @@ export const getusertag = async (req, res) => {
     res.status(400).json({ error: 'User dosnt exist' });
     return;
   }
-  mod.getusertag(idUser, (err, success) => {
-    if (err) {
-      res.status(400).json({ error: err.error });
-      return;
-    }
-    res.status(200).json({ usertag: success });
-  });
+  const findtag = util.promisify(mod.getusertag);
+  const result = [];
+  const resulttag = await findtag(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  for (let i = 0; i < resulttag.length; i += 1) {
+    result.push(resulttag[i].tag);
+  }
+  res.status(200).json({ usertag: result });
 };
 
 export const getme = (req, res) => res.status(200).send(req.user);

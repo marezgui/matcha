@@ -21,7 +21,7 @@ export const getUsersVal = (user, callback) => {
   if (orientation === 'BI') {
     orientation = 'O';
   }
-  // AND "users"."activate" = true
+
   db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND  "users"."idUser" != $3 AND "users"."activate" = true',
     [genre, orientation, idUser],
     (err, res) => {

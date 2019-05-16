@@ -81,6 +81,9 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
 
 export const getUserLiked = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -98,6 +101,9 @@ export const getUserLiked = async (req, res) => {
 
 export const getUserMatche = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -115,6 +121,9 @@ export const getUserMatche = async (req, res) => {
 
 export const getUserReported = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -132,6 +141,9 @@ export const getUserReported = async (req, res) => {
 
 export const getUserBlocked = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -149,6 +161,9 @@ export const getUserBlocked = async (req, res) => {
 
 export const like = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -202,6 +217,9 @@ export const like = async (req, res) => {
 
 export const unLike = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -253,6 +271,9 @@ export const unLike = async (req, res) => {
 
 export const reportUser = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -292,6 +313,9 @@ export const reportUser = async (req, res) => {
 
 export const unReportUser = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -332,6 +356,9 @@ export const unReportUser = async (req, res) => {
 
 export const blockUser = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -403,6 +430,9 @@ export const blockUser = async (req, res) => {
 
 export const unBlockUser = async (req, res) => {
   const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Id must be a number' });
+  }
 
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -463,41 +493,34 @@ export const unBlockUser = async (req, res) => {
       start: valeurDuProchainStart
     }
     les tags sont separer par une virgule tags -> test1,test2 tag,test etc...
-    tagIdListRet separer par virgule aussi -> 253,685,etc...
 */
 
 const getUserwithTags = async (user, count, start, ageMin, ageMax,
-  distanceMin, distanceMax, scoreMin, scoreMax, tags, tagIdListRet, res) => {
+  distanceMin, distanceMax, scoreMin, scoreMax, tags, res) => {
   const tagid = [];
-  let goodTagId = [];
+  const goodTagId = [];
   let newStart = start;
-  let resultData;
-  if (tagIdListRet === null) {
-    const checkTags = util.promisify(mod.getTagOfUsers);
-    for (let i = 0; i < tags.length; i += 1) {
-      const taglist = await checkTags(user.idUser, tags[i]).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
-      if (taglist !== '') {
-        for (let j = 0; j < taglist.length; j += 1) {
-          tagid.push(taglist[j].userId);
-        }
+  const checkTags = util.promisify(mod.getTagOfUsers);
+  for (let i = 0; i < tags.length; i += 1) {
+    const taglist = await checkTags(user.idUser, tags[i]).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
+    if (taglist !== '') {
+      for (let j = 0; j < taglist.length; j += 1) {
+        tagid.push(taglist[j].userId);
       }
     }
-    const uniq = [...new Set(tagid)];
-    let setcountid = 0;
-    for (let i = 0; i < uniq.length; i += 1) {
-      for (let j = 0; j < tagid.length; j += 1) {
-        if (uniq[i] === tagid[j]) {
-          setcountid += 1;
-          if (setcountid === tags.length) { goodTagId.push(uniq[i]); }
-        }
-      }
-      setcountid = 0;
-    }
-    resultData = { users: [], newStart, goodTagId };
-  } else {
-    goodTagId = tagIdListRet.split(',').map(Number);
-    resultData = { users: [], newStart, goodTagId: tagIdListRet.split(',').map(Number) };
   }
+  const uniq = [...new Set(tagid)];
+  let setcountid = 0;
+  for (let i = 0; i < uniq.length; i += 1) {
+    for (let j = 0; j < tagid.length; j += 1) {
+      if (uniq[i] === tagid[j]) {
+        setcountid += 1;
+        if (setcountid === tags.length) { goodTagId.push(uniq[i]); }
+      }
+    }
+    setcountid = 0;
+  }
+  const resultData = { users: [], newStart };
 
   let result = 0;
   let c = 0;
@@ -666,9 +689,14 @@ export const getUsersForMe = async (req, res) => {
   const { user } = req;
   const count = Number(req.params.count);
   const start = Number(req.params.start);
-
+  if (isNaN(count)) {
+    return res.status(400).json({ error: 'count must be a number' });
+  }
+  if (isNaN(start)) {
+    return res.status(400).json({ error: 'start must be a number' });
+  }
   let { ageMin, ageMax, distanceMin, distanceMax,
-    scoreMin, scoreMax, tags, tagIdListRet } = req.body;
+    scoreMin, scoreMax, tags } = req.body;
   if (ageMin === undefined || ageMin === '') {
     ageMin = 0;
   }
@@ -687,9 +715,7 @@ export const getUsersForMe = async (req, res) => {
   if (scoreMax === undefined || scoreMax === '') {
     scoreMax = null;
   }
-  if (tagIdListRet === undefined || tagIdListRet === '') {
-    tagIdListRet = null;
-  }
+
 
   if (tags === undefined || tags === '') {
     tags = null;
@@ -698,6 +724,6 @@ export const getUsersForMe = async (req, res) => {
   }
   tags = tags.split(',');
   return getUserwithTags(user, count, start, ageMin, ageMax,
-    distanceMin, distanceMax, scoreMin, scoreMax, tags, tagIdListRet, res);
+    distanceMin, distanceMax, scoreMin, scoreMax, tags, res);
 
 };
