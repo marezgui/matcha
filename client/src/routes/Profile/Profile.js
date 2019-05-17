@@ -25,19 +25,23 @@ class Profile extends Component {
   };
 
   handelChange = (e) => {
-    console.log(e.target);
-    const { name, value } = e.target;
+    const { name, value, checked, type } = e.target;
     const { user } = this.state;
     const newValues = { ...user };
-    newValues[name] = value;
+    if (type === 'checkbox') {
+      newValues[name] = checked;
+    } else {
+      newValues[name] = value;
+    }
     this.setState({ user: newValues });
-    console.log(`name = ${name} value = ${value}`);
+    console.log(e.target.checked);
+    console.log(`name: ${name} value: ${value}`);
   }
 
   render() {
     const { user } = this.state;
     const { firstName, lastName, username, mail, bio, dateOfBirth, genre,
-      orientation, notification } = user;
+      orientation, notifications } = user;
     const PersonelInfo = (
       <Form className="bloc" onSubmit={this.editPerso}>
         <h4 className="ui dividing header">Personal Information</h4>
@@ -125,7 +129,6 @@ class Profile extends Component {
           onChange={e => this.handelChange(e)}
 
         />
-        <Button type="submit">Update</Button>
       </Form>
     );
 
@@ -144,53 +147,117 @@ class Profile extends Component {
           name="bio"
           onChange={e => this.handelChange(e)}
         />
-        <Form.Group grouped>
-          <h5 className="ui dividing header">Genre</h5>
-          <Form.Radio
-            label="Man"
-            value="M"
-            name="genre"
-            checked={genre === 'M'}
-            onChange={e => this.handelChange(e)}
-          />
-          <Form.Radio
-            label="Women"
-            value="W"
-            name="genre"
-            checked={genre === 'W'}
-            onChange={e => this.handelChange(e)}
-          />
-          <Form.Radio
-            label="Other"
-            value="O"
-            name="genre"
-            checked={genre === 'O'}
-            onChange={e => this.handelChange(e)}
-          />
-        </Form.Group>
-        <Form.Group grouped>
-          <h5 className="ui dividing header">Orientation</h5>
-          <Form.Radio
-            label="Man"
-            name="orientation"
-            value="M"
-            checked={orientation === 'M'}
-          />
-          <Form.Radio
-            label="Women"
-            name="orientation"
-            value="W"
-            checked={orientation === 'W'}
-          />
-          <Form.Radio
-            label="Bisexuel"
-            name="orientation"
-            value="BI"
-            checked={orientation === 'BI'}
-          />
-        </Form.Group>
-        <Form.Checkbox toggle type="checkbox" label="Mail notification" name="notification" value="1" checked={notification === 'true'} />
-        <Button type="submit">Update</Button>
+        <div className="radio-group">
+          <h4 className="ui dividing header">Genre</h4>
+          <div className="form-check">
+            <label htmlFor="man">
+              <input
+                id="man"
+                type="radio"
+                name="genre"
+                value="M"
+                className="form-check-input"
+                checked={genre === 'M'}
+                onChange={e => this.handelChange(e)}
+              />
+              Man
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="women">
+              <input
+                id="women"
+                type="radio"
+                name="genre"
+                value="W"
+                className="form-check-input"
+                checked={genre === 'W'}
+                onChange={e => this.handelChange(e)}
+              />
+              Women
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="other">
+              <input
+                id="other"
+                type="radio"
+                name="genre"
+                value="O"
+                className="form-check-input"
+                checked={genre === 'O'}
+                onChange={e => this.handelChange(e)}
+              />
+              Other
+            </label>
+          </div>
+        </div>
+
+        <div className="radio-group">
+          <h4 className="ui dividing header">Orientation</h4>
+          <div className="form-check">
+            <label htmlFor="orim">
+              <input
+                id="orim"
+                type="radio"
+                name="orientation"
+                value="M"
+                className="form-check-input"
+                checked={orientation === 'M'}
+                onChange={e => this.handelChange(e)}
+              />
+              Man
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="oriw">
+              <input
+                id="oriw"
+                type="radio"
+                name="orientation"
+                value="W"
+                className="form-check-input"
+                checked={orientation === 'W'}
+                onChange={e => this.handelChange(e)}
+              />
+              Women
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="bi">
+              <input
+                id="bi"
+                type="radio"
+                name="orientation"
+                value="BI"
+                className="form-check-input"
+                checked={orientation === 'BI'}
+                onChange={e => this.handelChange(e)}
+              />
+              Bisexuel
+            </label>
+          </div>
+        </div>
+        <hr />
+        <Form.Checkbox
+          toggle
+          id="notif"
+          name="notifications"
+          label="Receive notifications by email"
+          checked={notifications}
+          onChange={e => this.handelChange(e)}
+        />
+        <hr />
+        <Form.Input
+          fluid
+          id="localisation"
+          label="Localisation"
+          placeholder="Localisation"
+          iconPosition="left"
+          icon="location arrow"
+          name="localisation"
+          onChange={e => this.handelChange(e)}
+        />
       </Form>
     );
 
