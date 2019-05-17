@@ -53,5 +53,5 @@ export const Account = ({ data }) => (
         {data}
       </Avatar>
     )
-    : null // Here mini photo use Avatar with alt&src
+    : <Avatar alt="Remy Sharp" src={`data:image/png;base64,${data}`} />
 );

@@ -1,15 +1,14 @@
-.Like {
+.Like, .ShowMore {
     background: 0;
-    color: red;
     border: 0;
+}
+
+.Like {
+    color: red;
 }
 
 .slick-dots {
     bottom: 0;
-}
-
-.UserCard {
-    height: auto;
 }
 
 .UserCard .header {
@@ -18,8 +17,23 @@
     border-bottom: 1px solid rgba(59, 57, 57, 0.349);
 }
 
-.UserCard .content {
-    padding: 0px;
+.Biography {
+    line-height: 1em;
+}
+
+.ShowMore { 
+    text-align: right;
+    color: rgba(0,0,0,.68);
+    font-size: 0.8em;
+}
+
+.Hide {
+    height: 3em;
+    overflow: hidden;
+}
+
+.Show {
+    height: auto;
 }
 
 .Status {
@@ -40,6 +54,14 @@
     font-style: italic;
     padding-bottom: 5px;
 }
+
+.Tags {
+    height: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+
 
 /* ICONS */
 .fa-mars {

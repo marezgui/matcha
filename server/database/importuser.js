@@ -40,8 +40,8 @@ const importuser = async (numberuser) => {
     image = {
       master: 'image2',
       image1: piclarge,
-      image2: picmedium,
-      image3: picthumbnail,
+      image2: piclarge,
+      image3: piclarge,
       image4: '',
       image5: '',
     };
@@ -63,7 +63,7 @@ const importuser = async (numberuser) => {
     const lastName = tmp.name.last;
     const mail = tmp.email;
     const { username } = tmp.login;
-    const bio = tmp.location.description;
+    const bio = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lacinia ultrices turpis quis pulvinar. Aliquam tincidunt mi eu lorem feugiat ultricies. In laoreet sem nibh, non pharetra quam facilisis in. Aenean dictum in justo et blandit. Ut ve';
     const activate = true;
     const photo = image;
     const dateOfBirth = tmp.dob.date;

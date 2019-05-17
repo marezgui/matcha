@@ -5,7 +5,8 @@ import { Chat, Alert, Account } from 'components/UI/Icons/Icons';
 import Dropdown from 'components/UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
-const navIcons = ({ sideDrawerComponent, user: { firstName, lastName } }) => (
+// eslint-disable-next-line max-len
+const navIcons = ({ sideDrawerComponent, user: { firstName, lastName, photo, photo: { master } } }) => (
   <ul className="NavIcons">
     <li>
       <NavLink to="/">
@@ -32,7 +33,7 @@ const navIcons = ({ sideDrawerComponent, user: { firstName, lastName } }) => (
     </li>
     <li className={sideDrawerComponent && 'SideMyAccount'}>
       <NavLink to="/profile" className="sideProfile">
-        <Account data={firstName[0]} />
+        <Account data={photo[master] || firstName[0]} />
         {sideDrawerComponent && (
           <span style={{ paddingLeft: '10px' }}>
             {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`}
