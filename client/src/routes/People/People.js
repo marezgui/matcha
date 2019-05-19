@@ -4,6 +4,7 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserCard from 'components/UserCard/UserCard';
 import Spinner from 'components/UI/Spinner/Spinner';
+import Chat from 'components/Chat/Chat';
 import './People.css';
 
 class People extends Component {
@@ -21,7 +22,7 @@ class People extends Component {
       .post(`social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         this.setState({ users: res.data.resultData.users });
-        //console.log(res.data.resultData.newStart);
+        // console.log(res.data.resultData.newStart);
       });
   }
 
@@ -67,6 +68,7 @@ class People extends Component {
             />
           ))}
         </InfiniteScroll>
+        <Chat />
       </section>
     );
   }

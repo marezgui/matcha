@@ -1,0 +1,63 @@
+.ChatLauncher {
+  width: 60px;
+  height: 60px;
+  background-color: #4e8cff;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  border-radius: 50%;
+  box-shadow: none;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.ChatLauncher:before {
+  content: '';
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 60px;  
+  border-radius: 50%;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.ChatLauncher .OpenIcon,
+.ChatLauncher .ClosedIcon {
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
+}
+
+.ChatLauncher .ClosedIcon {
+  transition: opacity 100ms ease-in-out, transform 100ms ease-in-out;
+  width: 60px;
+  height: 60px;
+}
+
+.ChatLauncher .OpenIcon {
+  padding: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+}
+
+.ChatLauncher.Opened .OpenIcon {
+  transform: rotate(-90deg);
+  opacity: 1;
+}
+
+.ChatLauncher.Opened .ClosedIcon {
+  transform: rotate(-90deg);
+  opacity: 0;
+}
+
+.ChatLauncher.Opened:before {
+  box-shadow: 0px 0px 400px 250px rgba(148, 149, 150, 0.2);
+}
+
+.ChatLauncher:hover {
+  box-shadow: 0 0px 27px 1.5px rgba(0,0,0,0.2);
+}
