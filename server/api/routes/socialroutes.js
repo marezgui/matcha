@@ -41,6 +41,12 @@ socialRoute.route('/getusermatche/:id') // renvoi true or false si l'user est en
   .get(checklog, socialCtrl.getUserMatche);
 
 socialRoute.route('/getusersforme/:count/:start')
-  .get(checklog, socialCtrl.getUsersForMe);
+  .post(checklog, socialCtrl.getUsersForMe);
+
+socialRoute.route('/getblockedlist/') // renvoi la liste des bocked
+  .get(checklog, socialCtrl.getUserBlockedList);
+
+socialRoute.route('/getusersvar/') // renvoi les var pour la recherche
+  .get(checklog, socialCtrl.getUserAgeDistanceScoreReport);
 
 export default socialRoute;

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 // eslint-disable-next-line import/prefer-default-export
 
 export const updateObject = (oldObject, newProperties) => ({
@@ -33,10 +35,33 @@ export const checkInputValidity = (name, value, min, max) => {
   return error;
 };
 
+const getDateDiff = (date) => {
+  const newDate = new Date(date);
+  const diffms = Date.now() - newDate.getTime();
+
+  return new Date(diffms);
+};
+
 export const getAge = (dateOfBirth) => {
-  const dob = new Date(dateOfBirth);
-  const diffms = Date.now() - dob.getTime();
-  const age = new Date(diffms);
+  const age = getDateDiff(dateOfBirth);
 
   return Math.abs(age.getUTCFullYear() - 1970);
+};
+
+const convertUTCDateToLocalDate = (date) => {
+  const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+  const offset = date.getTimezoneOffset() / 60;
+  const hours = date.getHours();
+
+  newDate.setHours(hours - offset);
+
+  return newDate;
+};
+
+export const getLastLog = (lastLog) => {
+  const date = new Date(lastLog);
+  const localTime = convertUTCDateToLocalDate(date);
+
+  return moment(localTime).from(Date.now());
 };

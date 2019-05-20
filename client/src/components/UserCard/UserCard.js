@@ -1,9 +1,10 @@
+
 import React, { Component } from 'react';
 import { Card, Image } from 'semantic-ui-react';
 import Slider from 'react-slick';
 import axios from 'axios';
 import Chip from '@material-ui/core/Chip';
-import { getAge } from 'shared/utility';
+import { getAge, getLastLog } from 'shared/utility';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './UserCard.css';
@@ -11,15 +12,18 @@ import './UserCard.css';
 class UserCard extends Component {
   state = {
     liked: false,
+    showLink: false,
+    tags: [],
   };
 
   componentDidMount() {
     this.getLikeStatus();
+    this.getTags();
   }
 
   getLikeStatus = () => {
-    const { user, token } = this.props;
-    const { idUser } = user;
+    const { data, token } = this.props;
+    const { idUser } = data;
 
     axios
       .get(`social/getuserliked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
@@ -30,10 +34,21 @@ class UserCard extends Component {
       });
   }
 
+  getTags = () => {
+    const { token, data } = this.props;
+    const { idUser } = data;
+
+    axios
+      .get(`users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        this.setState({ tags: res.data.usertag });
+      });
+  }
+
   changeLikeStatus = async () => {
     const { liked } = this.state;
-    const { user, token } = this.props;
-    const { idUser } = user;
+    const { data, token } = this.props;
+    const { idUser } = data;
     const headers = { headers: { Authorization: `bearer ${token}` } };
     await this.getLikeStatus();
 
@@ -48,8 +63,14 @@ class UserCard extends Component {
     }
   }
 
+  showMore = () => {
+    const { showLink } = this.state;
+
+    this.setState({ showLink: !showLink });
+  }
+
   render() {
-    const { user } = this.props;
+    const { data } = this.props;
     const { idUser,
       firstName,
       bio,
@@ -59,7 +80,7 @@ class UserCard extends Component {
       genre,
       orientation,
       connexionLog,
-      location } = user;
+      location } = data;
     // const images = Array.prototype.slice.call(photo);
     const { master } = photo;
 
@@ -76,11 +97,18 @@ class UserCard extends Component {
       ],
     };
 
-    const { liked } = this.state;
+    const { liked, showLink, tags } = this.state;
+
     let likeStatus = (<i className="far fa-heart" />);
 
     if (liked) {
       likeStatus = (<i className="fas fa-heart" />);
+    }
+
+    let showLinkClasses = ['Biography', 'Hide'];
+
+    if (showLink) {
+      showLinkClasses = ['Biography', 'Show'];
     }
 
     return (
@@ -89,7 +117,7 @@ class UserCard extends Component {
           <Slider {...settings} className="Slider">
             <Image src={`data:image/png;base64,${photo[master]}`} />
             {Object.keys(photo).map(
-              value => (photo[value] && photo[value].length !== 6 ? <Image src={`data:image/png;base64,${photo[value]}`} /> : null)
+              (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} src={`data:image/png;base64,${photo[value]}`} /> : null)
             )}
           </Slider>
           <Card.Content>
@@ -98,7 +126,7 @@ class UserCard extends Component {
                 <span>
                   <i className="fas fa-circle" />
                   {' '}
-                  offline
+                  {getLastLog(connexionLog)}
                 </span>
               </div>
               <span>
@@ -143,22 +171,23 @@ class UserCard extends Component {
             </Card.Content>
             <Card.Meta>
               Biography
-              {' '}
-              {idUser}
             </Card.Meta>
             <Card.Description>
-              {bio}
+              <p className={showLinkClasses.join(' ')}>
+                {bio}
+              </p>
+              <p style={{ textAlign: 'right' }}>
+                <button type="button" className="ShowMore" onClick={this.showMore}>
+                  Show
+                  {' '}
+                  {showLink ? 'Less' : 'More'}
+                </button>
+              </p>
             </Card.Description>
           </Card.Content>
           <Card.Content extra>
-            <div>
-              <Chip style={{ height: '14px' }} label="# tag" />
-              <Chip style={{ margin: '3px', height: '14px' }} label="# tag" />
-              <Chip style={{ height: '14px' }} label="# tag" />
-              <Chip style={{ margin: '1px', height: '14px' }} label="# tag" />
-              <Chip style={{ height: '14px' }} label="# tag" />
-              <Chip style={{ height: '14px' }} label="# tag" />
-              <Chip style={{ height: '14px' }} label="# tag" />
+            <div className="Tags">
+              {tags.map((tag, id) => (<Chip key={id} style={{ height: '14px' }} label={tag} />))}
             </div>
           </Card.Content>
         </Card>

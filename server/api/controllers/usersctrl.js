@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import util from 'util';
 import jwt from 'jsonwebtoken';
+import geolib from 'geolib';
 import sendmail from '../utils/mail.utils';
 // Passport pour le username/logout -> req.user
 import * as mod from '../models/usersmod';
@@ -105,7 +106,7 @@ export const login = async (req, res) => {
         res.status(400).json({ error: err.error });
         return;
       }
-      console.log(success);
+      console.log(`user login ${success}`);
     });
     return res.json({ message: 'Connection Validate', token });
   }
@@ -138,32 +139,53 @@ export const getallusers = (req, res) => {
 export const getuser = async (req, res) => {
   const idUser = Number(req.params.id);
 
-  const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const finduser = util.promisify(mod.getuserbyIdUser);
+  const resultuser = await finduser(idUser).then(data => data)
+    .catch((err) => { res.status(400).json({ error: err.error }); });
 
-  if (resultexist === false) {
+  if (resultuser === undefined) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
-  return mod.getuserbyIdUser(idUser, (err, success) => {
-    if (err) {
-      res.status(400).json({ error: err.error });
-      return;
-    }
-    res.status(200).json({ user: success });
-  });
+  return res.status(200).json({ user: resultuser });
 };
 
-export const getalltag = (req, res) => mod.getalltag((err, success) => {
-  if (err) {
-    res.status(400).json({ error: err.error });
+export const getUserDistance = async (req, res) => {
+  const idUser = Number(req.params.id);
+  if (isNaN(idUser)) {
+    res.status(400).json({ error: 'Id must be a number' });
     return;
   }
-  res.status(200).json({ alltag: success });
-});
+  const { user } = req;
+  const finduser = util.promisify(mod.getuserbyIdUser);
+  const resultuser = await finduser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  if (resultuser === undefined) {
+    res.status(400).json({ error: 'User dosnt exist' });
+    return;
+  }
+  let distance = await geolib.getDistanceSimple(
+    { latitude: resultuser.location.latitude, longitude: resultuser.location.longitude },
+    { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
+  );
+  distance /= 1000;
+  res.status(200).json({ distance });
+};
+
+export const getalltag = async (req, res) => {
+  const findtag = util.promisify(mod.getalltag);
+  const result = [];
+  const resulttag = await findtag().then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  for (let i = 0; i < resulttag.length; i += 1) {
+    result.push(resulttag[i].tag);
+  }
+  res.status(200).json({ alltag: result });
+};
 
 export const getusertag = async (req, res) => {
   const idUser = Number(req.params.id);
-
+  if (isNaN(idUser)) {
+    res.status(400).json({ error: 'Id must be a number' });
+    return;
+  }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
 
@@ -171,14 +193,15 @@ export const getusertag = async (req, res) => {
     res.status(400).json({ error: 'User dosnt exist' });
     return;
   }
-  mod.getusertag(idUser, (err, success) => {
-    if (err) {
-      res.status(400).json({ error: err.error });
-      return;
-    }
-    res.status(200).json({ usertag: success });
-  });
+  const findtag = util.promisify(mod.getusertag);
+  const result = [];
+  const resulttag = await findtag(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  for (let i = 0; i < resulttag.length; i += 1) {
+    result.push(resulttag[i].tag);
+  }
+  res.status(200).json({ usertag: result });
 };
+
 export const getme = (req, res) => res.status(200).send(req.user);
 
 export const deluser = async (req, res) => {
