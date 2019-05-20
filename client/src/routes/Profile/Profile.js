@@ -1,5 +1,5 @@
 import { Col, Row, Container, } from 'reactstrap';
-import { Button, Form, } from 'semantic-ui-react';
+import { Form, } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Layout from '../../components/Layout/Layout';
@@ -15,15 +15,6 @@ class Profile extends Component {
     this.setState({ user });
   }
 
-  editPerso = (e) => {
-    e.preventDefault();
-    console.log('edit information personnel');
-  };
-
-  editProfil = (e) => {
-    e.preventDefault();
-  };
-
   handelChange = (e) => {
     const { name, value, checked, type } = e.target;
     const { user } = this.state;
@@ -34,8 +25,6 @@ class Profile extends Component {
       newValues[name] = value;
     }
     this.setState({ user: newValues });
-    console.log(e.target.checked);
-    console.log(`name: ${name} value: ${value}`);
   }
 
   render() {
@@ -265,7 +254,7 @@ class Profile extends Component {
       <div className="bloc">
         <img
           alt="photoDeProfile"
-          src="#"
+          src="data:image/jpeg;base64, "
           className="photo profile"
         />
         <img
