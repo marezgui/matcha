@@ -1,21 +1,36 @@
 import { Col, Row, Container, } from 'reactstrap';
-import { Button, Form, } from 'semantic-ui-react';
+import { Form, } from 'semantic-ui-react';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Layout from '../../components/Layout/Layout';
 import './Profile.css';
 
 class Profile extends Component {
+  state = {
+    user: [],
+  }
 
-  editPerso = (e) => {
-    e.preventDefault();
-    console.log('edit information personnel');
-  };
+  componentDidMount() {
+    const { user } = this.props;
+    this.setState({ user });
+  }
 
-  editProfil = (e) => {
-    e.preventDefault();
-  };
+  handelChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    const { user } = this.state;
+    const newValues = { ...user };
+    if (type === 'checkbox') {
+      newValues[name] = checked;
+    } else {
+      newValues[name] = value;
+    }
+    this.setState({ user: newValues });
+  }
 
   render() {
+    const { user } = this.state;
+    const { firstName, lastName, username, mail, bio, dateOfBirth, genre,
+      orientation, notifications } = user;
     const PersonelInfo = (
       <Form className="bloc" onSubmit={this.editPerso}>
         <h4 className="ui dividing header">Personal Information</h4>
@@ -26,6 +41,9 @@ class Profile extends Component {
           placeholder="First name"
           iconPosition="left"
           icon="user"
+          name="firstName"
+          value={firstName}
+          onChange={e => this.handelChange(e)}
         />
         <Form.Input
           fluid
@@ -34,6 +52,10 @@ class Profile extends Component {
           placeholder="Last name"
           iconPosition="left"
           icon="user"
+          value={lastName}
+          name="lastName"
+          onChange={e => this.handelChange(e)}
+
         />
         <Form.Input
           fluid
@@ -42,6 +64,10 @@ class Profile extends Component {
           type="date"
           iconPosition="left"
           icon="calendar alternate"
+          value={dateOfBirth}
+          name="dateOfBirth"
+          onChange={e => this.handelChange(e)}
+
         />
         <h4 className="ui dividing header">Account Information</h4>
         <Form.Input
@@ -52,6 +78,10 @@ class Profile extends Component {
           type="email"
           iconPosition="left"
           icon="at"
+          value={mail}
+          name="mail"
+          onChange={e => this.handelChange(e)}
+
         />
         <Form.Input
           fluid
@@ -60,6 +90,9 @@ class Profile extends Component {
           placeholder="Username"
           iconPosition="left"
           icon="user"
+          value={username}
+          name="username"
+          onChange={e => this.handelChange(e)}
         />
         <Form.Input
           fluid
@@ -69,6 +102,9 @@ class Profile extends Component {
           type="password"
           iconPosition="left"
           icon="key"
+          name="password"
+          onChange={e => this.handelChange(e)}
+
         />
         <Form.Input
           fluid
@@ -78,8 +114,10 @@ class Profile extends Component {
           type="password"
           iconPosition="left"
           icon="key"
+          name="confirmPassword"
+          onChange={e => this.handelChange(e)}
+
         />
-        <Button type="submit">Update</Button>
       </Form>
     );
 
@@ -94,21 +132,121 @@ class Profile extends Component {
           maxLength="500"
           rows="5"
           style={{ resize: 'none' }}
+          value={bio}
+          name="bio"
+          onChange={e => this.handelChange(e)}
         />
-        <Form.Group grouped>
-          <h5 className="ui dividing header">Genre</h5>
-          <Form.Field label="Man" control="input" type="radio" name="genre" />
-          <Form.Field label="Women" control="input" type="radio" name="genre" />
-          <Form.Field label="Other" control="input" type="radio" name="genre" />
-        </Form.Group>
-        <Form.Group grouped>
-          <h5 className="ui dividing header">Orientation</h5>
-          <Form.Field label="Man" control="input" type="radio" name="orientation" />
-          <Form.Field label="Women" control="input" type="radio" name="orientation" />
-          <Form.Field label="Bisexuel" control="input" type="radio" name="orientation" />
-        </Form.Group>
-        <Form.Checkbox toggle type="checkbox" label="Mail notification" name="notification" />
-        <Button type="submit">Update</Button>
+        <div className="radio-group">
+          <h4 className="ui dividing header">Genre</h4>
+          <div className="form-check">
+            <label htmlFor="man">
+              <input
+                id="man"
+                type="radio"
+                name="genre"
+                value="M"
+                className="form-check-input"
+                checked={genre === 'M'}
+                onChange={e => this.handelChange(e)}
+              />
+              Man
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="women">
+              <input
+                id="women"
+                type="radio"
+                name="genre"
+                value="W"
+                className="form-check-input"
+                checked={genre === 'W'}
+                onChange={e => this.handelChange(e)}
+              />
+              Women
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="other">
+              <input
+                id="other"
+                type="radio"
+                name="genre"
+                value="O"
+                className="form-check-input"
+                checked={genre === 'O'}
+                onChange={e => this.handelChange(e)}
+              />
+              Other
+            </label>
+          </div>
+        </div>
+
+        <div className="radio-group">
+          <h4 className="ui dividing header">Orientation</h4>
+          <div className="form-check">
+            <label htmlFor="orim">
+              <input
+                id="orim"
+                type="radio"
+                name="orientation"
+                value="M"
+                className="form-check-input"
+                checked={orientation === 'M'}
+                onChange={e => this.handelChange(e)}
+              />
+              Man
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="oriw">
+              <input
+                id="oriw"
+                type="radio"
+                name="orientation"
+                value="W"
+                className="form-check-input"
+                checked={orientation === 'W'}
+                onChange={e => this.handelChange(e)}
+              />
+              Women
+            </label>
+          </div>
+          <div className="form-check">
+            <label htmlFor="bi">
+              <input
+                id="bi"
+                type="radio"
+                name="orientation"
+                value="BI"
+                className="form-check-input"
+                checked={orientation === 'BI'}
+                onChange={e => this.handelChange(e)}
+              />
+              Bisexuel
+            </label>
+          </div>
+        </div>
+        <hr />
+        <Form.Checkbox
+          toggle
+          id="notif"
+          name="notifications"
+          label="Receive notifications by email"
+          checked={notifications}
+          onChange={e => this.handelChange(e)}
+        />
+        <hr />
+        <Form.Input
+          fluid
+          id="localisation"
+          label="Localisation"
+          placeholder="Localisation"
+          iconPosition="left"
+          icon="location arrow"
+          name="localisation"
+          onChange={e => this.handelChange(e)}
+        />
       </Form>
     );
 
@@ -116,7 +254,7 @@ class Profile extends Component {
       <div className="bloc">
         <img
           alt="photoDeProfile"
-          src="#"
+          src="data:image/jpeg;base64, "
           className="photo profile"
         />
         <img
@@ -143,4 +281,8 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+});
+
+export default connect(mapStateToProps)(Profile);
