@@ -1,8 +1,8 @@
-
 import React, { Component } from 'react';
 import { Card, Image } from 'semantic-ui-react';
 import Slider from 'react-slick';
 import axios from 'axios';
+import ProfilePage from 'components/ProfilePage/ProfilePage';
 import Chip from '@material-ui/core/Chip';
 import { getAge, getLastLog } from 'shared/utility';
 import 'slick-carousel/slick/slick.css';
@@ -14,6 +14,7 @@ class UserCard extends Component {
     liked: false,
     showLink: false,
     tags: [],
+    modal: false,
   };
 
   componentDidMount() {
@@ -64,9 +65,16 @@ class UserCard extends Component {
   }
 
   showMore = () => {
-    const { showLink } = this.state;
+    this.setState(prevState => ({ showLink: !prevState.showLink }));
+  }
 
-    this.setState({ showLink: !showLink });
+  profilePageHandler = () => {
+    const { modal } = this.state;
+
+    this.setState(prevState => ({ modal: !prevState.modal }), () => {
+      if (modal) document.body.classList.remove('ModalOpen'); // Prevent Body scroll
+      else document.body.classList.add('ModalOpen');
+    });
   }
 
   render() {
@@ -97,7 +105,7 @@ class UserCard extends Component {
       ],
     };
 
-    const { liked, showLink, tags } = this.state;
+    const { liked, showLink, tags, modal } = this.state;
 
     let likeStatus = (<i className="far fa-heart" />);
 
@@ -112,86 +120,96 @@ class UserCard extends Component {
     }
 
     return (
-      <section className="UserCard">
-        <Card>
-          <Slider {...settings} className="Slider">
-            <Image src={`data:image/png;base64,${photo[master]}`} />
-            {Object.keys(photo).map(
-              (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} src={`data:image/png;base64,${photo[value]}`} /> : null)
-            )}
-          </Slider>
-          <Card.Content>
-            <Card.Header>
-              <div className="Status">
+      <>
+        <section className="UserCard">
+          <Card>
+            <Slider {...settings} className="Slider">
+              <Image className="Grabber" src={`data:image/png;base64,${photo[master]}`} />
+              {Object.keys(photo).map(
+                (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} className="Grabber" src={`data:image/png;base64,${photo[value]}`} /> : null)
+              )}
+            </Slider>
+            <Card.Content>
+              <Card.Header>
+                <div className="Status">
+                  <span>
+                    <i className="fas fa-circle" />
+                    {' '}
+                    {getLastLog(connexionLog)}
+                  </span>
+                </div>
                 <span>
-                  <i className="fas fa-circle" />
-                  {' '}
-                  {getLastLog(connexionLog)}
+                  <button type="button" className="Like" onClick={this.changeLikeStatus}>
+                    {likeStatus}
+                  </button>
                 </span>
-              </div>
-              <span>
-                <button type="button" className="Like" onClick={this.changeLikeStatus}>
-                  {likeStatus}
-                </button>
-              </span>
-              <span>{`${firstName.charAt(0).toUpperCase() + firstName.slice(1)}, ${getAge(dateOfBirth)} years`}</span>
-            </Card.Header>
-            <Card.Content extra>
-              <p className="Information">
-                <span className="Distance">
-                  <i className="fas fa-map-marker-alt" />
-                  {` ${location.city}`}
+                <span onClick={this.profilePageHandler} role="presentation" className="Pointer">
+                  <p style={{ display: 'inline-block' }}>
+                    {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)}`}
+                  </p>
+                  <p style={{ display: 'inline-block' }}>{`, ${getAge(dateOfBirth)} years`}</p>
                 </span>
-                <span>
-                  {{
-                    M: (<i className="fas fa-mars" />),
-                    W: (<i className="fas fa-venus" />),
-                    O: (<i className="fas fa-transgender-alt" />),
-                  }[genre]}
-                  {' '}
-                  {(<i className="fas fa-exchange-alt" />)}
-                  {' '}
-                  {{
-                    M: (<i className="fas fa-mars" />),
-                    W: (<i className="fas fa-venus" />),
-                    BI: (
-                      <>
-                        <i className="fas fa-mars" />
-                        {' '}
-                        <i className="fas fa-venus" />
-                      </>
-                    ),
-                  }[orientation]}
-                </span>
-                <span className="Popularity">
-                  <i className="fas fa-fire-alt" />
-                  {score}
-                </span>
-              </p>
-            </Card.Content>
-            <Card.Meta>
+              </Card.Header>
+              <Card.Content extra>
+                <p className="Information">
+                  <span className="Distance">
+                    <i className="fas fa-map-marker-alt" />
+                    {` ${location.city}`}
+                  </span>
+                  <span>
+                    {{
+                      M: (<i className="fas fa-mars" />),
+                      W: (<i className="fas fa-venus" />),
+                      O: (<i className="fas fa-transgender-alt" />),
+                    }[genre]}
+                    {' '}
+                    {(<i className="fas fa-exchange-alt" />)}
+                    {' '}
+                    {{
+                      M: (<i className="fas fa-mars" />),
+                      W: (<i className="fas fa-venus" />),
+                      BI: (
+                        <>
+                          <i className="fas fa-mars" />
+                          {' '}
+                          <i className="fas fa-venus" />
+                        </>
+                      ),
+                    }[orientation]}
+                  </span>
+                  <span className="Popularity">
+                    <i className="fas fa-fire-alt" />
+                    {score}
+                  </span>
+                </p>
+              </Card.Content>
+              <Card.Meta>
               Biography
-            </Card.Meta>
-            <Card.Description>
-              <p className={showLinkClasses.join(' ')}>
-                {bio}
-              </p>
-              <p style={{ textAlign: 'right' }}>
-                <button type="button" className="ShowMore" onClick={this.showMore}>
+              </Card.Meta>
+              <Card.Description>
+                <p className={showLinkClasses.join(' ')}>
+                  {bio}
+                </p>
+                <p style={{ textAlign: 'right' }}>
+                  <button type="button" className="ShowMore" onClick={this.showMore}>
                   Show
-                  {' '}
-                  {showLink ? 'Less' : 'More'}
-                </button>
-              </p>
-            </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            <div className="Tags">
-              {tags.map((tag, id) => (<Chip key={id} style={{ height: '14px' }} label={tag} />))}
-            </div>
-          </Card.Content>
-        </Card>
-      </section>
+                    {' '}
+                    {showLink ? 'Less' : 'More'}
+                  </button>
+                </p>
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div className="Tags">
+                {tags.map((tag, id) => (<Chip key={id} style={{ height: '14px' }} label={tag} />))}
+              </div>
+            </Card.Content>
+          </Card>
+        </section>
+        {modal
+          && <ProfilePage data={data} handleProfilePage={this.profilePageHandler} />
+        }
+      </>
     );
   }
 }

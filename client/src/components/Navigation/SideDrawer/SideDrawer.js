@@ -13,7 +13,7 @@ const sideDrawer = ({ open, closed }) => {
 
   return (
     <>
-      <Backdrop show={open} clicked={closed} />
+      <Backdrop show={open} clicked={closed} mobile />
       <div className={attachedClasses.join(' ')}>
         <NavLinks sideDrawerComponent />
         <NavIcons sideDrawerComponent />

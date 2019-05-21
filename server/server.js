@@ -1,9 +1,12 @@
+import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import dotenv from 'dotenv';
+import socket from 'socket.io';
 import { db } from './database';
 import importuser from './database/importuser';
+import SocketManager from './SocketManager';
 
 // Lien des routes
 import routerApp from './api/router';
@@ -11,7 +14,10 @@ import routerApp from './api/router';
 dotenv.load();
 
 const PORT = process.env.PORT || 8080;
-const server = express();
+const app = express();
+const server = http.createServer(app);
+const io = socket(server);
+
 
 /*
  Si vous voulez tester les mails :
@@ -19,13 +25,21 @@ const server = express();
  sendmail('ton mail', 'sujet', 'mail format txt', '<strong>mail format html</strong>')
 */
 
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-server.use(passport.initialize());
+app.use(passport.initialize());
 
-server.use(routerApp);
+app.use(routerApp);
+
+io.on('connection', (socketFront) => {
+  console.log('new connexion', socketFront.id);
+
+  socketFront.on('disconnect', () => {
+    console.log('new dicoc');
+  });
+});
 
 server.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
 
@@ -43,4 +57,4 @@ db.query('SELECT * FROM users', (err, res) => {
   }
 });
 
-export default server;
+export default app;

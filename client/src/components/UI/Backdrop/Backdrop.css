@@ -9,7 +9,7 @@
 }
 
 @media (min-width: 679px) {
-    .Backdrop {
+    .Backdrop.Mobile {
         display: none;
     }
 }

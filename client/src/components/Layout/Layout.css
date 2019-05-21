@@ -27,3 +27,15 @@ html, body
     flex-direction: column;
     margin-top: 66px;
 }
+
+.ModalOpen {
+    overflow: hidden;
+}
+
+.Pointer {
+    cursor: pointer;
+}
+
+.Grabber {
+    cursor: grab;
+}

@@ -21,6 +21,7 @@
     "pg": "^7.8.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "socket.io": "^2.2.0",
     "sort-json-array": "^0.1.7",
     "uniqid": "^5.0.3",
     "util": "^0.11.1"
