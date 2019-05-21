@@ -1,4 +1,5 @@
 import { db } from '../../database';
+// AND "users"."activate" = true AND "users"."userIsComplete" = true
 
 export const getuserbyIdUser = (idUser, callback) => {
   db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
@@ -22,7 +23,7 @@ export const getUsersVal = (user, callback) => {
     orientation = 'O';
   }
 
-  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND  "users"."idUser" != $3 AND "users"."activate" = true',
+  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND  "users"."idUser" != $3 AND "users"."activate" = true AND "users"."userIsComplete" = true',
     [genre, orientation, idUser],
     (err, res) => {
       if (err.error) {
@@ -43,8 +44,7 @@ export const getUsersForMe = (user, scoreMin, scoreMax, count, start, callback) 
   if (orientation === 'BI') {
     orientation = 'O';
   }
-  // AND "users"."activate" = true
-  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND "users"."score" >= $3 AND "users"."score" <= $4 AND  "users"."idUser" != $5  LIMIT $6 OFFSET $7',
+  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND "users"."score" >= $3 AND "users"."score" <= $4 AND "users"."idUser" != $5 AND "users"."activate" = true AND "users"."userIsComplete" = true LIMIT $6 OFFSET $7',
     [genre, orientation, scoreMin, scoreMax, idUser, count, start],
     (err, res) => {
       if (err.error) {

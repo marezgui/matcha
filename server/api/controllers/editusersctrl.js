@@ -2,10 +2,10 @@ import bcrypt from 'bcrypt';
 import util from 'util';
 // Passport pour le username/logout -> req.user
 import * as mod from '../models/editusermod';
-import { getusertag } from '../models/usersmod';
+import { getusertag, getuserbyUsername } from '../models/usersmod';
 
 // Constants
-const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const MAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 const VERIF_LN_REGEX = /^[a-zA-Z0-9_.-]*$/;
 const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
@@ -56,8 +56,8 @@ export const edituserUsername = async (req, res) => {
     return;
   }
 
-  const getuserbyUsername = util.promisify(mod.getuserbyUsername);
-  const resultUsername = await getuserbyUsername(username).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  const getuserbyUsernameFct = util.promisify(getuserbyUsername);
+  const resultUsername = await getuserbyUsernameFct(username).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUsername !== undefined) {
     res.status(400).json({ error: 'Username Exist' });
     return;

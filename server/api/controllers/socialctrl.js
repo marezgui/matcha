@@ -6,6 +6,11 @@ import * as mod from '../models/socialmod';
 // FONCTIONS
 
 export const getUserBlockedList = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    res.status(400).json({ error: 'Complete your profile first.' });
+    return;
+  }
+
   const { user } = req;
   const blockedornot = util.promisify(mod.getUserBlockedList);
   const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -13,6 +18,11 @@ export const getUserBlockedList = async (req, res) => {
 };
 
 export const getUserAgeDistanceScoreReport = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    res.status(400).json({ error: 'Complete your profile first.' });
+    return;
+  }
+
   const { user } = req;
   const userdata = util.promisify(mod.getUsersVal);
   const data = await userdata(user).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -80,6 +90,10 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
 };
 
 export const getUserLiked = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -100,6 +114,10 @@ export const getUserLiked = async (req, res) => {
 };
 
 export const getUserMatche = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -120,6 +138,10 @@ export const getUserMatche = async (req, res) => {
 };
 
 export const getUserReported = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -140,6 +162,10 @@ export const getUserReported = async (req, res) => {
 };
 
 export const getUserBlocked = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -160,6 +186,9 @@ export const getUserBlocked = async (req, res) => {
 };
 
 export const like = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -216,6 +245,10 @@ export const like = async (req, res) => {
 };
 
 export const unLike = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -270,6 +303,10 @@ export const unLike = async (req, res) => {
 };
 
 export const reportUser = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -312,6 +349,10 @@ export const reportUser = async (req, res) => {
 };
 
 export const unReportUser = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -355,6 +396,10 @@ export const unReportUser = async (req, res) => {
 };
 
 export const blockUser = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -429,6 +474,10 @@ export const blockUser = async (req, res) => {
 };
 
 export const unBlockUser = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
@@ -685,6 +734,10 @@ const getUserNoTags = async (user, count, start, ageMin, ageMax,
 /* //////////////////////////////////////////////////////////////// */
 
 export const getUsersForMe = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
+
 
   const { user } = req;
   const count = Number(req.params.count);

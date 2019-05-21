@@ -3,6 +3,8 @@ import util from 'util';
 import axios from 'axios';
 import { db } from './index';
 
+const MAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
 // Get User Sample
 const getuser = (numberuser, callback) => {
   request.get({
@@ -38,10 +40,10 @@ const importuser = async (numberuser) => {
     const picthumbnail = Buffer.from(image.data).toString('base64');
 
     image = {
-      master: 'image2',
+      master: 'image1',
       image1: piclarge,
-      image2: piclarge,
-      image3: piclarge,
+      image2: picmedium,
+      image3: picthumbnail,
       image4: '',
       image5: '',
     };
@@ -64,16 +66,26 @@ const importuser = async (numberuser) => {
     const mail = tmp.email;
     const { username } = tmp.login;
     const bio = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam lacinia ultrices turpis quis pulvinar. Aliquam tincidunt mi eu lorem feugiat ultricies. In laoreet sem nibh, non pharetra quam facilisis in. Aenean dictum in justo et blandit. Ut ve';
-    const activate = true;
     const photo = image;
     const dateOfBirth = tmp.dob.date;
     const location = place;
     const score = (Math.trunc(Math.random() * (1000 - 0)));
     const report = (Math.trunc(Math.random() * (150 - 0)));
+    let userIsComplete;
+    const activate = Boolean(Math.round(Math.random()));
+    if (activate === false) {
+      userIsComplete = false;
+    } else {
+      userIsComplete = Boolean(Math.round(Math.random()));
+    }
 
-    db.query('INSERT INTO "users" ("password", "firstName", "lastName", "mail", "username", "bio", "activate", "photo", "dateOfBirth", "location", "score", "report") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+    if (!MAIL_REGEX.test(mail)) {
+      continue;
+    }
+
+    db.query('INSERT INTO "users" ("password", "firstName", "lastName", "mail", "username", "bio", "activate", "photo", "dateOfBirth", "location", "score", "report", "userIsComplete") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 ,$13)',
       [password, firstName, lastName, mail, username, bio,
-        activate, photo, dateOfBirth, location, score, report], (err) => {
+        activate, photo, dateOfBirth, location, score, report, userIsComplete], (err) => {
         if (err.error) {
           console.log(err.error);
 

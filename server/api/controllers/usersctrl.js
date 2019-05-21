@@ -8,7 +8,7 @@ import * as mod from '../models/usersmod';
 import * as op from '../utils/passport.utils';
 
 // Constants
-const MAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const MAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 const VERIF_LN_REGEX = /^[a-zA-Z0-9_.-]*$/;
 const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
@@ -137,12 +137,18 @@ export const getallusers = (req, res) => {
 };
 
 export const getuser = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    return res.status(400).json({ error: 'Complete your profile first.' });
+  }
   const idUser = Number(req.params.id);
 
   const finduser = util.promisify(mod.getuserbyIdUser);
   const resultuser = await finduser(idUser).then(data => data)
     .catch((err) => { res.status(400).json({ error: err.error }); });
 
+  if (resultuser.userIsComplete === false) {
+    return res.status(400).json({ error: 'This user have not complete his profile.' });
+  }
   if (resultuser === undefined) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
@@ -150,6 +156,10 @@ export const getuser = async (req, res) => {
 };
 
 export const getUserDistance = async (req, res) => {
+  if (req.user.userIsComplete === false) {
+    res.status(400).json({ error: 'Complete your profile first.' });
+    return;
+  }
   const idUser = Number(req.params.id);
   if (isNaN(idUser)) {
     res.status(400).json({ error: 'Id must be a number' });
@@ -160,6 +170,10 @@ export const getUserDistance = async (req, res) => {
   const resultuser = await finduser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultuser === undefined) {
     res.status(400).json({ error: 'User dosnt exist' });
+    return;
+  }
+  if (resultuser.userIsComplete === false) {
+    res.status(400).json({ error: 'This user have not complete his profile.' });
     return;
   }
   let distance = await geolib.getDistanceSimple(

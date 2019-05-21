@@ -44,6 +44,6 @@ usersRoute.route('/usertag/:id')
   .get(checklog, usersCtrl.getusertag); // affiche tous les tags de l'user connecter
 
 usersRoute.route('/userdistance/:id')
-  .get(checklog, usersCtrl.getUserDistance); // affiche tous les tags de l'user connecter
+  .get(checklog, usersCtrl.getUserDistance); // affiche calcul la distance avec luser connecter
 
 export default usersRoute;
