@@ -14,21 +14,6 @@ const PORT = process.env.PORT || 8080;
 const server = express();
 
 /*
-
-to do :
-verifier aue j'ai bien completer mon profil
-verifier aue l'utilisateur que je like  lui aussi completer son profil
-
-faire un fonction qui permet de set la variable userIsComplete a true si le profil est completer
-
-faire un route pour les notifications:
-vue / like / matche  / unlike
-(fonction qui check et envois mails)
-
-*/
-
-
-/*
  Si vous voulez tester les mails :
  import sendmail from './api/utils/mail.utils'
  sendmail('ton mail', 'sujet', 'mail format txt', '<strong>mail format html</strong>')
