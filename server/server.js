@@ -6,9 +6,6 @@ import dotenv from 'dotenv';
 import socket from 'socket.io';
 import { db } from './database';
 import importuser from './database/importuser';
-import SocketManager from './SocketManager';
-
-// Lien des routes
 import routerApp from './api/router';
 
 dotenv.load();
@@ -17,7 +14,6 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
-
 
 /*
  Si vous voulez tester les mails :
@@ -28,16 +24,21 @@ const io = socket(server);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 app.use(passport.initialize());
-
 app.use(routerApp);
 
-io.on('connection', (socketFront) => {
-  console.log('new connexion', socketFront.id);
+io.on('connection', (client) => {
+  client.on('USER-LOGIN', (data) => {
+    console.log(`${data.user} is connected (id: ${client.id})`);
+  });
 
-  socketFront.on('disconnect', () => {
-    console.log('new dicoc');
+  client.on('SEND_MESSAGE', (data) => {
+    console.log(`new message from ${data.username}`);
+    io.emit('RECEIVE_MESSAGE', data);
+  });
+
+  client.on('disconnect', () => {
+    console.log(`id: ${client.id} disconnected`);
   });
 });
 
