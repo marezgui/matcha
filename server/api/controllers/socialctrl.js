@@ -127,6 +127,31 @@ export const getAllUserMatche = async (req, res) => {
 };
 
 //
+// ─── GET ALL USER MATCHE MORE ───────────────────────────────────────────────────
+//
+export const getAllUserMatcheMore = async (req, res) => {
+  const id = Number(req.params.matcheid);
+  if (isNaN(id)) {
+    res.status(400).json({ error: 'matcheId must be a number' });
+    return;
+  }
+  mod.getAllUserMatcheMore(req.user.idUser, id, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error }); return;
+    }
+    const result = [];
+    for (let i = 0; i < success.length; i += 1) {
+      result[i] = [];
+      result[i].push(Number(success[i].idMatche));
+      result[i].push(Number(success[i].userId1));
+      result[i].push(Number(success[i].userId2));
+      result[i].push(success[i].matcheDate);
+    }
+    res.status(200).json({ result }); // return a tab
+  });
+};
+
+//
 // ─── GET USER MATCHE TRUE FALSE ─────────────────────────────────────────────────
 //
 export const getUserMatche = async (req, res) => {

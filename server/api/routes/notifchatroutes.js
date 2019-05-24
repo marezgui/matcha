@@ -13,6 +13,8 @@ notifchatRoute.route('/getmesageofmatche/:MATCHEID')
   .get(checklog, notifchatCtrl.getMessageOfMatche);
 notifchatRoute.route('/getallmesage/')
   .get(checklog, notifchatCtrl.getAllMessage);
+notifchatRoute.route('/getallnotif/')
+  .get(checklog, notifchatCtrl.getAllNotif);
 notifchatRoute.route('/getnotifvue/')
   .get(checklog, notifchatCtrl.getNotifAtVue);
 notifchatRoute.route('/notifvue/:id')

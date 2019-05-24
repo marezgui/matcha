@@ -41,6 +41,26 @@ const sendmailnotif = (typeNotif, mail) => {
 };
 
 //
+// ─── GET ALL NOTIFICATIONS ──────────────────────────────────────────────────────
+//
+export const getAllNotif = async (req, res) => {
+  const { user } = req;
+  const ResGetAllNotif = util.promisify(mod.getAllNotif);
+  const resultNotif = await ResGetAllNotif(user.idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const result = [];
+  for (let i = 0; i < resultNotif.length; i += 1) {
+    result[i] = [];
+    result[i].push(Number(resultNotif[i].idNotification));
+    result[i].push(Number(resultNotif[i].userId));
+    result[i].push(Number(resultNotif[i].userIdSender));
+    result[i].push(resultNotif[i].vue);
+    result[i].push(resultNotif[i].type);
+    result[i].push(resultNotif[i].message);
+  }
+  res.status(200).json({ resultNotif: result });
+};
+
+//
 // ─── GET ALL MESSAGE OF A USER ──────────────────────────────────────────────────
 //
 export const getAllMessage = async (req, res) => {

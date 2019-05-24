@@ -1,14 +1,11 @@
 Pour le back :
   ✔ faire un code plus propre et bien lisible @done(19-05-24 01:54)
-
   ✔ routes pour modifier le mot de passe @done(19-05-24 01:54)
   ✔ route mot de passe oublier @done(19-05-24 01:54)
-
   Pour les verif :
     ✔ fonction qui set les verif a true @done(19-05-24 01:54)
     ✔ verifier que l'utilistaur a bien completerson profil @done(19-05-24 01:54)
     ✔ verifier que l'utilisateur passif a lui aussi completer son profil @done(19-05-24 01:54)
-
   Pour les notifs/chat :
     ✔ ce renseigner sur socket.io @done(19-05-24 01:54)
     cree les routes et les fonctions lorsqu'un user est :
@@ -24,9 +21,8 @@ Pour le back :
       ✔ recuperer l'historiaue des message de la bdd @done(19-05-24 01:55)
       ✔ resuperer historique message de tous les matches @done(19-05-24 01:55)
       ✔ ajouter la fonction dans socket.io @done(19-05-24 01:55)
-
-  ✔ gerer le fait que l'user soit en ligne @done(19-05-24 01:55)
-
-☐ tester sql insections @started(19-05-24 01:55)
+      ✔ recuperer toute les notifs @done(19-05-24 10:55)
+      ✔ gerer le fait que l'user soit en ligne @done(19-05-24 01:55)
+  ☐ tester sql insections @started(19-05-24 01:55)
 
 Pour le front :

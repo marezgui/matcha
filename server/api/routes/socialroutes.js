@@ -28,6 +28,8 @@ socialRoute.route('/getusermatche/:id') // renvoi true or false si l'user est en
   .get(checklog, socialCtrl.getUserMatche);
 socialRoute.route('/getallusermatche/') // renvoi in tableau de tous les matche avec l'user en cours
   .get(checklog, socialCtrl.getAllUserMatche);
+socialRoute.route('/getallusermatchemore/:matcheid') // renvoi in tableau de tous les matche avec l'user en cours !!!!! + le contenue du matche !!!!!
+  .get(checklog, socialCtrl.getAllUserMatcheMore);
 socialRoute.route('/getusersforme/:count/:start') // count est le nombre d user voulu et start le nombre a partir du quel chercher
   .post(checklog, socialCtrl.getUsersForMe);
 socialRoute.route('/getblockedlist/') // renvoi la liste des bocked

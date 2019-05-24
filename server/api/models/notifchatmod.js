@@ -15,6 +15,20 @@ export const getAllMessageOfMatch = (idMatch, callback) => {
 };
 
 //
+// ─── GET ALL NOTIFS ─────────────────────────────────────────────────────────────
+//
+export const getAllNotif = (id, callback) => {
+  db.query('SELECT * FROM "notification" WHERE "userId" = $1',
+    [id],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+//
 // ─── ADD MESSAGE TO DATABASE ────────────────────────────────────────────────────
 //
 export const addMessageToDatabase = (matcheId, sendUserId, message, callback) => {
