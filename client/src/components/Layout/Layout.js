@@ -22,7 +22,7 @@ class Layout extends Component {
 
     return (
       <>
-        <Toolbar openSideDrawer={this.openSideDrawerHandler} isSideDrawerOpen={showSideDrawer} />
+        <Toolbar openSideDrawer={this.openSideDrawerHandler} />
         <SideDrawer open={showSideDrawer} closed={this.sideDrawerClosedHandler} />
 
         <section className="Content">

@@ -11,6 +11,10 @@
     bottom: 0;
 }
 
+.UserCardPictures {
+    border-radius: 5px 0 0 0;
+}
+
 .UserCard .header {
     padding: 0;
     width: 100%;
@@ -60,8 +64,6 @@
     display: flex;
     justify-content: space-around;
 }
-
-
 
 /* ICONS */
 .fa-mars {

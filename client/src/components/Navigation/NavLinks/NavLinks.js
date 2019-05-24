@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { People, Match } from 'components/UI/Icons/Icons';
+import { People, Dashborad } from 'components/UI/Icons/Icons';
 import './NavLinks.scss';
 
 const navLinks = ({ sideDrawerComponent }) => (
@@ -9,12 +9,6 @@ const navLinks = ({ sideDrawerComponent }) => (
       <NavLink to="/people" activeClassName="active">
         {sideDrawerComponent && <People />}
         <span className="textLinks">People</span>
-      </NavLink>
-    </li>
-    <li>
-      <NavLink exact to="" activeClassName="active">
-        {sideDrawerComponent && <Match />}
-        <span className="textLinks">Match</span>
       </NavLink>
     </li>
   </ul>

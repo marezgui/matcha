@@ -2,11 +2,15 @@ import React from 'react';
 import close from 'assets/images/close.png';
 import './Modal.css';
 
-const modal = ({ children, clicked }) => (
+const modal = ({ title, children, clicked }) => (
   <div className="Modal">
     <div className="ModalHeader">
-      <img className="ModalHeaderImg" src="https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png" alt="" />
-      <div className="ModalHeaderTittle"> Chat </div>
+      <div className="ModalHeaderIcon">
+        <i className="far fa-address-card" />
+      </div>
+      <div className="ModalHeaderTittle">
+        {title}
+      </div>
       <div className="ModalHeaderCloseButton" onClick={clicked} role="presentation">
         <img src={close} alt="close" />
       </div>

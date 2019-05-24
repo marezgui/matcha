@@ -17,7 +17,7 @@ class People extends Component {
   componentDidMount() {
     const { count, start } = this.state;
     const { token } = this.props;
-    console.log(count, start);
+
     axios
       .post(`social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
@@ -32,12 +32,12 @@ class People extends Component {
 
     this.setState({ start: start + count }, () => {
       const { count, start } = this.state; // To REMOVE find a solution!
-      console.log('fetch', count, start);
+      // console.log('fetch', count, start);
       axios
         .post(`social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
           this.setState({ users: users.concat(res.data.resultData.users) });
-          console.log(res.data.resultData.newStart);
+          // console.log(res.data.resultData.newStart);
         });
     });
   };
@@ -63,7 +63,6 @@ class People extends Component {
             <UserCard
               key={user.idUser}
               data={user}
-              token={token}
               refresh
             />
           ))}

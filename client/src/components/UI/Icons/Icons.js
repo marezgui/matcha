@@ -20,21 +20,7 @@ export const Menu = props => (
 
 export const People = () => (
   <span className="Icons">
-    <i className="fas fa-cannabis" />
-  </span>
-);
-
-export const Match = () => (
-  <span className="Icons">
-    <i className="fas fa-cannabis" />
-  </span>
-);
-
-export const Chat = ({ badge }) => (
-  <span className="Icons">
-    <Badge badgeContent={badge} color="primary">
-      <i className="far fa-envelope" />
-    </Badge>
+    <i className="fas fa-street-view" />
   </span>
 );
 

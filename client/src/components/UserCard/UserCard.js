@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Card, Image } from 'semantic-ui-react';
 import Slider from 'react-slick';
 import axios from 'axios';
-import ProfilePage from 'components/ProfilePage/ProfilePage';
-import Chip from '@material-ui/core/Chip';
+import { connect } from 'react-redux';
+import Profile from 'components/Profile/Profile';
+// import Chip from '@material-ui/core/Chip';
 import { getAge, getLastLog } from 'shared/utility';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -12,8 +13,8 @@ import './UserCard.css';
 class UserCard extends Component {
   state = {
     liked: false,
-    showLink: false,
     tags: [],
+    showLink: false,
     modal: false,
   };
 
@@ -47,17 +48,20 @@ class UserCard extends Component {
   }
 
   changeLikeStatus = async () => {
-    const { liked } = this.state;
     const { data, token } = this.props;
+    const { liked } = this.state;
+
     const { idUser } = data;
     const headers = { headers: { Authorization: `bearer ${token}` } };
     await this.getLikeStatus();
 
     if (liked) {
+      this.setState({ liked: false });
       axios
         .delete(`social/like/${idUser}`, headers)
         .then(res => this.setState({ liked: false }));
     } else {
+      this.setState({ liked: true });
       axios
         .post(`social/like/${idUser}`, null, headers)
         .then(res => this.setState({ liked: true }));
@@ -68,7 +72,7 @@ class UserCard extends Component {
     this.setState(prevState => ({ showLink: !prevState.showLink }));
   }
 
-  profilePageHandler = () => {
+  profileHandler = () => {
     const { modal } = this.state;
 
     this.setState(prevState => ({ modal: !prevState.modal }), () => {
@@ -79,18 +83,19 @@ class UserCard extends Component {
 
   render() {
     const { data } = this.props;
+    const { liked, showLink, tags, modal } = this.state;
+
     const { idUser,
       firstName,
       bio,
       dateOfBirth,
       photo,
+      master = photo.master,
       score,
       genre,
       orientation,
       connexionLog,
       location } = data;
-    // const images = Array.prototype.slice.call(photo);
-    const { master } = photo;
 
     const settings = {
       dots: true,
@@ -105,28 +110,26 @@ class UserCard extends Component {
       ],
     };
 
-    const { liked, showLink, tags, modal } = this.state;
-
     let likeStatus = (<i className="far fa-heart" />);
-
-    if (liked) {
-      likeStatus = (<i className="fas fa-heart" />);
-    }
-
     let showLinkClasses = ['Biography', 'Hide'];
 
-    if (showLink) {
-      showLinkClasses = ['Biography', 'Show'];
-    }
+    if (liked) likeStatus = (<i className="fas fa-heart" />);
+
+    if (showLink) showLinkClasses = ['Biography', 'Show'];
+
+    const meta = {
+      tags,
+      likeStatus,
+    };
 
     return (
       <>
         <section className="UserCard">
           <Card>
-            <Slider {...settings} className="Slider">
-              <Image className="Grabber" src={`data:image/png;base64,${photo[master]}`} />
+            <Slider {...settings}>
+              <Image className="Grabber UserCardPictures" src={`data:image/png;base64,${photo[master]}`} />
               {Object.keys(photo).map(
-                (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} className="Grabber" src={`data:image/png;base64,${photo[value]}`} /> : null)
+                (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} className="Grabber UserCardPictures" src={`data:image/png;base64,${photo[value]}`} /> : null)
               )}
             </Slider>
             <Card.Content>
@@ -143,7 +146,7 @@ class UserCard extends Component {
                     {likeStatus}
                   </button>
                 </span>
-                <span onClick={this.profilePageHandler} role="presentation" className="Pointer">
+                <span onClick={this.profileHandler} role="presentation" className="Pointer">
                   <p style={{ display: 'inline-block' }}>
                     {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)}`}
                   </p>
@@ -152,7 +155,7 @@ class UserCard extends Component {
               </Card.Header>
               <Card.Content extra>
                 <p className="Information">
-                  <span className="Distance">
+                  <span>
                     <i className="fas fa-map-marker-alt" />
                     {` ${location.city}`}
                   </span>
@@ -199,19 +202,31 @@ class UserCard extends Component {
                 </p>
               </Card.Description>
             </Card.Content>
-            <Card.Content extra>
+            {/* <Card.Content extra>
               <div className="Tags">
                 {tags.map((tag, id) => (<Chip key={id} style={{ height: '14px' }} label={tag} />))}
               </div>
-            </Card.Content>
+            </Card.Content> */}
           </Card>
         </section>
         {modal
-          && <ProfilePage data={data} handleProfilePage={this.profilePageHandler} />
+          && (
+          <Profile
+            data={data}
+            meta={meta}
+            settings={settings}
+            handleProfile={this.profileHandler}
+            handleLike={this.changeLikeStatus}
+          />
+          )
         }
       </>
     );
   }
 }
 
-export default UserCard;
+const mapStateToProps = state => ({
+  token: state.auth.token,
+});
+
+export default connect(mapStateToProps)(UserCard);
