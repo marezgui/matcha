@@ -34,6 +34,10 @@ const socketFunction = (io) => {
       io.emit('INIT', connexiontab);
     });
 
+    client.on('NEW-NOTIFICATION', () => {
+      io.emit('RELOAD-NOTIFICATION');
+    });
+
     client.on('USER-LOGIN', (data) => {
       idUser = data.userId;
       connexiontab = stockInTab(connexiontab, idUser, true);
