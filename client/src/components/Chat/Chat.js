@@ -14,12 +14,22 @@ class Chat extends Component {
     };
     this.socket = io('localhost:8080');
 
-    this.socket.emit('USER-LOGIN', { user: 'john' });
+    this.socket.emit('USER-LOGIN', { userId: 'IDUSER HERE' });
 
     const addMessage = (data) => {
       const { messages } = this.state;
       this.setState({ messages: [...messages, data] });
     };
+
+    this.socket.on('USER-IS-LOGIN', (idUser, status) => {
+      if (status === true) {
+        console.log(`${idUser} is log`);
+        // la tu peux set un rond verd par ex pour dire au'il est log
+      } else {
+        console.log(`${idUser} is not log`);
+        // et la un rond rouge par exemple
+      }
+    });
 
     this.socket.on('RECEIVE_MESSAGE', (data) => {
       addMessage(data);

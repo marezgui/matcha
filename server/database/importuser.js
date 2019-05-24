@@ -3,9 +3,14 @@ import util from 'util';
 import axios from 'axios';
 import { db } from './index';
 
+// ─── REGEX LIST ─────────────────────────────────────────────────────────────────
+
 const MAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
-// Get User Sample
+//
+// ─── GET DES USERS SAMPLE SUR LE SITE RANDMUSER ─────────────────────────────────
+//
+
 const getuser = (numberuser, callback) => {
   request.get({
     rejectUnauthorized: false,

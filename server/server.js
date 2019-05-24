@@ -7,6 +7,7 @@ import socket from 'socket.io';
 import { db } from './database';
 import importuser from './database/importuser';
 import routerApp from './api/router';
+import socketFunction from './api/socket/controllers';
 
 dotenv.load();
 
@@ -15,32 +16,12 @@ const app = express();
 const server = http.createServer(app);
 const io = socket(server);
 
-/*
- Si vous voulez tester les mails :
- import sendmail from './api/utils/mail.utils'
- sendmail('ton mail', 'sujet', 'mail format txt', '<strong>mail format html</strong>')
-*/
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(routerApp);
-
-io.on('connection', (client) => {
-  client.on('USER-LOGIN', (data) => {
-    console.log(`${data.user} is connected (id: ${client.id})`);
-  });
-
-  client.on('SEND_MESSAGE', (data) => {
-    console.log(`new message from ${data.username}`);
-    io.emit('RECEIVE_MESSAGE', data);
-  });
-
-  client.on('disconnect', () => {
-    console.log(`id: ${client.id} disconnected`);
-  });
-});
+socketFunction(io); // fonction socker.io
 
 server.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
 

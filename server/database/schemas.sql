@@ -1,11 +1,11 @@
-/* Create database named 'matcha' AND execute the following code */
-/* We use camelCase */
--- -----------------------------------------------------
--- Schema matcha
--- -----------------------------------------------------
+--
+-- ─── FORMAT DE LA BASE DE DONNEE ────────────────────────────────────────────────
+--
+
 DROP SCHEMA IF EXISTS matcha ;
-CREATE SCHEMA IF NOT EXISTS matcha ;--DEFAULT CHARACTER SET utf8 ;
---USE matcha ;
+CREATE SCHEMA IF NOT EXISTS matcha ;
+
+Enum
 
 CREATE TYPE GENRE AS ENUM ('M', 'W', 'O');
 CREATE TYPE TYPENOTIF AS ENUM ('VUE', 'LIKE', 'UNLIKE', 'MATCHE', 'NEWMESSAGE', 'OTHER');
@@ -83,6 +83,15 @@ CREATE TABLE IF NOT EXISTS "matche" (
   FOREIGN KEY ("userId1") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY ("userId2") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
+CREATE TABLE IF NOT EXISTS "message" (
+  "idMessage"  SERIAL PRIMARY KEY,
+  "matcheId" INT NOT NULL,
+  "sendUserId" INT NOT NULL,
+  "date" TIMESTAMP DEFAULT NOW(),
+  "message" VARCHAR(255) NULL,
+  FOREIGN KEY ("matcheId") REFERENCES "matche" ("idMatche") ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY ("sendUserId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
+
 CREATE TABLE IF NOT EXISTS "likes" (
   "idLike"  SERIAL PRIMARY KEY,
   "userId" INT NOT NULL,
@@ -91,14 +100,15 @@ CREATE TABLE IF NOT EXISTS "likes" (
   FOREIGN KEY ("userId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY ("likedUserId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
-/* CREATE TYPE TYPENOTIF AS ENUM ('VUE', 'LIKE', 'UNLIKE', 'MATCHE', 'NEWMESSAGE', 'OTHER'); */
 CREATE TABLE IF NOT EXISTS "notification" (
   "idNotification" SERIAL PRIMARY KEY,
   "userId" INT NOT NULL,
+  "userIdSender" INT DEFAULT NULL,
   "vue" boolean DEFAULT '0',
   "type" TYPENOTIF DEFAULT 'OTHER',
-  message VARCHAR(255) NULL,
-  FOREIGN KEY ("userId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
+  "message" VARCHAR(255) NULL,
+  FOREIGN KEY ("userId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY ("userIdSender") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
 CREATE TABLE IF NOT EXISTS "tag" (
   "idTag" SERIAL PRIMARY KEY,
@@ -113,7 +123,7 @@ CREATE TABLE IF NOT EXISTS "blocked" (
   FOREIGN KEY ("userId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY ("blockedUserId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
-  CREATE TABLE IF NOT EXISTS "report" (
+CREATE TABLE IF NOT EXISTS "report" (
   "idReported" SERIAL PRIMARY KEY,
   "userId" INT NOT NULL,
   "reportedUserId" INT NOT NULL,

@@ -1,6 +1,9 @@
 import { db } from '../../database';
 // AND "users"."activate" = true AND "users"."userIsComplete" = true
 
+//
+// ─── GET USER BY ID ─────────────────────────────────────────────────────────────
+//
 export const getuserbyIdUser = (idUser, callback) => {
   db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
@@ -10,19 +13,18 @@ export const getuserbyIdUser = (idUser, callback) => {
   });
 };
 
+//
+// ─── GET USER VALUES FOR SEARCHING MATCHE ───────────────────────────────────────
+//
 export const getUsersVal = (user, callback) => {
-
   let { genre, orientation } = user;
   const { idUser } = user;
-
   if (genre === 'O') {
     genre = 'BI';
   }
-
   if (orientation === 'BI') {
     orientation = 'O';
   }
-
   db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND  "users"."idUser" != $3 AND "users"."activate" = true AND "users"."userIsComplete" = true',
     [genre, orientation, idUser],
     (err, res) => {
@@ -33,14 +35,15 @@ export const getUsersVal = (user, callback) => {
     });
 };
 
+//
+// ─── GET USER FOR ME MATCHE FUNCTION ────────────────────────────────────────────
+//
 export const getUsersForMe = (user, scoreMin, scoreMax, count, start, callback) => {
-
   let { genre, orientation } = user;
   const { idUser } = user;
   if (genre === 'O') {
     genre = 'BI';
   }
-
   if (orientation === 'BI') {
     orientation = 'O';
   }
@@ -54,6 +57,9 @@ export const getUsersForMe = (user, scoreMin, scoreMax, count, start, callback) 
     });
 };
 
+//
+// ─── GET TAGS OF USER ───────────────────────────────────────────────────────────
+//
 export const getTagOfUsers = (id, tag, callback) => {
   db.query('SELECT "tag"."userId" FROM "tag" WHERE "tag" = $1 AND "userId" != $2', [tag, id], (err, res) => {
     if (err.error) {
@@ -63,18 +69,28 @@ export const getTagOfUsers = (id, tag, callback) => {
   });
 };
 
+//
+// ─── TEST USER ID ───────────────────────────────────────────────────────────────
+//
 export const testUserId = (idUser, callback) => {
   db.query('SELECT * FROM "users" WHERE "idUser" = $1', [idUser], (err, res) => {
     if (err.error) {
       callback(err, null);
     }
     if (res[0]) {
-      callback(null, true);
+      if (res[0].activate === true && res[0].userIsComplete === true) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
     }
     callback(null, false);
   });
 };
 
+//
+// ─── LIKE REQUEST ───────────────────────────────────────────────────────────────
+//
 export const like = (idUser, id, callback) => {
   db.query('INSERT INTO "likes" ("userId", "likedUserId") VALUES ($1, $2)',
     [idUser, id],
@@ -86,6 +102,9 @@ export const like = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── LIKE REQUEST ───────────────────────────────────────────────────────────────
+//
 export const unLike = (idUser, id, callback) => {
   db.query('DELETE FROM "likes" WHERE "userId" = $1 AND "likedUserId" = $2',
     [idUser, id],
@@ -97,6 +116,9 @@ export const unLike = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── REPORT USER REQUEST ────────────────────────────────────────────────────────
+//
 export const report = (idUser, id, callback) => {
   db.query('INSERT INTO "report" ("userId", "reportedUserId") VALUES ($1, $2)',
     [idUser, id],
@@ -108,6 +130,9 @@ export const report = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── UNREPORT USER REQUEST ──────────────────────────────────────────────────────
+//
 export const unReport = (idUser, id, callback) => {
   db.query('DELETE FROM "report" WHERE "userId" = $1 AND "reportedUserId" = $2',
     [idUser, id],
@@ -119,6 +144,9 @@ export const unReport = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── EDIT LIKE VAL ──────────────────────────────────────────────────────────────
+//
 export const editLike = (id, val, callback) => {
   const value = Number(val);
   db.query('SELECT "users"."score" FROM "users" WHERE "idUser" = $1', [id],
@@ -139,7 +167,9 @@ export const editLike = (id, val, callback) => {
     });
 };
 
-
+//
+// ─── EDIT REPORT VAL ────────────────────────────────────────────────────────────
+//
 export const editReport = (id, val, callback) => {
   const value = Number(val);
   db.query('SELECT "users"."report" FROM "users" WHERE "idUser" = $1', [id],
@@ -160,6 +190,9 @@ export const editReport = (id, val, callback) => {
     });
 };
 
+//
+// ─── BLOCK USER ─────────────────────────────────────────────────────────────────
+//
 export const blockUser = (idUser, id, callback) => {
   db.query('INSERT INTO "blocked" ("userId", "blockedUserId") VALUES ($1, $2)',
     [idUser, id],
@@ -171,6 +204,9 @@ export const blockUser = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── UNBLOCK USER ───────────────────────────────────────────────────────────────
+//
 export const unBlockUser = (idUser, id, callback) => {
   db.query('DELETE FROM "blocked" WHERE "userId" = $1 AND "blockedUserId" = $2',
     [idUser, id],
@@ -182,6 +218,9 @@ export const unBlockUser = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── GET USER LIKE ──────────────────────────────────────────────────────────────
+//
 export const getUserLiked = (idUser, id, callback) => {
   db.query('SELECT "likes" FROM "likes" WHERE "userId" = $1 AND "likedUserId" = $2',
     [idUser, id],
@@ -197,6 +236,9 @@ export const getUserLiked = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── GET USER REPORT ────────────────────────────────────────────────────────────
+//
 export const getUserReported = (idUser, id, callback) => {
   db.query('SELECT "report" FROM "report" WHERE "userId" = $1 AND "reportedUserId" = $2',
     [idUser, id],
@@ -212,6 +254,9 @@ export const getUserReported = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── GET USER BLOCKED LIST ──────────────────────────────────────────────────────
+//
 export const getUserBlockedList = (idUser, callback) => {
   db.query('SELECT * FROM "blocked" WHERE "userId" = $1 OR "blockedUserId" = $1',
     [idUser],
@@ -223,6 +268,9 @@ export const getUserBlockedList = (idUser, callback) => {
     });
 };
 
+//
+// ─── GET USER BLOCKED ───────────────────────────────────────────────────────────
+//
 export const getUserBlocked = (idUser, id, callback) => {
   db.query('SELECT "blocked" FROM "blocked" WHERE ("userId" = $1 AND "blockedUserId" = $2) OR ("userId" = $2 AND "blockedUserId" = $1)',
     [idUser, id],
@@ -238,6 +286,23 @@ export const getUserBlocked = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── GET ALL USER MATCHE ────────────────────────────────────────────────────────
+//
+export const getAllUserMatche = (idUser, callback) => {
+  db.query('SELECT "matche"."idMatche" FROM "matche" WHERE "userId1" = $1 OR "userId2" = $1',
+    [idUser],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+//
+// ─── GET USER MATCHE ────────────────────────────────────────────────────────────
+//
 export const getUserMatche = (idUser, id, callback) => {
   db.query('SELECT "matche" FROM "matche" WHERE ("userId1" = $1 AND "userId2" = $2) OR ("userId1" = $2 AND "userId2" = $1)',
     [idUser, id],
@@ -253,6 +318,9 @@ export const getUserMatche = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── CREATE MATCHE ──────────────────────────────────────────────────────────────
+//
 export const createMatche = (idUser, id, callback) => {
   db.query('INSERT INTO "matche" ("userId1", "userId2") VALUES ($1, $2)',
     [idUser, id],
@@ -264,6 +332,9 @@ export const createMatche = (idUser, id, callback) => {
     });
 };
 
+//
+// ─── DEL MATCHE ─────────────────────────────────────────────────────────────────
+//
 export const delMatche = (idUser, id, callback) => {
   db.query('DELETE FROM "matche" WHERE ("userId1" = $1 AND "userId2" = $2) OR ("userId1" = $2 AND "userId2" = $1)',
     [idUser, id],

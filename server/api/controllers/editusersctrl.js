@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt';
 import util from 'util';
-// Passport pour le username/logout -> req.user
 import * as mod from '../models/editusermod';
 import { getusertag, getuserbyUsername } from '../models/usersmod';
 
-// Constants
+//
+// ─── REGEX ──────────────────────────────────────────────────────────────────────
+//
 const MAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 const VERIF_LN_REGEX = /^[a-zA-Z0-9_.-]*$/;
@@ -12,28 +13,61 @@ const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
 const VERIF_BIO = /^[a-zA-Z0-9_.-\s]*$/;
 const VERIF_BD = /^((?:0[1-9])|(?:1[0-2]))\/((?:0[0-9])|(?:[1-2][0-9])|(?:3[0-1]))\/(\d{4})$/; // ex : 04/25/1987 month/day/year
 
-// FONCTIONS
+//
+// ─── CHECK USERISCOMPLETE ───────────────────────────────────────────────────────
+//
+export const checkUserIsComplete = async (req, res) => {
+  const { user } = req;
+  const { location } = user;
+  const { photo } = user;
+  let err = 0;
+  const checkUserComplete = util.promisify(mod.editUserIsComplete);
+  if (user.bio === '' || user.bio === null) {
+    err = 2;
+  } else if (user.dateOfBirth === null) {
+    err = 3;
+  } else if (photo.master === null || photo.master === undefined || photo.master === '') {
+    err = 4;
+  } else if ((photo.image1 === '' || photo.image1 === null || photo.image1 === undefined)
+    && (photo.image2 === '' || photo.image2 === null || photo.image2 === undefined)
+    && (photo.image3 === '' || photo.image3 === null || photo.image3 === undefined)
+    && (photo.image4 === '' || photo.image4 === null || photo.image4 === undefined)
+    && (photo.image5 === '' || photo.image5 === null || photo.image5 === undefined)) {
+    err = 5;
+  } else if ((location.longitude === '' || location.longitude === null || location.longitude === undefined)
+    || (location.latitude === '' || location.latitude === null || location.latitude === undefined)) {
+    err = 6;
+  } else if (err === 0) {
+    if (user.userIsComplete === false) {
+      await checkUserComplete(user.idUser, true).then().catch((error) => { console.log(`[Error]: ${error}`); });
+    } res.status(200).json({ message: 'Profil Complite' });
 
+  } else if (err !== 0) {
+    if (user.userIsComplete === true) {
+      await checkUserComplete(user.idUser, false).then().catch((error) => { console.log(`[Error]: ${error}`); });
+    } res.status(400).json({ error: `Profil NOT Complite ${err}` });
+  }
+};
+
+//
+// ─── EDIT USER MAIL ─────────────────────────────────────────────────────────────
+//
 export const edituserMail = async (req, res) => {
   const { mail } = req.body;
-
   if (!mail) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!MAIL_REGEX.test(mail)) {
     res.status(400).json({ error: 'Invalid mail.' });
     return;
   }
-
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail !== undefined) {
     res.status(400).json({ error: 'User email already have a account' });
     return;
   }
-
   mod.edituserMail(req, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
@@ -43,19 +77,19 @@ export const edituserMail = async (req, res) => {
   });
 };
 
+//
+// ─── EDIT USER NAME ─────────────────────────────────────────────────────────────
+//
 export const edituserUsername = async (req, res) => {
   const { username } = req.body;
-
   if (!username) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!VERIF_LN_REGEX.test(username)) {
     res.status(400).json({ error: 'Invalid Username, only lettes and numbers' });
     return;
   }
-
   const getuserbyUsernameFct = util.promisify(getuserbyUsername);
   const resultUsername = await getuserbyUsernameFct(username).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUsername !== undefined) {
@@ -71,15 +105,15 @@ export const edituserUsername = async (req, res) => {
   });
 };
 
-
+//
+// ─── EDIT USER PASSWORD ─────────────────────────────────────────────────────────
+//
 export const edituserPassword = async (req, res) => {
   const { password } = req.body;
-
   if (!password) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!PASSWORD_REGEX.test(password)) {
     res.status(400).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
     return;
@@ -95,9 +129,11 @@ export const edituserPassword = async (req, res) => {
   });
 };
 
+//
+// ─── EDIT USER FIRST NAME ───────────────────────────────────────────────────────
+//
 export const edituserFirstName = async (req, res) => {
   const { firstName } = req.body;
-
   if (!firstName) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
@@ -115,9 +151,11 @@ export const edituserFirstName = async (req, res) => {
   });
 };
 
+//
+// ─── EDIT USER LAST NAME ────────────────────────────────────────────────────────
+//
 export const edituserLastName = async (req, res) => {
   const { lastName } = req.body;
-
   if (!lastName) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
@@ -135,9 +173,11 @@ export const edituserLastName = async (req, res) => {
   });
 };
 
+//
+// ─── EDIT USER BIO ──────────────────────────────────────────────────────────────
+//
 export const edituserBio = async (req, res) => {
   const { bio } = req.body;
-
   if (!bio) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
@@ -155,19 +195,19 @@ export const edituserBio = async (req, res) => {
   });
 };
 
+//
+// ─── EDIT USER GENRE ────────────────────────────────────────────────────────────
+//
 export const edituserGenre = async (req, res) => {
   const { genre } = req.body;
-
   if (!genre) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!(genre === 'M' || genre === 'W' || genre === 'O')) {
     res.status(400).json({ error: 'Error genre.' });
     return;
   }
-
   mod.edituserGenre(req, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
@@ -177,19 +217,19 @@ export const edituserGenre = async (req, res) => {
   });
 };
 
+//
+// ─── EDIT USER ORIENTATION ──────────────────────────────────────────────────────
+//
 export const edituserOrientation = async (req, res) => {
   const { orientation } = req.body;
-
   if (!orientation) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!(orientation === 'M' || orientation === 'W' || orientation === 'BI')) {
     res.status(400).json({ error: 'Error orientation.' });
     return;
   }
-
   mod.edituserOrientation(req, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
@@ -199,20 +239,19 @@ export const edituserOrientation = async (req, res) => {
   });
 };
 
-
+//
+// ─── EDIT USER DATE OF BIRTH ────────────────────────────────────────────────────
+//
 export const edituserDateOfBirth = async (req, res) => {
   const { dateOfBirth } = req.body;
-
   if (!dateOfBirth) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!VERIF_BD.test(dateOfBirth)) {
     res.status(400).json({ error: 'Invalid date of birth. ex : 04/25/1987 month/day/year' });
     return;
   }
-
   mod.edituserDateOfBirth(req, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
@@ -222,13 +261,15 @@ export const edituserDateOfBirth = async (req, res) => {
   });
 };
 
+//
+// ─── REMOVE A TAG ───────────────────────────────────────────────────────────────
+//
 export const removetag = (req, res) => {
   const { tag } = req.body;
   if (!tag) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!VERIF_LN_REGEX.test(tag)) {
     res.status(400).json({ error: 'Invalid tag, only lettes and numbers' });
     return;
@@ -242,22 +283,22 @@ export const removetag = (req, res) => {
   });
 };
 
+//
+// ─── ADD A NEW TAG ──────────────────────────────────────────────────────────────
+//
 export const addtag = async (req, res) => {
   const { tag } = req.body;
   const { iduser } = req.user;
-
   if (!tag) {
     res.status(400).json({ error: 'Missing parameters.' });
     return;
   }
-
   if (!VERIF_LN_REGEX.test(tag)) {
     res.status(400).json({ error: 'Invalid tag, only lettes and numbers' });
     return;
   }
   const gettaglist = util.promisify(getusertag);
   const taglist = await gettaglist(iduser).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
-
   // si tag est dega dans taglist on return
   for (let i = 0; i < taglist.length; i += 1) {
     if (tag === taglist[i].tag) {
@@ -265,13 +306,11 @@ export const addtag = async (req, res) => {
       return;
     }
   }
-
   // on verifi son nombre de tag max 5
   if (taglist.length > 4) {
     res.status(400).json({ error: 'You have already 5 tag' });
     return;
   }
-
   mod.addtag(req, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });
@@ -281,26 +320,14 @@ export const addtag = async (req, res) => {
   });
 };
 
-/*
-    Formatage des json :
-    let photo = {
-      master: 'image2',
-      image1: piclarge,
-      image2: picmedium,
-      image3: picthumbnail,
-      image4: '',
-      image5: '',
-    };
-    image = JSON.stringify(image); // on a donc notre json base64 pour les images
-*/
-
+//
+// ─── EDIT USER PHOTOS ───────────────────────────────────────────────────────────
+//
 export const edituserPhoto = async (req, res) => {
   let { photo } = req.body;
-
   if (typeof photo === 'undefined') {
     return res.status(400).json({ error: 'Missing arguments photo' });
   }
-
   photo = JSON.parse(photo);
   if (typeof photo.master === 'undefined') {
     return res.status(400).json({ error: 'Missing arguments master' });
@@ -329,27 +356,15 @@ export const edituserPhoto = async (req, res) => {
   });
 };
 
-/*
-    let location = {
-      street: location.street,
-      city: location.city,
-      state: location.state,
-      postcode: location.postcode,
-      latitude: locationlatitude,
-      longitude: locationongitude,
-    };
-    location = JSON.stringify(location); // on a donc notre location
-*/
-
+//
+// ─── EDIT USER LOCATION ─────────────────────────────────────────────────────────
+//
 export const edituserLocation = async (req, res) => {
   let { location } = req.body;
-
   if (typeof location === 'undefined') {
     return res.status(400).json({ error: 'Missing arguments Location' });
   }
-
   location = JSON.parse(location);
-
   if (typeof location.street === 'undefined') {
     return res.status(400).json({ error: 'Missing arguments street' });
   }
@@ -368,7 +383,6 @@ export const edituserLocation = async (req, res) => {
   if (typeof location.longitude === 'undefined') {
     return res.status(400).json({ error: 'Missing arguments longitude' });
   }
-
   return mod.editLocation(req, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error });

@@ -1,15 +1,13 @@
 import express from 'express';
-
-// Pour les users
 import usersRoute from './routes/usersroutes';
 import socialRoute from './routes/socialroutes';
 import editUsersRoute from './routes/editusersroutes';
+import notifchatRoute from './routes/notifchatroutes';
 
 const routerApp = express.Router();
 
-// Pour l'index
-routerApp.route('/') // la racine
-  .all((req, res) => { // on peux mettre le man ici
+routerApp.route('/')
+  .all((req, res) => {
     res.json({ message: 'Welcome to --- MATCHA -- ',
       methode: `you are using ${req.method} methode` });
   });
@@ -17,6 +15,6 @@ routerApp.route('/') // la racine
 routerApp.use('/api/users/', usersRoute);
 routerApp.use('/api/edit/', editUsersRoute);
 routerApp.use('/api/social/', socialRoute);
-// a l'interieur de social il ya les likes / matches / report / score
+routerApp.use('/api/notifchat/', notifchatRoute);
 
 export default routerApp;

@@ -2,31 +2,33 @@ import util from 'util';
 import geolib from 'geolib';
 import sortJsonArray from 'sort-json-array';
 import * as mod from '../models/socialmod';
+import { likeNotif, unlikeNotif, matcheNotif } from './notifchatctrl';
 
-// FONCTIONS
-
+//
+// ─── GET LIST OF BLOCKED USERS ──────────────────────────────────────────────────
+//
 export const getUserBlockedList = async (req, res) => {
   if (req.user.userIsComplete === false) {
     res.status(400).json({ error: 'Complete your profile first.' });
     return;
   }
-
   const { user } = req;
   const blockedornot = util.promisify(mod.getUserBlockedList);
   const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
   res.status(200).json({ blockedTab });
 };
 
+//
+// ─── GET USERS VAL FOR SEARCH ───────────────────────────────────────────────────
+//
 export const getUserAgeDistanceScoreReport = async (req, res) => {
   if (req.user.userIsComplete === false) {
     res.status(400).json({ error: 'Complete your profile first.' });
     return;
   }
-
   const { user } = req;
   const userdata = util.promisify(mod.getUsersVal);
   const data = await userdata(user).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
-
   let scoreMin = null;
   let scoreMax = null;
   let distanceMin = null;
@@ -35,12 +37,9 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
   let ageMax = null;
   let reportMin = null;
   let reportMax = null;
-
   let c = 0;
-
   const blockedornot = util.promisify(mod.getUserBlockedList);
   const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
-
   for (let i = 0; i < data.length; i += 1) {
     for (let j = 0; j < blockedTab.length; j += 1) {
       if (blockedTab[j].blockedUserId === data[i].idUser) {
@@ -60,7 +59,6 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
     distance /= 1000;
     const userAge = Math.floor((new Date() - data[i].dateOfBirth)
     / 1000 / 60 / 60 / 24 / 365);
-
     scoreMin = scoreMin === null ? data[i].score : scoreMin;
     scoreMax = scoreMax === null ? data[i].score : scoreMax;
     distanceMin = distanceMin === null ? distance : distanceMin;
@@ -69,7 +67,6 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
     ageMax = ageMax === null ? userAge : ageMax;
     reportMin = reportMin === null ? data[i].report : reportMin;
     reportMax = reportMax === null ? data[i].report : reportMax;
-
     scoreMin = scoreMin > data[i].score ? data[i].score : scoreMin;
     scoreMax = scoreMax < data[i].score ? data[i].score : scoreMax;
     distanceMin = distanceMin > distance ? distance : distanceMin;
@@ -89,19 +86,19 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
     reportMax });
 };
 
+//
+// ─── GET USER LIKED TRUE FALSE ──────────────────────────────────────────────────
+//
 export const getUserLiked = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
@@ -113,19 +110,35 @@ export const getUserLiked = async (req, res) => {
   });
 };
 
+//
+// ─── GET ALL USER MATCHE ────────────────────────────────────────────────────────
+//
+export const getAllUserMatche = async (req, res) => {
+  mod.getAllUserMatche(req.user.idUser, (err, success) => {
+    if (err) {
+      res.status(400).json({ error: err.error }); return;
+    }
+    const result = [];
+    for (let i = 0; i < success.length; i += 1) {
+      result.push(Number(success[i].idMatche));
+    }
+    res.status(200).json({ result }); // return a tab
+  });
+};
+
+//
+// ─── GET USER MATCHE TRUE FALSE ─────────────────────────────────────────────────
+//
 export const getUserMatche = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
@@ -137,19 +150,19 @@ export const getUserMatche = async (req, res) => {
   });
 };
 
+//
+// ─── GET USER REPORTED TRUE FALSE ───────────────────────────────────────────────
+//
 export const getUserReported = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
@@ -161,19 +174,19 @@ export const getUserReported = async (req, res) => {
   });
 };
 
+//
+// ─── GET USER BLOCKED TRUE FALSE ────────────────────────────────────────────────
+//
 export const getUserBlocked = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
@@ -185,6 +198,9 @@ export const getUserBlocked = async (req, res) => {
   });
 };
 
+//
+// ─── LIKE USER ──────────────────────────────────────────────────────────────────
+//
 export const like = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
@@ -193,47 +209,39 @@ export const like = async (req, res) => {
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
-
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (blockedvalue === true) {
     return res.status(400).json({ error: 'you have blocked this user' });
   }
-
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (likevalue === true) {
     return res.status(400).json({ error: 'you already like this user' });
   }
-
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   const matchereeci = util.promisify(mod.getUserLiked);
   const likereci = await matchereeci(id, req.user.idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if ((matchevalue === false) && (likereci === true)) {
     mod.createMatche(req.user.idUser, id, (err, success) => {
       if (err) {
         console.log(err);
       }
+      matcheNotif(req.user.idUser, id);
       console.log(`create matche ${success}`);
     });
   }
-
   mod.editLike(id, 1, (err, success) => {
     if (err) {
       console.log(err);
     }
+    likeNotif(req.user.idUser, id);
     console.log(`add like ${success}`);
   });
   return mod.like(req.user.idUser, id, (err, success) => {
@@ -244,33 +252,29 @@ export const like = async (req, res) => {
   });
 };
 
+//
+// ─── UNLIKE USER ────────────────────────────────────────────────────────────────
+//
 export const unLike = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
-
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (blockedvalue === true) {
     return res.status(400).json({ error: 'you have blocked this user' });
   }
-
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (matchevalue === true) {
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
@@ -279,19 +283,16 @@ export const unLike = async (req, res) => {
       console.log(`remove matche ${success}`);
     });
   }
-
-
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (likevalue === false) {
     return res.status(400).json({ error: 'you already unlike this user' });
   }
-
   mod.editLike(id, Number(-1), (err, success) => {
     if (err) {
       console.log(err);
     }
+    unlikeNotif(req.user.idUser, id);
     console.log(`remove like ${success}`);
   });
   return mod.unLike(req.user.idUser, id, (err, success) => {
@@ -302,44 +303,38 @@ export const unLike = async (req, res) => {
   });
 };
 
+//
+// ─── REPORT USER ────────────────────────────────────────────────────────────────
+//
 export const reportUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
-
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (blockedvalue === true) {
     return res.status(400).json({ error: 'you have blocked this user' });
   }
-
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (reportvalue === true) {
     return res.status(400).json({ error: 'you already report this user' });
   }
-
   mod.editReport(id, 1, (err, success) => {
     if (err) {
       console.log(err);
     }
     console.log(`add report ${success}`);
   });
-
   return mod.report(req.user.idUser, id, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error }); return;
@@ -348,45 +343,38 @@ export const reportUser = async (req, res) => {
   });
 };
 
+//
+// ─── UNREPORT USER ──────────────────────────────────────────────────────────────
+//
 export const unReportUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
-
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (blockedvalue === true) {
     return res.status(400).json({ error: 'you have blocked this user' });
   }
-
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (reportvalue === false) {
     return res.status(400).json({ error: 'you already unreport this user' });
   }
-
   mod.editReport(id, Number(-1), (err, success) => {
     if (err) {
       console.log(err);
     }
     console.log(`remove report ${success}`);
   });
-
-
   return mod.unReport(req.user.idUser, id, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error }); return;
@@ -395,32 +383,29 @@ export const unReportUser = async (req, res) => {
   });
 };
 
+//
+// ─── BLOCK USER ─────────────────────────────────────────────────────────────────
+//
 export const blockUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (blockedvalue === true) {
     return res.status(400).json({ error: 'you already have blocked this user' });
   }
-
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (matchevalue === true) {
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
@@ -431,7 +416,6 @@ export const blockUser = async (req, res) => {
   }
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (likevalue === true) {
     mod.editLike(id, Number(-1), (err, success) => {
       if (err) {
@@ -446,10 +430,8 @@ export const blockUser = async (req, res) => {
       console.log({ message: `User ${id} unliked ${success}` });
     });
   }
-
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (reportvalue === false) {
     mod.editReport(id, 1, (err, success) => {
       if (err) {
@@ -464,7 +446,6 @@ export const blockUser = async (req, res) => {
       console.log({ message: `User ${id} report ${success}` });
     });
   }
-
   return mod.blockUser(req.user.idUser, id, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error }); return;
@@ -473,32 +454,29 @@ export const blockUser = async (req, res) => {
   });
 };
 
+//
+// ─── UNBLOCK USER ───────────────────────────────────────────────────────────────
+//
 export const unBlockUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
   const id = Number(req.params.id);
   if (isNaN(id)) {
     return res.status(400).json({ error: 'Id must be a number' });
   }
-
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (resultexist === false) {
     return res.status(400).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (blockedvalue === false) {
     return res.status(400).json({ error: 'you already have unblocked this user' });
   }
-
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-
   if (reportvalue === false) {
     mod.editReport(id, -1, (err, success) => {
       if (err) {
@@ -513,7 +491,6 @@ export const unBlockUser = async (req, res) => {
       console.log({ message: `User ${id} unreport ${success}` });
     });
   }
-
   return mod.unBlockUser(req.user.idUser, id, (err, success) => {
     if (err) {
       res.status(400).json({ error: err.error }); return;
@@ -522,9 +499,9 @@ export const unBlockUser = async (req, res) => {
   });
 };
 
-/* ---------------------------------------------------------- */
-/* ---///---///---/// Debut fonction Mache \\\---\\\---\\\--- */
-/* ---------------------------------------------------------- */
+//
+// ─── FONCTION MATCHE AVEC ET SANS TAG ───────────────────────────────────────────
+//
 
 /*
   la fonction return un json :
@@ -544,6 +521,9 @@ export const unBlockUser = async (req, res) => {
     les tags sont separer par une virgule tags -> test1,test2 tag,test etc...
 */
 
+//
+// ─── GET USER FOR ME WITH TAG ───────────────────────────────────────────────────
+//
 const getUserwithTags = async (user, count, start, ageMin, ageMax,
   distanceMin, distanceMax, scoreMin, scoreMax, tags, res) => {
   const tagid = [];
@@ -570,19 +550,15 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
     setcountid = 0;
   }
   const resultData = { users: [], newStart };
-
   let result = 0;
   let c = 0;
   const blockedornot = util.promisify(mod.getUserBlockedList);
   const getUserFunction = util.promisify(mod.getuserbyIdUser);
   const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
-
   for (newStart; newStart < goodTagId.length; newStart += 1) {
-
     if (result >= count) {
       break;
     }
-
     for (let j = 0; j < blockedTab.length; j += 1) {
       if (blockedTab[j].blockedUserId === goodTagId[newStart]) {
         c = 1;
@@ -594,12 +570,10 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
       c = 0;
       continue;
     }
-
     const getUser = await getUserFunction(goodTagId[newStart]).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
     if (getUser === undefined) {
       break;
     }
-
     let distance = await geolib.getDistanceSimple(
       { latitude: getUser.location.latitude, longitude: getUser.location.longitude },
       { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
@@ -643,7 +617,6 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
         continue;
       }
     }
-
     resultData.users.push(getUser);
     result += 1;
   }
@@ -652,23 +625,20 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
   return res.status(200).json({ resultData });
 };
 
-/* //////////////////////////////////////////////////////////////// */
-
+//
+// ─── GET USER FOR ME NO TAG ─────────────────────────────────────────────────────
+//
 const getUserNoTags = async (user, count, start, ageMin, ageMax,
   distanceMin, distanceMax, scoreMin, scoreMax, res) => {
-
   let result = 0;
   let c = 0;
   let newStart = start;
   const resultData = { users: [], newStart };
   const blockedornot = util.promisify(mod.getUserBlockedList);
   const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
-
   const getUserFct = util.promisify(mod.getUsersForMe);
-
   while (result < count) {
     const getUser = await getUserFct(user, scoreMin, scoreMax, 150, start).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
-
     for (let i = 0; i < 150; i += 1) {
       if (result >= count) {
         break;
@@ -731,14 +701,13 @@ const getUserNoTags = async (user, count, start, ageMin, ageMax,
   return res.status(200).json({ resultData });
 };
 
-/* //////////////////////////////////////////////////////////////// */
-
+//
+// ─── GET USER FOR ME ────────────────────────────────────────────────────────────
+//
 export const getUsersForMe = async (req, res) => {
   if (req.user.userIsComplete === false) {
     return res.status(400).json({ error: 'Complete your profile first.' });
   }
-
-
   const { user } = req;
   const count = Number(req.params.count);
   const start = Number(req.params.start);
@@ -768,8 +737,6 @@ export const getUsersForMe = async (req, res) => {
   if (scoreMax === undefined || scoreMax === '') {
     scoreMax = null;
   }
-
-
   if (tags === undefined || tags === '') {
     tags = null;
     return getUserNoTags(user, count, start, ageMin, ageMax,
