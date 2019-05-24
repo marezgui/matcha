@@ -2,7 +2,6 @@ import { Col, Row, Container, } from 'reactstrap';
 import { Form, } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Layout from '../../components/Layout/Layout';
 import './Profile.css';
 
 class Profile extends Component {
@@ -266,17 +265,15 @@ class Profile extends Component {
     );
 
     return (
-      <Layout>
-        <Container>
-          <Row>
-            <Col>{PhotoProfile}</Col>
-          </Row>
-          <Row>
-            <Col md="6" sm="12">{PersonelInfo}</Col>
-            <Col md="6" sm="12">{ProfilInfo}</Col>
-          </Row>
-        </Container>
-      </Layout>
+      <Container>
+        <Row>
+          <Col>{PhotoProfile}</Col>
+        </Row>
+        <Row>
+          <Col md="6" sm="12">{PersonelInfo}</Col>
+          <Col md="6" sm="12">{ProfilInfo}</Col>
+        </Row>
+      </Container>
     );
   }
 }

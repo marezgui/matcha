@@ -29,13 +29,14 @@
     display: flex;
   }
 
-  .ModalHeaderImg {
-    border-radius: 50%;
+  .ModalHeaderIcon {
+    font-size: 2em;
     align-self: center;
     padding: 10px;
   }
   
   .ModalHeaderTittle {
+    font-size: 1.2em;
     align-self: center;
     padding: 10px;
     flex: 1;
@@ -66,4 +67,5 @@
 
   .ModalContent {
     flex: 1;
+    overflow: auto;
   }

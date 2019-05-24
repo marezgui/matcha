@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Chat, Alert, Account } from 'components/UI/Icons/Icons';
+import { Alert, Account } from 'components/UI/Icons/Icons';
 import Dropdown from 'components/UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
@@ -9,18 +9,7 @@ import './NavIcons.scss';
 const navIcons = ({ sideDrawerComponent, user: { firstName, lastName, photo, photo: { master } } }) => (
   <ul className="NavIcons">
     <li>
-      <NavLink to="/">
-        <Chat badge={1} />
-        {sideDrawerComponent && <span className="textIcons">Messages</span> }
-      </NavLink>
-      {!sideDrawerComponent && (
-        <Dropdown>
-          <p>Messages</p>
-        </Dropdown>
-      )}
-    </li>
-    <li>
-      <NavLink to="/">
+      <NavLink to="/notifications">
         <Alert badge={1} />
         {sideDrawerComponent && <span className="textIcons">Notifications</span> }
       </NavLink>

@@ -6,6 +6,7 @@ import Layout from 'components/Layout/Layout';
 import Auth from 'routes/Auth/Auth';
 import Profile from 'routes/Profile/Profile';
 import People from 'routes/People/People';
+import Notifications from 'routes/Notifications/Notifications';
 import Logout from 'routes/Auth/Logout/Logout';
 
 class App extends Component {
@@ -41,7 +42,8 @@ class App extends Component {
       routes = (
         <Switch>
           <DefaultLayout path="/people" component={People} />
-          <Route path="/profile" component={Profile} />
+          <DefaultLayout path="/notifications" component={Notifications} />
+          <DefaultLayout path="/profile" component={Profile} />
           <Route path="/logout" component={Logout} />
           <Redirect to="/people" />
         </Switch>
