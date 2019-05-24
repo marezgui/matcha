@@ -1,11 +1,42 @@
 import { addNewMessageToDatabase } from '../controllers/notifchatctrl';
 
+//
+// ─── CONNEXION TAB ──────────────────────────────────────────────────────────────
+//  tab format -> connexiontab[[id, isOnline], [id, isOnline], ...]
+const stockInTab = (connexiontab, idUser, isOnline) => {
+  let action = 0;
+  const resultTab = connexiontab;
+  for (let i = 0; i < resultTab.length; i += 1) {
+    if (resultTab[i][0] === idUser) {
+      resultTab[i][1] = isOnline;
+      action = 1;
+    }
+  }
+  if (action === 0) {
+    resultTab[resultTab.length] = [];
+    resultTab[resultTab.length][0].push(idUser);
+    resultTab[resultTab.length][1].push(isOnline);
+  }
+  return resultTab;
+};
+
+//
+// ─── SOCKET FUNCTIONS ───────────────────────────────────────────────────────────
+//
 const socketFunction = (io) => {
+
+  let connexiontab = [];
 
   io.on('connection', (client) => {
     let idUser;
+
+    client.on('USER-LOGIN-INIT', () => {
+      io.emit('INIT', connexiontab);
+    });
+
     client.on('USER-LOGIN', (data) => {
       idUser = data.userId;
+      connexiontab = stockInTab(connexiontab, idUser, true);
       io.emit('USER-IS-LOGIN', idUser, true); // besoin de userId
     });
 
@@ -15,6 +46,7 @@ const socketFunction = (io) => {
     });
 
     client.on('disconnect', () => {
+      connexiontab = stockInTab(connexiontab, idUser, false);
       io.emit('USER-IS-LOGIN', idUser, false);
     });
   });

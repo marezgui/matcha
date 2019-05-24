@@ -1,3 +1,4 @@
+☐                                                                        OBJECTIF FINIR LE 6 JUIN
 Pour le back :
   ✔ faire un code plus propre et bien lisible @done(19-05-24 01:54)
   ✔ routes pour modifier le mot de passe @done(19-05-24 01:54)
@@ -23,6 +24,8 @@ Pour le back :
       ✔ ajouter la fonction dans socket.io @done(19-05-24 01:55)
       ✔ recuperer toute les notifs @done(19-05-24 10:55)
       ✔ gerer le fait que l'user soit en ligne @done(19-05-24 01:55)
+      ☐ tablau user is ogin
+      ☐ event notif
   ☐ tester sql insections @started(19-05-24 01:55)
 
 Pour le front :
@@ -31,20 +34,20 @@ Pour le front :
         ✔ Afficher le profil de l'User dans un Modal. @started(18-05-24 11:00) @done(19-05-24 10:39) @lasted(52w23h39m31s)
 
     Pages:
-        Notifications: 
+        Notifications:
             - Lister tous les Likes/Visites/Matchs.
             - Afficher le Profil dans un Modal (onClick).
-        
+
         Mot de passe oublié:
             - Creer la page.
-            
+
         Activation du compte:
             - Creer la page.
-        
+
         People:
             - Afficher le Profil dans un Modal (onClick).
             - Afficher les tags dans UserCard et Profile.
             - Ajouter les Filtres de recherches.
             - Ajouter les options de trie.
-    Regex: 
+    Regex:
         - Changer les regex mail et bio.
