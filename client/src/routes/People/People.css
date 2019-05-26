@@ -16,3 +16,15 @@
 .LoaderContainer {
     width: 100%;
 }
+
+.PeopleFilterBox {
+    width: 100%;
+    background-color: rgb(230, 235, 239);
+    margin-bottom: 10px;
+}
+
+.PeopleFilterBoxContent {
+    width: 90%;
+    border: 1px solid white;
+    margin: auto;
+}
