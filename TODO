@@ -25,7 +25,7 @@ Pour le back :
       ✔ recuperer toute les notifs @done(19-05-24 10:55)
       ✔ gerer le fait que l'user soit en ligne @done(19-05-24 01:55)
       ✔ tablau user is ogin @done(19-05-24 13:52)
-      ☐ event notif
+      ✔ event notif @done(19-05-26 10:50)
   ☐ tester sql insections @started(19-05-24 01:55)
 
 Pour le front :

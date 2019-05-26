@@ -35,7 +35,7 @@ const socketFunction = (io) => {
     });
 
     client.on('NEW-NOTIFICATION', () => {
-      io.emit('RELOAD-NOTIFICATION');
+      io.emit('RELOAD-NOTIFICATION', idUser);
     });
 
     client.on('USER-LOGIN', (data) => {
