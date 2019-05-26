@@ -40,8 +40,9 @@ const socketFunction = (io) => {
       io.emit('RELOAD-NOTIFICATION', idUser);
     });
 
-    client.on('USER-LOGIN', (data) => {
-      idUser = data.userId;
+    client.on('USER-LOGIN', (userId) => {
+      idUser = userId;
+      console.log(idUser);
       connexiontab = stockInTab(connexiontab, idUser, true);
       io.emit('USER-IS-LOGIN', idUser, true); // besoin de userId
     });

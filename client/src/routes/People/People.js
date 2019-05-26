@@ -44,10 +44,14 @@ class People extends Component {
 
   render() {
     const { users } = this.state;
-    const { token } = this.props;
 
     return (
       <section className="People">
+        <aside className="PeopleFilterBox">
+          <section className="PeopleFilterBoxContent">
+            Filter / Sort
+          </section>
+        </aside>
         <InfiniteScroll
           dataLength={users.length}
           next={this.fetchImages}
