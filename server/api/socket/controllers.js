@@ -6,7 +6,7 @@ import { addNewMessageToDatabase } from '../controllers/notifchatctrl';
 const stockInTab = (connexiontab, idUser, isOnline) => {
   let action = 0;
   const resultTab = connexiontab;
-  if (resultTab[0] !== undefined) {
+  if (resultTab !== undefined) {
     for (let i = 0; i < resultTab.length; i += 1) {
       if (resultTab[i][0] === idUser) {
         resultTab[i][1] = isOnline;
@@ -41,7 +41,7 @@ const socketFunction = (io) => {
     });
 
     client.on('USER-LOGIN', (data) => {
-      idUser = data.userId;
+      idUser = datad;
       connexiontab = stockInTab(connexiontab, idUser, true);
       io.emit('USER-IS-LOGIN', idUser, true); // besoin de userId
     });
