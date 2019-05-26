@@ -14,7 +14,7 @@ class Chat extends Component {
     };
     this.socket = io('localhost:8080');
 
-    this.socket.emit('USER-LOGIN', { userId: 'IDUSER HERE' });
+    this.socket.emit('USER-LOGIN', { userId: this.props.user.idUser });
 
     const addMessage = (data) => {
       const { messages } = this.state;

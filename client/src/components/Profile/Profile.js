@@ -12,6 +12,7 @@ import './Profile.scss';
 class ProfilePage extends Component {
   state = {
     reported: false,
+    blocked: false,
     showBackdrop: true,
   }
 
@@ -37,6 +38,13 @@ class ProfilePage extends Component {
           this.setState({ reported: true });
         }
       });
+    axios
+      .get(`social/getuserblocked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        if (res.data.message === 'true') {
+          this.setState({ blocked: true });
+        }
+      });
   }
 
   changeReportStatus = async () => {
@@ -48,13 +56,40 @@ class ProfilePage extends Component {
     await this.getReportStatus();
 
     if (reported) {
+      // this.setState({ reported: false });
       axios
         .delete(`social/report/${idUser}`, headers)
-        .then(res => this.setState({ reported: false }));
+        .then(res => this.setState({ reported: false }))
+        .catch(err => console.log(err.response.data.error));
     } else {
+      // this.setState({ reported: true });
       axios
         .post(`social/report/${idUser}`, null, headers)
-        .then(res => this.setState({ reported: true }));
+        .then(res => this.setState({ reported: true }))
+        .catch(err => console.log(err.response.data.error));
+    }
+  }
+
+  changeBlockStatus = async () => {
+    const { data, token } = this.props;
+    const { blocked } = this.state;
+
+    const { idUser } = data;
+    const headers = { headers: { Authorization: `bearer ${token}` } };
+    await this.getReportStatus();
+
+    if (blocked) {
+      // this.setState({ blocked: false });
+      axios
+        .delete(`social/block/${idUser}`, headers)
+        .then(res => this.setState({ blocked: false }))
+        .catch(err => console.log(err.response.data.error));
+    } else {
+      // this.setState({ blocked: true });
+      axios
+        .post(`social/block/${idUser}`, null, headers)
+        .then(res => this.setState({ blocked: true }))
+        .catch(err => console.log(err.response.data.error));
     }
   }
 
@@ -71,17 +106,17 @@ class ProfilePage extends Component {
       orientation,
       connexionLog,
       location } = data;
-    const { reported, showBackdrop } = this.state;
+    const { blocked, reported, showBackdrop } = this.state;
 
     const title = `${username.charAt(0).toUpperCase() + username.slice(1)}`;
 
     const { master } = photo;
 
     let reportStatus = 'Report';
+    let blockStatus = 'Block';
 
-    if (reported) {
-      reportStatus = 'Un-Report';
-    }
+    if (reported) reportStatus = 'Un-Report';
+    if (blocked) blockStatus = 'Un-Block';
 
     return (
       <>
@@ -171,10 +206,19 @@ class ProfilePage extends Component {
               </p>
             </div>
             <div className="Report">
-              <p onClick={this.changeReportStatus} className="Pointer" style={{ marginLeft: 'auto', padding: '5px' }} role="presentation">
-                <i className="fas fa-exclamation-triangle" />
-                <span>
-                  {reportStatus}
+              <p style={{ marginLeft: 'auto', padding: '5px' }}>
+                <span className="Pointer" onClick={this.changeBlockStatus} role="presentation">
+                  <i className="fas fa-ban" />
+                  <span>
+                    {blockStatus}
+                  </span>
+                </span>
+                {'   '}
+                <span className="Pointer" onClick={this.changeReportStatus} role="presentation">
+                  <i className="fas fa-exclamation-triangle" />
+                  <span>
+                    {reportStatus}
+                  </span>
                 </span>
               </p>
             </div>

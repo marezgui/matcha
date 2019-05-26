@@ -33,7 +33,8 @@ class UserCard extends Component {
         if (res.data.message === 'true') {
           this.setState({ liked: true });
         }
-      });
+      })
+      .catch(err => console.log(err.response.data.error));
   }
 
   getTags = () => {
@@ -44,7 +45,8 @@ class UserCard extends Component {
       .get(`users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         this.setState({ tags: res.data.usertag });
-      });
+      })
+      .catch(err => console.log(err.response.data.error));
   }
 
   changeLikeStatus = async () => {
@@ -59,12 +61,14 @@ class UserCard extends Component {
       this.setState({ liked: false });
       axios
         .delete(`social/like/${idUser}`, headers)
-        .then(res => this.setState({ liked: false }));
+        .then(res => this.setState({ liked: false }))
+        .catch(err => console.log(err.response.data.error));
     } else {
       this.setState({ liked: true });
       axios
         .post(`social/like/${idUser}`, null, headers)
-        .then(res => this.setState({ liked: true }));
+        .then(res => this.setState({ liked: true }))
+        .catch(err => console.log(err.response.data.error));
     }
   }
 
