@@ -6,10 +6,12 @@ import { addNewMessageToDatabase } from '../controllers/notifchatctrl';
 const stockInTab = (connexiontab, idUser, isOnline) => {
   let action = 0;
   const resultTab = connexiontab;
-  for (let i = 0; i < resultTab.length; i += 1) {
-    if (resultTab[i][0] === idUser) {
-      resultTab[i][1] = isOnline;
-      action = 1;
+  if (resultTab[0] !== undefined) {
+    for (let i = 0; i < resultTab.length; i += 1) {
+      if (resultTab[i][0] === idUser) {
+        resultTab[i][1] = isOnline;
+        action = 1;
+      }
     }
   }
   if (action === 0) {

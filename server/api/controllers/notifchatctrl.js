@@ -88,7 +88,7 @@ export const getAllMessage = async (req, res) => {
 export const getMessageOfMatche = async (req, res) => {
   const matche = Number(req.params.id);
   if (isNaN(matche)) {
-    res.status(400).json({ error: 'matche must be a number' });
+    res.status(303).json({ error: 'matche must be a number' });
   }
   const getAllMessageOfMatch = util.promisify(mod.getAllMessageOfMatch);
   const resultMessage = await getAllMessageOfMatch(matche).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -194,7 +194,7 @@ export const addNewMessageToDatabase = async (matcheId, sendUserId, message) => 
 export const getNotifAtVue = (req, res) => {
   const { user } = req;
   mod.getNotifVue(user.idUser, (err, success) => {
-    if (err) { return res.status(400).json({ error: 'error' }); }
+    if (err) { return res.status(303).json({ error: 'error' }); }
     return res.status(200).json({ message: `ok${success}` });
   });
 };
@@ -205,18 +205,18 @@ export const getNotifAtVue = (req, res) => {
 export const notifVue = async (req, res) => {
   const { user } = req;
   if (req.user.userIsComplete === false) {
-    res.status(400).json({ error: 'Complete your profile first.' });
+    res.status(303).json({ error: 'Complete your profile first.' });
     return;
   }
   const idUser = Number(req.params.id);
   if (isNaN(idUser)) {
-    res.status(400).json({ error: 'Id must be a number' });
+    res.status(303).json({ error: 'Id must be a number' });
     return;
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    res.status(400).json({ error: 'User dosnt exist' });
+    res.status(303).json({ error: 'User dosnt exist' });
     return;
   }
   const getuser = util.promisify(getuserbyIdUser);
@@ -227,7 +227,7 @@ export const notifVue = async (req, res) => {
     if (sendmailval === true) { sendmailnotif('VUE', resultuser.mail); }
   }
   mod.addNotif(resultuser.idUser, user.idUser, 'VUE', `${user.firstName} visited your profile`, (err, success) => {
-    if (err) { return res.status(400).json({ error: 'error' }); }
+    if (err) { return res.status(303).json({ error: 'error' }); }
     return res.status(200).json({ message: `ok${success}` });
   });
 };

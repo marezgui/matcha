@@ -20,12 +20,12 @@ const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
 export const getForgotPasswordKey = async (req, res) => {
   const { mail } = req.body;
   if (!MAIL_REGEX.test(mail)) {
-    return res.status(400).json({ error: 'Invalid mail.' });
+    return res.status(303).json({ error: 'Invalid mail.' });
   }
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail === undefined) {
-    return res.status(400).json({ error: 'Unknow User email' });
+    return res.status(303).json({ error: 'Unknow User email' });
   }
   const resultrestoreKey = util.promisify(mod.getRestoreKey);
   const restoreKey = await resultrestoreKey(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
@@ -40,7 +40,7 @@ export const getForgotPasswordKey = async (req, res) => {
       Matcha Team`);
     return res.status(200).json({ message: 'Done, check your mail' });
   }
-  return res.status(400).json({ error: 'Error' });
+  return res.status(303).json({ error: 'Error' });
 };
 
 //
@@ -56,11 +56,11 @@ export const changePassword = async (req, res) => {
   }
   let { password } = req.body;
   if (!password) {
-    res.status(400).json({ error: 'Missing parameters.' });
+    res.status(303).json({ error: 'Missing parameters.' });
     return;
   }
   if (!PASSWORD_REGEX.test(password)) {
-    res.status(400).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
+    res.status(303).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
     return;
   }
   const hash = util.promisify(bcrypt.hash);
@@ -72,7 +72,7 @@ export const changePassword = async (req, res) => {
   });
   await mod.edituserPassword(mail, password, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error });
+      res.status(303).json({ error: err.error });
       return;
     }
     res.status(200).json({ message: `User Edit password ${success}` });
@@ -85,35 +85,35 @@ export const changePassword = async (req, res) => {
 export const adduser = async (req, res) => {
   const { mail, username, password, firstName, lastName } = req.body;
   if (!(mail || username || password || firstName || lastName)) {
-    return res.status(400).json({ error: 'Missing parameters.' });
+    return res.status(303).json({ error: 'Missing parameters.' });
   }
   if (username.length >= 15 || username.length <= 3) {
-    return res.status(400).json({ error: 'Invalid username. (must be length 3 - 15)' });
+    return res.status(303).json({ error: 'Invalid username. (must be length 3 - 15)' });
   }
   if (!MAIL_REGEX.test(mail)) {
-    return res.status(400).json({ error: 'Invalid mail.' });
+    return res.status(303).json({ error: 'Invalid mail.' });
   }
   if (!VERIF_L_REGEX.test(firstName)) {
-    return res.status(400).json({ error: 'Invalid Firstname, only lettes' });
+    return res.status(303).json({ error: 'Invalid Firstname, only lettes' });
   }
   if (!VERIF_LN_REGEX.test(username)) {
-    return res.status(400).json({ error: 'Invalid Username, only lettes and numbers' });
+    return res.status(303).json({ error: 'Invalid Username, only lettes and numbers' });
   }
   if (!VERIF_L_REGEX.test(lastName)) {
-    return res.status(400).json({ error: 'Invalid Lastname, only lettes' });
+    return res.status(303).json({ error: 'Invalid Lastname, only lettes' });
   }
   if (!PASSWORD_REGEX.test(password)) {
-    return res.status(400).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
+    return res.status(303).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
   }
   const getuserbyUsername = util.promisify(mod.getuserbyUsername);
   const resultUsername = await getuserbyUsername(username).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUsername !== undefined) {
-    return res.status(400).json({ error: 'Username Exist' });
+    return res.status(303).json({ error: 'Username Exist' });
   }
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail !== undefined) {
-    return res.status(400).json({ error: 'User email already have a account' });
+    return res.status(303).json({ error: 'User email already have a account' });
   }
   const hash = util.promisify(bcrypt.hash);
   req.body.password = await hash(password, 5).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
@@ -130,7 +130,7 @@ export const adduser = async (req, res) => {
       Matcha Team`);
     return res.status(200).json({ message: 'Inscription done, check your mail' });
   }
-  return res.status(400).json({ error: 'Error Add User' });
+  return res.status(303).json({ error: 'Error Add User' });
 };
 
 //
@@ -139,17 +139,17 @@ export const adduser = async (req, res) => {
 export const login = async (req, res) => {
   const { mail, password } = req.body;
   if (!(mail || password)) {
-    return res.status(401).json({ error: 'Empty form' });
+    return res.status(303).json({ error: 'Empty form' });
   }
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail === undefined) {
-    return res.status(400).json({ error: 'Unknow user mail' });
+    return res.status(303).json({ error: 'Unknow user mail' });
   }
   const hashcmp = util.promisify(bcrypt.compare);
   const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail.activate === false) {
-    return res.status(403).json({ error: `Your account is not activated yet. ${resultUserMail.mail}` });
+    return res.status(303).json({ error: `Your account is not activated yet. ${resultUserMail.mail}` });
   }
   if (passwdcmp === true) {
     const payload = { idUser: resultUserMail.idUser };
@@ -161,14 +161,14 @@ export const login = async (req, res) => {
             console.log(errRestore + successRestore);
           }
         });
-        res.status(400).json({ error: err.error });
+        res.status(303).json({ error: err.error });
         return;
       }
       console.log(`user login ${success}`);
     });
     return res.json({ message: 'Connection Validate', token });
   }
-  return res.status(401).json({ error: 'Passwords did not match.' });
+  return res.status(303).json({ error: 'Passwords did not match.' });
 };
 
 //
@@ -183,7 +183,7 @@ export const confirmmail = async (req, res) => {
   }
   return mod.activeuser(goodkey, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err });
+      res.status(303).json({ error: err });
       return;
     }
     res.status(200).json({ message: 'User Activate', info: success });
@@ -195,17 +195,17 @@ export const confirmmail = async (req, res) => {
 //
 export const getuser = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const idUser = Number(req.params.id);
   const finduser = util.promisify(mod.getuserbyIdUser);
   const resultuser = await finduser(idUser).then(data => data)
-    .catch((err) => { res.status(400).json({ error: err.error }); });
+    .catch((err) => { res.status(303).json({ error: err.error }); });
   if (resultuser.userIsComplete === false) {
-    return res.status(400).json({ error: 'This user have not complete his profile.' });
+    return res.status(303).json({ error: 'This user have not complete his profile.' });
   }
   if (resultuser === undefined) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   return res.status(200).json({ user: resultuser });
 };
@@ -215,23 +215,23 @@ export const getuser = async (req, res) => {
 //
 export const getUserDistance = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    res.status(400).json({ error: 'Complete your profile first.' });
+    res.status(303).json({ error: 'Complete your profile first.' });
     return;
   }
   const idUser = Number(req.params.id);
   if (isNaN(idUser)) {
-    res.status(400).json({ error: 'Id must be a number' });
+    res.status(303).json({ error: 'Id must be a number' });
     return;
   }
   const { user } = req;
   const finduser = util.promisify(mod.getuserbyIdUser);
   const resultuser = await finduser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultuser === undefined) {
-    res.status(400).json({ error: 'User dosnt exist' });
+    res.status(303).json({ error: 'User dosnt exist' });
     return;
   }
   if (resultuser.userIsComplete === false) {
-    res.status(400).json({ error: 'This user have not complete his profile.' });
+    res.status(303).json({ error: 'This user have not complete his profile.' });
     return;
   }
   let distance = await geolib.getDistanceSimple(
@@ -261,13 +261,13 @@ export const getalltag = async (req, res) => {
 export const getusertag = async (req, res) => {
   const idUser = Number(req.params.id);
   if (isNaN(idUser)) {
-    res.status(400).json({ error: 'Id must be a number' });
+    res.status(303).json({ error: 'Id must be a number' });
     return;
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    res.status(400).json({ error: 'User dosnt exist' });
+    res.status(303).json({ error: 'User dosnt exist' });
     return;
   }
   const findtag = util.promisify(mod.getusertag);
@@ -290,23 +290,23 @@ export const getme = (req, res) => res.status(200).send(req.user);
 export const deluser = async (req, res) => {
   const { mail, password } = req.body;
   if (!(mail || password)) {
-    return res.status(401).json({ error: 'Empty form' });
+    return res.status(303).json({ error: 'Empty form' });
   }
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail === undefined) {
-    return res.status(400).json({ error: 'Unknow user mail' });
+    return res.status(303).json({ error: 'Unknow user mail' });
   }
   const hashcmp = util.promisify(bcrypt.compare);
   const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (passwdcmp === true) {
     return mod.deluser(req.user.idUser, (err, success) => {
       if (err) {
-        res.status(400).json({ error: err.error });
+        res.status(303).json({ error: err.error });
         return;
       }
       res.status(200).json({ message: 'User Delete', info: success });
     });
   }
-  return res.status(401).json({ error: 'Passwords did not match.' });
+  return res.status(303).json({ error: 'Passwords did not match.' });
 };

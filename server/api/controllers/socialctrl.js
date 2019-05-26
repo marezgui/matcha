@@ -9,7 +9,7 @@ import { likeNotif, unlikeNotif, matcheNotif } from './notifchatctrl';
 //
 export const getUserBlockedList = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    res.status(400).json({ error: 'Complete your profile first.' });
+    res.status(303).json({ error: 'Complete your profile first.' });
     return;
   }
   const { user } = req;
@@ -23,7 +23,7 @@ export const getUserBlockedList = async (req, res) => {
 //
 export const getUserAgeDistanceScoreReport = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    res.status(400).json({ error: 'Complete your profile first.' });
+    res.status(303).json({ error: 'Complete your profile first.' });
     return;
   }
   const { user } = req;
@@ -91,20 +91,20 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
 //
 export const getUserLiked = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   return mod.getUserLiked(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `${success}` }); // success = true or false
   });
@@ -116,7 +116,7 @@ export const getUserLiked = async (req, res) => {
 export const getAllUserMatche = async (req, res) => {
   mod.getAllUserMatche(req.user.idUser, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     const result = [];
     for (let i = 0; i < success.length; i += 1) {
@@ -132,12 +132,12 @@ export const getAllUserMatche = async (req, res) => {
 export const getAllUserMatcheMore = async (req, res) => {
   const id = Number(req.params.matcheid);
   if (isNaN(id)) {
-    res.status(400).json({ error: 'matcheId must be a number' });
+    res.status(303).json({ error: 'matcheId must be a number' });
     return;
   }
   mod.getAllUserMatcheMore(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     const result = [];
     for (let i = 0; i < success.length; i += 1) {
@@ -156,20 +156,20 @@ export const getAllUserMatcheMore = async (req, res) => {
 //
 export const getUserMatche = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   return mod.getUserMatche(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `${success}` }); // success = true or false
   });
@@ -180,20 +180,20 @@ export const getUserMatche = async (req, res) => {
 //
 export const getUserReported = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   return mod.getUserReported(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `${success}` }); // success = true or false
   });
@@ -204,20 +204,20 @@ export const getUserReported = async (req, res) => {
 //
 export const getUserBlocked = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   return mod.getUserBlocked(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `${success}` }); // success = true or false
   });
@@ -228,26 +228,26 @@ export const getUserBlocked = async (req, res) => {
 //
 export const like = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
-    return res.status(400).json({ error: 'you have blocked this user' });
+    return res.status(303).json({ error: 'you have blocked this user' });
   }
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (likevalue === true) {
-    return res.status(400).json({ error: 'you already like this user' });
+    return res.status(303).json({ error: 'you already like this user' });
   }
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -271,7 +271,7 @@ export const like = async (req, res) => {
   });
   return mod.like(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `User ${id} liked ${success}` });
   });
@@ -282,21 +282,21 @@ export const like = async (req, res) => {
 //
 export const unLike = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
-    return res.status(400).json({ error: 'you have blocked this user' });
+    return res.status(303).json({ error: 'you have blocked this user' });
   }
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -311,7 +311,7 @@ export const unLike = async (req, res) => {
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (likevalue === false) {
-    return res.status(400).json({ error: 'you already unlike this user' });
+    return res.status(303).json({ error: 'you already unlike this user' });
   }
   mod.editLike(id, Number(-1), (err, success) => {
     if (err) {
@@ -322,7 +322,7 @@ export const unLike = async (req, res) => {
   });
   return mod.unLike(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `User ${id} unliked ${success}` });
   });
@@ -333,26 +333,26 @@ export const unLike = async (req, res) => {
 //
 export const reportUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
-    return res.status(400).json({ error: 'you have blocked this user' });
+    return res.status(303).json({ error: 'you have blocked this user' });
   }
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (reportvalue === true) {
-    return res.status(400).json({ error: 'you already report this user' });
+    return res.status(303).json({ error: 'you already report this user' });
   }
   mod.editReport(id, 1, (err, success) => {
     if (err) {
@@ -362,7 +362,7 @@ export const reportUser = async (req, res) => {
   });
   return mod.report(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `User ${id} report ${success}` });
   });
@@ -373,26 +373,26 @@ export const reportUser = async (req, res) => {
 //
 export const unReportUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
-    return res.status(400).json({ error: 'you have blocked this user' });
+    return res.status(303).json({ error: 'you have blocked this user' });
   }
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (reportvalue === false) {
-    return res.status(400).json({ error: 'you already unreport this user' });
+    return res.status(303).json({ error: 'you already unreport this user' });
   }
   mod.editReport(id, Number(-1), (err, success) => {
     if (err) {
@@ -402,7 +402,7 @@ export const unReportUser = async (req, res) => {
   });
   return mod.unReport(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `User ${id} unreport ${success}` });
   });
@@ -413,21 +413,21 @@ export const unReportUser = async (req, res) => {
 //
 export const blockUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
-    return res.status(400).json({ error: 'you already have blocked this user' });
+    return res.status(303).json({ error: 'you already have blocked this user' });
   }
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -473,7 +473,7 @@ export const blockUser = async (req, res) => {
   }
   return mod.blockUser(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `User ${id} blocked ${success}` });
   });
@@ -484,21 +484,21 @@ export const blockUser = async (req, res) => {
 //
 export const unBlockUser = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const id = Number(req.params.id);
   if (isNaN(id)) {
-    return res.status(400).json({ error: 'Id must be a number' });
+    return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
   const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
-    return res.status(400).json({ error: 'User dosnt exist' });
+    return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
   const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (blockedvalue === false) {
-    return res.status(400).json({ error: 'you already have unblocked this user' });
+    return res.status(303).json({ error: 'you already have unblocked this user' });
   }
   const reportornot = util.promisify(mod.getUserReported);
   const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -518,7 +518,7 @@ export const unBlockUser = async (req, res) => {
   }
   return mod.unBlockUser(req.user.idUser, id, (err, success) => {
     if (err) {
-      res.status(400).json({ error: err.error }); return;
+      res.status(303).json({ error: err.error }); return;
     }
     res.status(200).json({ message: `User ${id} unblocked ${success}` });
   });
@@ -731,16 +731,16 @@ const getUserNoTags = async (user, count, start, ageMin, ageMax,
 //
 export const getUsersForMe = async (req, res) => {
   if (req.user.userIsComplete === false) {
-    return res.status(400).json({ error: 'Complete your profile first.' });
+    return res.status(303).json({ error: 'Complete your profile first.' });
   }
   const { user } = req;
   const count = Number(req.params.count);
   const start = Number(req.params.start);
   if (isNaN(count)) {
-    return res.status(400).json({ error: 'count must be a number' });
+    return res.status(303).json({ error: 'count must be a number' });
   }
   if (isNaN(start)) {
-    return res.status(400).json({ error: 'start must be a number' });
+    return res.status(303).json({ error: 'start must be a number' });
   }
   let { ageMin, ageMax, distanceMin, distanceMax,
     scoreMin, scoreMax, tags } = req.body;
