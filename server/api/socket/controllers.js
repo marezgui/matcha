@@ -1,25 +1,32 @@
 import { addNewMessageToDatabase } from '../controllers/notifchatctrl';
 
 //
+// ─── GLOBALES ───────────────────────────────────────────────────────────────────
+//
+const connexiontab = new Array([]);
+let idUser;
+
+//
 // ─── CONNEXION TAB ──────────────────────────────────────────────────────────────
 //  tab format -> connexiontab[[id, isOnline], [id, isOnline], ...]
-const stockInTab = (connexiontab, idUser, isOnline) => {
+const stockInTab = (id, isOnline) => {
+  console.log(connexiontab);
   let action = 0;
-  const resultTab = connexiontab;
-  if (resultTab !== undefined) {
-    for (let i = 0; i < resultTab.length; i += 1) {
-      if (resultTab[i][0] === idUser) {
-        resultTab[i][1] = isOnline;
+  if (connexiontab !== undefined) {
+    for (let i = 0; i < connexiontab.length; i += 1) {
+      if (connexiontab[i][0] === id) {
+        connexiontab[i][1] = isOnline;
         action = 1;
       }
     }
   }
   if (action === 0) {
-    resultTab[resultTab.length] = [];
-    resultTab[resultTab.length][0].push(idUser);
-    resultTab[resultTab.length][1].push(isOnline);
+    connexiontab[connexiontab.length - 1] = [];
+    connexiontab[connexiontab.length - 1].push(id);
+    connexiontab[connexiontab.length - 1].push(isOnline);
   }
-  return resultTab;
+  console.log(connexiontab);
+  return connexiontab;
 };
 
 //
@@ -27,10 +34,23 @@ const stockInTab = (connexiontab, idUser, isOnline) => {
 //
 const socketFunction = (io) => {
 
-  let connexiontab = [];
-
   io.on('connection', (client) => {
-    let idUser;
+
+    process.on('uncaughtException', (err) => {
+      console.error(err.stack);
+      console.log('Node NOT Exiting...');
+    });
+
+    client.on('USER-LOGIN', (data) => {
+      idUser = data;
+      stockInTab(idUser, true);
+      io.emit('USER-IS-LOGIN', idUser, true);
+    });
+
+    client.on('disconnect', () => {
+      stockInTab(idUser, false);
+      io.emit('USER-IS-LOGIN', idUser, false);
+    });
 
     client.on('USER-LOGIN-INIT', () => {
       io.emit('INIT', connexiontab);
@@ -40,22 +60,11 @@ const socketFunction = (io) => {
       io.emit('RELOAD-NOTIFICATION', idUser);
     });
 
-    client.on('USER-LOGIN', (userId) => {
-      idUser = userId;
-      console.log(idUser);
-      connexiontab = stockInTab(connexiontab, idUser, true);
-      io.emit('USER-IS-LOGIN', idUser, true); // besoin de userId
-    });
-
     client.on('SEND_MESSAGE', (data) => { // variables : matcheId, senduserId(qui est l'id de l'user aui envoi le msg), message
       addNewMessageToDatabase(data.matcheId, data.senduserId, data.message);
       io.emit('RECEIVE_MESSAGE', data);
     });
 
-    client.on('disconnect', () => {
-      connexiontab = stockInTab(connexiontab, idUser, false);
-      io.emit('USER-IS-LOGIN', idUser, false);
-    });
   });
 
 };
