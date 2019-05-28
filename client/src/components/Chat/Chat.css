@@ -1,0 +1,13 @@
+.MatcheList {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+}
+
+.Channel {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
+}

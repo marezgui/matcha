@@ -13,6 +13,7 @@ class Login extends Component {
     password: '',
     errors: {},
     formIsValid: false,
+    restore: false,
   };
 
   addError = (field, msg) => {
@@ -112,6 +113,7 @@ class Login extends Component {
         <div className="header"> Login </div>
         {form}
         {authRedirect}
+        <p onClick={this.handleRestore}> Restore your password. </p>
       </div>
     );
   }
