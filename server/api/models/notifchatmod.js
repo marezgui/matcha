@@ -4,7 +4,7 @@ import { db } from '../../database';
 // ─── GET ALL MESSAGE OF MATCH ───────────────────────────────────────────────────
 //
 export const getAllMessageOfMatch = (idMatch, callback) => {
-  db.query('SELECT * FROM "message" WHERE "matcheId" = $1',
+  db.query('SELECT "idMessage", "sendUserId" ,"date", "message" FROM "message" WHERE "matcheId" = $1',
     [idMatch],
     (err, res) => {
       if (err.error) {

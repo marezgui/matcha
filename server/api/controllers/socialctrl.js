@@ -139,15 +139,12 @@ export const getAllUserMatcheMore = async (req, res) => {
     if (err) {
       res.status(303).json({ error: err.error }); return;
     }
-    const result = [];
-    for (let i = 0; i < success.length; i += 1) {
-      result[i] = [];
-      result[i].push(Number(success[i].idMatche));
-      result[i].push(Number(success[i].userId1));
-      result[i].push(Number(success[i].userId2));
-      result[i].push(success[i].matcheDate);
-    }
-    res.status(200).json({ result }); // return a tab
+    let usermatche;
+    if (success[0].userId1 === req.user.idUser)
+      usermatche = success[0].userId2;
+    else
+      usermatche = success[0].userId1;
+    res.status(200).json({ usermatche }); // return a tab
   });
 };
 
@@ -593,6 +590,7 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
     }
     if (c !== 0) {
       c = 0;
+      result++;
       continue;
     }
     const getUser = await getUserFunction(goodTagId[newStart]).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -679,6 +677,7 @@ const getUserNoTags = async (user, count, start, ageMin, ageMax,
         }
       }
       if (c !== 0) {
+        result++;
         c = 0;
         continue;
       }

@@ -86,7 +86,7 @@ export const getAllMessage = async (req, res) => {
 // ─── GET ALL THE MESSAGE OF A MATCH CONVERSATION ────────────────────────────────
 //
 export const getMessageOfMatche = async (req, res) => {
-  const matche = Number(req.params.id);
+  const matche = Number(req.params.MATCHEID); 
   if (isNaN(matche)) {
     res.status(303).json({ error: 'matche must be a number' });
   }
