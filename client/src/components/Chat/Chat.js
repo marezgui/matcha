@@ -7,13 +7,10 @@ import Messages from './Messages/Messages';
 import './Chat.css';
 
 class Chat extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      matches: [],
-      clickedMatche: false,
-    };
-  }
+  state = {
+    matches: [],
+    clickedMatche: false,
+  };
 
   componentDidMount = () => {
     const { token } = this.props;
@@ -34,8 +31,9 @@ class Chat extends Component {
                   const { matches } = this.state;
                   const { user } = res3.data;
                   const { username, photo, master = photo.master } = user;
+                  const matche = { id, usermatche, username, avatar: photo[master] };
 
-                  this.setState({ matches: matches.concat({ id, usermatche, username, avatar: photo[master] }) });
+                  this.setState({ matches: matches.concat(matche) });
                   // console.log(user.username);
                 });
             });
@@ -53,15 +51,17 @@ class Chat extends Component {
 
     let content = (
       <div className="MatcheList">
-        {matches.map(matche => (
-          <div key={matche.id} className="Pointer Channel" onClick={() => this.handleMatcheList(matche.id)}>
-            {!matche.avatar ? (
+        {matches.map(({ id, username, avatar }) => (
+          <div key={id} className="Pointer Channel" role="presentation" onClick={() => this.handleMatcheList(id)}>
+            {!avatar ? (
               <Avatar style={{ backgroundColor: 'grey' }}>
-                {matche.username[0].charAt(0).toUpperCase()}
+                {username.charAt(0).toUpperCase()}
               </Avatar>
             )
-              : <Avatar alt={matche.username} src={`data:image/png;base64,${matche.avatar}`} />}
-            {matche.username}
+              : <Avatar alt={username} src={`data:image/png;base64,${avatar}`} />}
+            <p className="ChannelName">
+              {username.charAt(0).toUpperCase() + username.slice(1)}
+            </p>
           </div>
         ))}
       </div>
@@ -90,6 +90,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(Chat);
+
 
 /*
 import React, { Component } from 'react';

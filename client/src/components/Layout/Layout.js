@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
+import io from 'socket.io-client';
+import { connect } from 'react-redux';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 import './Layout.css';
 
 class Layout extends Component {
-  state = {
-    showSideDrawer: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      showSideDrawer: false,
+    };
+    const { user: { idUser } } = this.props;
+    const userId = idUser;
+
+    this.socket = io('localhost:8080');
+    this.socket.emit('USER-LOGIN', userId);
+    this.socket.emit('USER-LOGIN-INIT');
+    this.socket.on('INIT', (data) => {
+      console.log(data); // Stcok tab to redux
+    });
+  }
 
   sideDrawerClosedHandler = () => {
     this.setState({ showSideDrawer: false });
@@ -33,4 +47,9 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  token: state.auth.token,
+});
+
+export default connect(mapStateToProps)(Layout);

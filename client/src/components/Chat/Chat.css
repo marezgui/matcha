@@ -1,5 +1,4 @@
 .MatcheList {
-    border: 1px solid black;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -8,6 +7,14 @@
 
 .Channel {
     display: flex;
+    justify-content: space-around;
     align-items: center;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid grey;
+    padding: 5px;
+}
+
+.ChannelName {
+    font-weight: 500;
+    width: 80%;
+    vertical-align: center;
 }

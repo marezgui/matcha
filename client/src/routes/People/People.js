@@ -12,6 +12,7 @@ class People extends Component {
     users: [],
     count: 10,
     start: 0,
+    hasMore: true,
   };
 
   componentDidMount() {
@@ -38,12 +39,13 @@ class People extends Component {
         .then((res) => {
           this.setState({ users: users.concat(res.data.resultData.users) });
           // console.log(res.data.resultData.newStart);
+          if (!res.data.resultData.users.length) this.setState({ hasMore: false });
         });
     });
   };
 
   render() {
-    const { users } = this.state;
+    const { users, hasMore } = this.state;
 
     return (
       <section className="People">
@@ -55,11 +57,11 @@ class People extends Component {
         <InfiniteScroll
           dataLength={users.length}
           next={this.fetchImages}
-          hasMore
+          hasMore={hasMore}
           loader={<div className="LoaderContainer"><Spinner /></div>}
           endMessage={(
-            <div>
-              <p> Yay! You have seen it all </p>
+            <div style={{ width: '100%' }}>
+              <p style={{ textAlign: 'center', padding: '10px' }}> Yay! You have seen it all </p>
             </div>
           )}
         >

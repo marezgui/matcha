@@ -37,7 +37,6 @@ class Chat extends Component {
 
           <div className={windowClasses.join(' ')}>
             <div className="ChatHeader">
-              <img className="ChatHeaderImg" src="https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png" alt="" />
               <div className="ChatHeaderTittle"> Chat </div>
               <div className="ChatHeaderCloseButton" onClick={this.onClickHandler} role="presentation">
                 <img src={close} alt="close" />

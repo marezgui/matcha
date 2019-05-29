@@ -56,7 +56,7 @@ class Login extends Component {
   };
 
   autoLog = () => { // To remove
-    const [mail, password] = ['eugenio.fuentes@example.com', 'Password1234'];
+    const [mail, password] = ['austin.garrett@example.com', 'Password1234'];
     const { onAuth } = this.props;
     onAuth(mail, password);
   };

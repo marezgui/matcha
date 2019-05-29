@@ -1,0 +1,49 @@
+.Messages {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.MessagesBody {
+    border: 1px solid black;
+    flex: 1;
+    overflow: auto;
+    padding: 10px;
+}
+
+.Sender, .Receiver {
+    width: 80%;
+    padding: 5px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.Sender {
+    margin-left: auto;
+    background-color: #577284;
+    color: white;
+}
+
+.Receiver {
+    margin-right: auto;
+    background-color: #CE5B78;
+}
+
+.MessagesFooter {
+    border: 1px solid black;
+}
+
+.MessagesFooter > form {
+    display: flex;
+    background-color: rgb(239, 239, 239);
+}
+
+.MessagesInput {
+    /* border: 1px solid black; */
+}
+
+.MessagesSend {
+    /* border: 1px solid black; */
+    width: 20%;
+}

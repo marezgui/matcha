@@ -1,6 +1,6 @@
 .ChatHeader {
     background: #4e8cff;
-    min-height: 50px;
+    height: 30px;
     border-top-left-radius: 9px;
     border-top-right-radius: 9px;
     color: white;
@@ -32,10 +32,6 @@
     box-sizing: border-box;
     cursor: pointer;
     border-radius: 5px;
-  }
-  
-  .ChatHeaderCloseButton:hover {
-    background: #4882ed;
   }
   
   .ChatHeaderCloseButton img {
