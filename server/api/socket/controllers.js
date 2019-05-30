@@ -1,32 +1,20 @@
 import { addNewMessageToDatabase } from '../controllers/notifchatctrl';
+import { db } from '../../database';
 
 //
-// ─── GLOBALES ───────────────────────────────────────────────────────────────────
+// ─── EDIT USER ISONLINE ET CONNEXIONLOG ─────────────────────────────────────────
 //
-const connexiontab = new Array([]);
-let idUser;
-
-//
-// ─── CONNEXION TAB ──────────────────────────────────────────────────────────────
-//  tab format -> connexiontab[[id, isOnline], [id, isOnline], ...]
-const stockInTab = (id, isOnline) => {
-  console.log(connexiontab);
-  let action = 0;
-  if (connexiontab !== undefined) {
-    for (let i = 0; i < connexiontab.length; i += 1) {
-      if (connexiontab[i][0] === id) {
-        connexiontab[i][1] = isOnline;
-        action = 1;
-      }
-    }
+const editLog = (idUser, status) => {
+  if (idUser !== undefined) {
+    db.query('UPDATE "users" SET "isOnline" = $1 , "connexionLog" = NOW() WHERE "idUser" = $2',
+      [status, idUser],
+      (err, res) => {
+        if (err.error) {
+          console.log('error edit log');
+        }
+        console.log(`edit logs${res}`);
+      });
   }
-  if (action === 0) {
-    connexiontab[connexiontab.length - 1] = [];
-    connexiontab[connexiontab.length - 1].push(id);
-    connexiontab[connexiontab.length - 1].push(isOnline);
-  }
-  console.log(connexiontab);
-  return connexiontab;
 };
 
 //
@@ -35,29 +23,32 @@ const stockInTab = (id, isOnline) => {
 const socketFunction = (io) => {
 
   io.on('connection', (client) => {
-
+    // process.setMaxListeners(0);
     process.on('uncaughtException', (err) => {
       console.error(err.stack);
       console.log('Node NOT Exiting...');
     });
 
     client.on('USER-LOGIN', (data) => {
-      idUser = data;
-      stockInTab(idUser, true);
-      io.emit('USER-IS-LOGIN', idUser, true);
+      // eslint-disable-next-line no-param-reassign
+      client.userid = data;
+      console.log(`connect :${client.userid}`);
+      editLog(client.userid, true);
+      io.emit('USER-STATUS', data, true); // ----> il faut que tu regarde cet event
+    });
+
+    client.on('USER-LOGOUT', (data) => {
+      // eslint-disable-next-line no-param-reassign
+      client.userid = data;
+      console.log(`logout :${client.userid}`);
+      editLog(client.userid, false);
+      io.emit('USER-STATUS', data, false); // ----> il faut que tu regarde cet event
     });
 
     client.on('disconnect', () => {
-      stockInTab(idUser, false);
-      io.emit('USER-IS-LOGIN', idUser, false);
-    });
-
-    client.on('USER-LOGIN-INIT', () => {
-      io.emit('INIT', connexiontab);
-    });
-
-    client.on('NEW-NOTIFICATION', () => {
-      io.emit('RELOAD-NOTIFICATION', idUser);
+      console.log(`disconnect :${client.userid}`);
+      editLog(client.userid, false);
+      io.emit('USER-STATUS', client.userid, false);
     });
 
     client.on('SEND_MESSAGE', (data) => { // variables : matcheId, senduserId(qui est l'id de l'user aui envoi le msg), message

@@ -16,13 +16,11 @@ class Layout extends Component {
 
     this.socket = io('localhost:8080');
     this.socket.emit('USER-LOGIN', userId);
-    this.socket.emit('USER-LOGIN-INIT');
-    this.socket.on('INIT', (data) => {
-      console.log(data); // Stcok tab to redux
-    });
+    this.socket = io({ transports: ['websocket'], upgrade: false });
   }
 
   sideDrawerClosedHandler = () => {
+
     this.setState({ showSideDrawer: false });
   };
 

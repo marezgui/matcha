@@ -83,9 +83,9 @@ export const getSecondMatcheId = (matcheId, sendUserId, callback) => {
       callback(err, null);
     }
     if (res[0].userId1 !== sendUserId) {
-      callback(err, res[0].userId1);
+      callback(null, res[0].userId1);
     } else {
-      callback(err, res[0].userId2);
+      callback(null, res[0].userId2);
     }
   });
 };

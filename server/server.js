@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(routerApp);
-socketFunction(io); // fonction socker.io
+socketFunction(io); // fonction socket.io
 
 server.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
 
@@ -33,9 +33,9 @@ db.query('SELECT NOW()', (err, res) => {
 
 db.query('SELECT * FROM users', (err, res) => {
   if (err.error) { console.log(err.error); return; }
-  if (res[100] === undefined) {
+  if (res[500] === undefined) {
     console.log('La bdd est vide on va charger des users');
-    importuser(500);
+    importuser(1000);
   }
 });
 

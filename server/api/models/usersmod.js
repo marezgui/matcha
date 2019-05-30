@@ -193,10 +193,10 @@ export const getuserbyUsername = (username, callback) => {
 //
 // ─── UPDATE LAST CONNEXION LOG ──────────────────────────────────────────────────
 //
-export const connexionLog = (mail, callback) => {
+export const connexionLog = (mail, status, callback) => {
   const time = 'NOW()';
-  db.query('UPDATE "users" SET "connexionLog" = $1 WHERE "mail" = $2',
-    [time, mail],
+  db.query('UPDATE "users" SET "connexionLog" = $1, "isOnline" = $3 WHERE "mail" = $2',
+    [time, mail, status],
     (err, res) => {
       if (err.error) {
         callback(err, null);

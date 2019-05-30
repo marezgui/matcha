@@ -154,7 +154,7 @@ export const login = async (req, res) => {
   if (passwdcmp === true) {
     const payload = { idUser: resultUserMail.idUser };
     const token = jwt.sign(payload, op.opts.secretOrKey);
-    mod.connexionLog(mail, (err, success) => {
+    mod.connexionLog(mail, true, (err, success) => {
       if (err) {
         mod.delRestoreKey(mail, (errRestore, successRestore) => {
           if (errRestore) {

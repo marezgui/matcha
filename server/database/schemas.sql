@@ -5,15 +5,15 @@
 DROP SCHEMA IF EXISTS matcha ;
 CREATE SCHEMA IF NOT EXISTS matcha ;
 
-Enum
-
+--
+-- ─── ENUM ───────────────────────────────────────────────────────────────────────
+--
 CREATE TYPE GENRE AS ENUM ('M', 'W', 'O');
 CREATE TYPE TYPENOTIF AS ENUM ('VUE', 'LIKE', 'UNLIKE', 'MATCHE', 'NEWMESSAGE', 'OTHER');
 CREATE TYPE ORIENTATION AS ENUM ('M', 'W', 'BI');
 
 DROP TABLE IF EXISTS "users" CASCADE;
 DROP TABLE IF EXISTS "blocked" CASCADE;
-DROP TABLE IF EXISTS "chat" CASCADE;
 DROP TABLE IF EXISTS "matche" CASCADE;
 DROP TABLE IF EXISTS "likes" CASCADE;
 DROP TABLE IF EXISTS "notification" CASCADE;
@@ -64,16 +64,10 @@ CREATE TABLE IF NOT EXISTS "users" (
   "restoreKey" VARCHAR(255) NULL,
   "score" INT DEFAULT '0',
   "report" INT DEFAULT '0',
+  "isOnline" boolean DEFAULT '0',
   "connexionLog" TIMESTAMP DEFAULT NOW(),
   "location" JSON NULL,
   "photo" JSON NULL);
-
-CREATE TABLE IF NOT EXISTS "chat" (
-  "idChat" SERIAL PRIMARY KEY,
-  "userId1" INT NOT NULL,
-  "userId2" INT NOT NULL,
-  FOREIGN KEY ("userId1") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY ("userId2") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
 CREATE TABLE IF NOT EXISTS "matche" (
   "idMatche"  SERIAL PRIMARY KEY,

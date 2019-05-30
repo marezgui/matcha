@@ -27,8 +27,9 @@ Pour le back :
       ✔ tablau user is ogin @done(19-05-24 13:52)
       ✔ event notif @done(19-05-26 10:50)
 
-      ☐ init matche
-      ☐ get matche more virer user "me"
+      ✔ init match @done(19-05-28 23:56)
+      ✔ get matche more virer user "me" @done(19-05-28 23:56)
+
   ☐ tester sql insections @started(19-05-24 01:55)
 
 Pour le front :
