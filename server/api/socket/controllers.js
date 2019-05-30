@@ -51,6 +51,10 @@ const socketFunction = (io) => {
       io.emit('USER-STATUS', client.userid, false);
     });
 
+    client.on('CREATE-NOTIFICATION', (idToSendNotification) => {
+      io.emit('RELOAD-NOTIFICATION-FOR', idToSendNotification);
+    });
+
     client.on('SEND_MESSAGE', (data) => { // variables : matcheId, senduserId(qui est l'id de l'user aui envoi le msg), message
       addNewMessageToDatabase(data.matcheId, data.senduserId, data.message);
       io.emit('RECEIVE_MESSAGE', data);
