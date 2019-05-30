@@ -14,9 +14,8 @@ class Layout extends Component {
     const { user: { idUser } } = this.props;
     const userId = idUser;
 
-    this.socket = io('localhost:8080');
+    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     this.socket.emit('USER-LOGIN', userId);
-    this.socket = io({ transports: ['websocket'], upgrade: false });
   }
 
   sideDrawerClosedHandler = () => {

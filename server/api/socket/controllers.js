@@ -23,7 +23,7 @@ const editLog = (idUser, status) => {
 const socketFunction = (io) => {
 
   io.on('connection', (client) => {
-    // process.setMaxListeners(0);
+    process.setMaxListeners(0);
     process.on('uncaughtException', (err) => {
       console.error(err.stack);
       console.log('Node NOT Exiting...');

@@ -30,8 +30,8 @@ Pour le back :
       ✔ init match @done(19-05-28 23:56)
       ✔ get matche more virer user "me" @done(19-05-28 23:56)
 
-      ☐ trouver erreur proxy
       ✔ routes notifications socket @done(19-05-30 12:04)
+      ☐ trouver erreur proxy
       ☐ filtre de recherche
 
   ☐ tester sql insections @started(19-05-24 01:55)
