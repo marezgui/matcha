@@ -61,6 +61,12 @@ class Login extends Component {
     onAuth(mail, password);
   };
 
+  autoLog2 = () => { // To remove
+    const [mail, password] = ['alice.roy@example.com', 'Password1234'];
+    const { onAuth } = this.props;
+    onAuth(mail, password);
+  };
+
   render() {
     const { errors, mail, password, formIsValid } = this.state;
     const { error, loading, isAuthenticated } = this.props;
@@ -109,7 +115,12 @@ class Login extends Component {
 
     return (
       <div className="inner-container">
-        <Button clicked={this.autoLog}> AutoLog </Button> {/*TO REMOVE*/}
+      {/*TO REMOVE*/}
+      <div>
+        <Button clicked={this.autoLog}> LogUser1 </Button>
+      </div>
+        <Button clicked={this.autoLog2}> LogUser2 </Button>
+      {/*TO REMOVE*/}
         <div className="header"> Login </div>
         {form}
         {authRedirect}

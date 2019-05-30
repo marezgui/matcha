@@ -29,20 +29,17 @@ const socketFunction = (io) => {
       console.log('Node NOT Exiting...');
     });
 
-    client.on('USER-LOGIN', (data) => {
+    client.on('USER-LOGIN', (idUser) => {
       // eslint-disable-next-line no-param-reassign
-      client.userid = data;
-      console.log(`connect :${client.userid}`);
-      editLog(client.userid, true);
-      io.emit('USER-STATUS', data, true); // ----> il faut que tu regarde cet event
+      console.log(`connect :${idUser}`);
+      editLog(idUser, true);
+      io.emit('USER-STATUS', idUser, true); // ----> il faut que tu regarde cet event
     });
 
-    client.on('USER-LOGOUT', (data) => {
-      // eslint-disable-next-line no-param-reassign
-      client.userid = data;
-      console.log(`logout :${client.userid}`);
-      editLog(client.userid, false);
-      io.emit('USER-STATUS', data, false); // ----> il faut que tu regarde cet event
+    client.on('USER-LOGOUT', (idUser) => {
+      console.log(`logout : ${idUser}`);
+      editLog(idUser, false);
+      io.emit('USER-STATUS', idUser, false); // ----> il faut que tu regarde cet event
     });
 
     client.on('disconnect', () => {

@@ -5,27 +5,24 @@ import NavLinks from '../NavLinks/NavLinks';
 import NavIcons from '../NavIcons/NavIcons';
 import './Toolbar.scss';
 
-const toolbar = ({ openSideDrawer }) => {
+const toolbar = ({ openSideDrawer }) => (
+  <header className="Toolbar">
+    <MediaQuery maxWidth={679}>
+      <Menu onClick={openSideDrawer} />
+    </MediaQuery>
 
-  return (
-    <header className="Toolbar">
-      <MediaQuery maxWidth={679}>
-        <Menu onClick={openSideDrawer} />
-      </MediaQuery>
+    <Logo className="Logo" />
 
-      <Logo className="Logo" />
+    <MediaQuery minWidth={680}>
+      <nav>
+        <NavLinks />
+      </nav>
 
-      <MediaQuery minWidth={680}>
-        <nav>
-          <NavLinks />
-        </nav>
-
-        <nav>
-          <NavIcons />
-        </nav>
-      </MediaQuery>
-    </header>
-  );
-};
+      <nav>
+        <NavIcons />
+      </nav>
+    </MediaQuery>
+  </header>
+);
 
 export default toolbar;

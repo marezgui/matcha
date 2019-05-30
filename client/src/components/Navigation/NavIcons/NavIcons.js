@@ -1,46 +1,69 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import io from 'socket.io-client';
 import { Alert, Account } from 'components/UI/Icons/Icons';
 import Dropdown from 'components/UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
 // eslint-disable-next-line max-len
-const navIcons = ({ sideDrawerComponent, user: { firstName, lastName, photo, photo: { master } } }) => (
-  <ul className="NavIcons">
-    <li>
-      <NavLink to="/notifications">
-        <Alert badge={1} />
-        {sideDrawerComponent && <span className="textIcons">Notifications</span> }
-      </NavLink>
-      {!sideDrawerComponent && (
-        <Dropdown>
-          <p>Notifications</p>
-          <p>Notifications</p>
-        </Dropdown>
-      )}
-    </li>
-    <li className={sideDrawerComponent && 'SideMyAccount'}>
-      <NavLink to="/profile" className="sideProfile">
-        <Account data={photo[master] || firstName[0]} />
-        {sideDrawerComponent && (
-          <span style={{ paddingLeft: '10px' }}>
-            {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`}
-          </span>
-        )}
-      </NavLink>
-      {!sideDrawerComponent && (
-        <Dropdown>
-          <NavLink to="/profile"> My Account </NavLink>
-          <NavLink to="/logout"> Logout </NavLink>
-        </Dropdown>
-      )}
-      {sideDrawerComponent
-        && <NavLink to="/logout" style={{ paddingTop: '10px' }}> Logout </NavLink>
+class navIcons extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notifications: 0,
+    };
+    this.socket = io('localhost:8080');
+    this.socket.on('RELOAD-NOTIFICATION-FOR', (id) => {
+      const { user: { idUser } } = this.props;
+      if (id === idUser) {
+        const { notifications } = this.state;
+        this.setState({ notifications: notifications + 1 });
       }
-    </li>
-  </ul>
-);
+    });
+  }
+
+  render() {
+    const { sideDrawerComponent,
+      user: { firstName, lastName, photo, photo: { master } } } = this.props;
+    const { notifications } = this.state;
+    return (
+      <ul className="NavIcons">
+        <li>
+          <NavLink to="/notifications">
+            <Alert badge={notifications} />
+            {sideDrawerComponent && <span className="textIcons">Notifications</span> }
+          </NavLink>
+          {!sideDrawerComponent && (
+          <Dropdown>
+            <p>Notifications</p>
+            <p>Notifications</p>
+          </Dropdown>
+          )}
+        </li>
+        <li className={sideDrawerComponent && 'SideMyAccount'}>
+          <NavLink to="/profile" className="sideProfile">
+            <Account data={photo[master] || firstName[0]} />
+            {sideDrawerComponent && (
+            <span style={{ paddingLeft: '10px' }}>
+              {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`}
+            </span>
+            )}
+          </NavLink>
+          {!sideDrawerComponent && (
+          <Dropdown>
+            <NavLink to="/profile"> My Account </NavLink>
+            <NavLink to="/logout"> Logout </NavLink>
+          </Dropdown>
+          )}
+          {sideDrawerComponent
+          && <NavLink to="/logout" style={{ paddingTop: '10px' }}> Logout </NavLink>
+        }
+        </li>
+      </ul>
+    );
+  }
+}
 
 const mapStateToProps = state => ({ user: state.auth.user });
 

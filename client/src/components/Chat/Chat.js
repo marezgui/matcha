@@ -10,6 +10,7 @@ class Chat extends Component {
   state = {
     matches: [],
     clickedMatche: false,
+    matcheWith: null,
   };
 
   componentDidMount = () => {
@@ -42,17 +43,17 @@ class Chat extends Component {
       .catch((err) => { console.log(err.response.data); });
   }
 
-  handleMatcheList = (clickedMatche) => {
-    this.setState({ clickedMatche });
+  handleMatcheList = (clickedMatche, matcheWith) => {
+    this.setState({ clickedMatche, matcheWith });
   }
 
   render() {
-    const { matches, clickedMatche } = this.state;
-
+    const { matches, clickedMatche, matcheWith } = this.state;
+    console.log(matches);
     let content = (
       <div className="MatcheList">
-        {matches.map(({ id, username, avatar }) => (
-          <div key={id} className="Pointer Channel" role="presentation" onClick={() => this.handleMatcheList(id)}>
+        {matches.map(({ id, usermatche, username, avatar }) => (
+          <div key={id} className="Pointer Channel" role="presentation" onClick={() => this.handleMatcheList(id, usermatche)}>
             {!avatar ? (
               <Avatar style={{ backgroundColor: 'grey' }}>
                 {username.charAt(0).toUpperCase()}
@@ -71,6 +72,7 @@ class Chat extends Component {
       content = (
         <Messages
           idMatche={clickedMatche}
+          usermatche={matcheWith}
           back={() => this.setState({ clickedMatche: false })}
         />
       );

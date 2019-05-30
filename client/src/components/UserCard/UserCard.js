@@ -5,22 +5,37 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import Profile from 'components/Profile/Profile';
 // import Chip from '@material-ui/core/Chip';
+import io from 'socket.io-client';
 import { getAge, getLastLog } from 'shared/utility';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './UserCard.css';
 
 class UserCard extends Component {
-  state = {
-    liked: false,
-    tags: [],
-    showLink: false,
-    modal: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      online: false,
+      liked: false,
+      tags: [],
+      showLink: false,
+      modal: false,
+    };
+    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
+    this.socket.on('USER-STATUS', (id, isOnline) => {
+      const { data: { idUser } } = this.props;
+      console.log(id, isOnline, idUser);
+      if (id === idUser) {
+        this.setState({ online: isOnline });
+      }
+    });
+  }
 
   componentDidMount() {
-    this.getLikeStatus();
+    /*this.getLikeStatus();
     this.getTags();
+    const { data: { isOnline } } = this.props;
+    this.setState({ online: isOnline });*/
   }
 
   getLikeStatus = () => {
@@ -49,13 +64,13 @@ class UserCard extends Component {
       .catch(err => console.log(err.response.data.error));
   }
 
-  changeLikeStatus = async () => {
+  changeLikeStatus = () => { // async
     const { data, token } = this.props;
     const { liked } = this.state;
 
     const { idUser } = data;
     const headers = { headers: { Authorization: `bearer ${token}` } };
-    await this.getLikeStatus();
+    this.getLikeStatus(); // await
 
     if (liked) {
       this.setState({ liked: false });
@@ -87,7 +102,7 @@ class UserCard extends Component {
 
   render() {
     const { data } = this.props;
-    const { liked, showLink, tags, modal } = this.state;
+    const { online, liked, showLink, tags, modal } = this.state;
 
     const { idUser,
       firstName,
@@ -116,10 +131,13 @@ class UserCard extends Component {
 
     let likeStatus = (<i className="far fa-heart" />);
     let showLinkClasses = ['Biography', 'Hide'];
+    const onlineClasses = ['Status'];
 
     if (liked) likeStatus = (<i className="fas fa-heart" />);
-
     if (showLink) showLinkClasses = ['Biography', 'Show'];
+    if (online) {
+      onlineClasses.push('Online');
+    }
 
     const meta = {
       tags,
@@ -138,11 +156,11 @@ class UserCard extends Component {
             </Slider>
             <Card.Content>
               <Card.Header>
-                <div className="Status">
+                <div className={onlineClasses.join(' ')}>
                   <span>
                     <i className="fas fa-circle" />
                     {' '}
-                    {getLastLog(connexionLog)}
+                    {online ? 'Online' : getLastLog(connexionLog)}
                   </span>
                 </div>
                 <span>

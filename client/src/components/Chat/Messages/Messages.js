@@ -27,7 +27,7 @@ class Messages extends Component {
     const { idMatche, token } = this.props;
     const headers = { headers: { Authorization: `bearer ${token}` } };
 
-    // console.log(idMatche);
+    // console.log(idMatche, usermatche);
 
     axios
       .get(`notifchat/getmesageofmatche/${idMatche}`, headers)
@@ -42,6 +42,11 @@ class Messages extends Component {
       this.setState({ toSend: value });
     }
 
+    emitNotification = () => {
+      const { usermatche } = this.props;
+      this.socket.emit('CREATE-NOTIFICATION', usermatche);
+    }
+
     sendMessage = (e) => {
       e.preventDefault();
       const { idMatche, user: { idUser } } = this.props;
@@ -53,8 +58,8 @@ class Messages extends Component {
           message: toSend,
         };
         this.socket.emit('SEND_MESSAGE', data);
-        this.socket.emit('NEW-NOTIFICATION');
         this.setState({ toSend: '' });
+        this.emitNotification();
       }
     }
 
