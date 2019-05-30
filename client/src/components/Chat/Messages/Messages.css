@@ -13,21 +13,27 @@
 }
 
 .Sender, .Receiver {
-    width: 80%;
+    width: auto;
+    max-width: 80%;
     padding: 5px;
     margin: 10px 0;
     border-radius: 5px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-y: auto;
 }
 
 .Sender {
     margin-left: auto;
     background-color: #577284;
     color: white;
+    text-align: right;
 }
 
 .Receiver {
     margin-right: auto;
     background-color: #CE5B78;
+    color: white;
 }
 
 .MessagesFooter {

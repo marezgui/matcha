@@ -12,21 +12,28 @@ class Messages extends Component {
       messages: [],
       toSend: '',
     };
-
     this.socket = io('localhost:8080');
+    this.socket.on('RECEIVE_MESSAGE', (data) => {
+      // console.log('receive', data);
+      const { idMatche } = this.props;
+      if (data.matcheId === idMatche) {
+        const { messages } = this.state;
+        this.setState({ messages: messages.concat(data) });
+      }
+    });
   }
 
   componentDidMount() {
     const { idMatche, token } = this.props;
     const headers = { headers: { Authorization: `bearer ${token}` } };
 
-    console.log(idMatche);
+    // console.log(idMatche);
 
     axios
       .get(`notifchat/getmesageofmatche/${idMatche}`, headers)
       .then((res) => {
         this.setState({ messages: res.data.resultMessage });
-        console.log(res.data);
+        // console.log(res.data);
       });
   }
 
@@ -39,13 +46,16 @@ class Messages extends Component {
       e.preventDefault();
       const { idMatche, user: { idUser } } = this.props;
       const { toSend } = this.state;
-      console.log(idMatche);
-      const data = {
-        matcheId: idMatche,
-        senduserId: idUser,
-        message: toSend,
-      };
-      this.socket.emit('SEND_MESSAGE', data);
+      if (toSend !== '') {
+        const data = {
+          matcheId: idMatche,
+          sendUserId: idUser,
+          message: toSend,
+        };
+        this.socket.emit('SEND_MESSAGE', data);
+        this.socket.emit('NEW-NOTIFICATION');
+        this.setState({ toSend: '' });
+      }
     }
 
     render() {
@@ -63,7 +73,7 @@ class Messages extends Component {
             <div>
               {messages.map(({ idMessage, sendUserId, message, date }) => (
                 <p
-                  key={idMessage}
+                  key={idMessage || Math.random()} // REMOVE RANDOM
                   className={idUser === sendUserId ? senderClasses : receiverClasses}
                 >
                   {`${message}`}
