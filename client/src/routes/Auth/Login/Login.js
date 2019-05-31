@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from 'store/actions/index';
-import { checkInputValidity } from 'shared/utility';
-import Input from 'components/UI/Input/Input';
-import Button from 'components/UI/Button/Button';
-import Spinner from 'components/UI/Spinner/Spinner';
+import * as actions from '../../../store/actions/index';
+import { checkInputValidity } from '../../../shared/utility';
+import Input from '../../../components/UI/Input/Input';
+import Button from '../../../components/UI/Button/Button';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 class Login extends Component {
   state = {
@@ -115,12 +115,12 @@ class Login extends Component {
 
     return (
       <div className="inner-container">
-      {/*TO REMOVE*/}
-      <div>
-        <Button clicked={this.autoLog}> LogUser1 </Button>
-      </div>
+        {/* TO REMOVE */}
+        <div>
+          <Button clicked={this.autoLog}> LogUser1 </Button>
+        </div>
         <Button clicked={this.autoLog2}> LogUser2 </Button>
-      {/*TO REMOVE*/}
+        {/* TO REMOVE */}
         <div className="header"> Login </div>
         {form}
         {authRedirect}

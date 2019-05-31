@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import io from 'socket.io-client';
-import Button from 'components/UI/Button/Button';
+import Button from '../../UI/Button/Button';
 import './Messages.css';
 
 class Messages extends Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import close from 'assets/images/close.png';
+import close from '../../../assets/images/close.png';
 import './Modal.css';
 
 const modal = ({ title, children, clicked }) => (

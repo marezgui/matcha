@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import { Alert, Account } from 'components/UI/Icons/Icons';
-import Dropdown from 'components/UI/Dropdown/Dropdown';
+import { Alert, Account } from '../../UI/Icons/Icons';
+import Dropdown from '../../UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
 // eslint-disable-next-line max-len

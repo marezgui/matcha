@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { checkInputValidity } from 'shared/utility';
-import Input from 'components/UI/Input/Input';
-import Button from 'components/UI/Button/Button';
-import Spinner from 'components/UI/Spinner/Spinner';
+import { checkInputValidity } from '../../../shared/utility';
+import Input from '../../../components/UI/Input/Input';
+import Button from '../../../components/UI/Button/Button';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 
 class Register extends Component {
   state = {

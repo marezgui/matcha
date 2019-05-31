@@ -3,10 +3,10 @@ import { Card, Image } from 'semantic-ui-react';
 import Slider from 'react-slick';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import Profile from 'components/Profile/Profile';
 // import Chip from '@material-ui/core/Chip';
 import io from 'socket.io-client';
-import { getAge, getLastLog } from 'shared/utility';
+import { getAge, getLastLog } from '../../shared/utility';
+import Profile from '../Profile/Profile';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './UserCard.css';
@@ -32,10 +32,10 @@ class UserCard extends Component {
   }
 
   componentDidMount() {
-    /*this.getLikeStatus();
+    /* this.getLikeStatus();
     this.getTags();
     const { data: { isOnline } } = this.props;
-    this.setState({ online: isOnline });*/
+    this.setState({ online: isOnline }); */
   }
 
   getLikeStatus = () => {

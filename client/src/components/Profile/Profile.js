@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import Backdrop from 'components/UI/Backdrop/Backdrop';
-import Modal from 'components/UI/Modal/Modal';
 import { Image } from 'semantic-ui-react';
 import Chip from '@material-ui/core/Chip';
 import Slider from 'react-slick';
-import { getAge, getLastLog } from 'shared/utility';
+import { getAge, getLastLog } from '../../shared/utility';
+import Modal from '../UI/Modal/Modal';
+import Backdrop from '../UI/Backdrop/Backdrop';
 import './Profile.scss';
 
 class ProfilePage extends Component {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import ChatWidget from 'components/UI/ChatWidget/ChatWidget';
 import { Avatar } from '@material-ui/core';
+import ChatWidget from '../UI/ChatWidget/ChatWidget';
 import Messages from './Messages/Messages';
 import './Chat.css';
 

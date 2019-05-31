@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { People, Dashborad } from 'components/UI/Icons/Icons';
+import { People, Dashborad } from '../../UI/Icons/Icons';
 import './NavLinks.scss';
 
 const navLinks = ({ sideDrawerComponent }) => (

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from 'store/actions';
-import Layout from 'components/Layout/Layout';
-import Auth from 'routes/Auth/Auth';
-import Profile from 'routes/Profile/Profile';
-import People from 'routes/People/People';
-import Notifications from 'routes/Notifications/Notifications';
-import Logout from 'routes/Auth/Logout/Logout';
+import * as actions from './store/actions';
+import Auth from './routes/Auth/Auth';
+import Profile from './routes/Profile/Profile';
+import People from './routes/People/People';
+import Notifications from './routes/Notifications/Notifications';
+import Logout from './routes/Auth/Logout/Logout';
+import Layout from './components/Layout/Layout';
 
 class App extends Component {
   componentDidMount() {

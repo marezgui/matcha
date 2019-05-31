@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import openChat from 'assets/images/openChat.svg';
-import close from 'assets/images/close.png';
+import openChat from '../../../assets/images/openChat.svg';
+import close from '../../../assets/images/close.png';
 import './Launcher.css';
 import './Window.css';
 import './Header.css';

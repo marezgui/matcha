@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, NavLink, Switch } from 'react-router-dom';
-import { Logo } from 'components/UI/Icons/Icons';
+import { Logo } from '../../components/UI/Icons/Icons';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import './Auth.scss';

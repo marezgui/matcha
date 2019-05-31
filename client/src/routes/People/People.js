@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import UserCard from 'components/UserCard/UserCard';
-import Spinner from 'components/UI/Spinner/Spinner';
-import Chat from 'components/Chat/Chat';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import Chat from '../../components/Chat/Chat';
+import UserCard from '../../components/UserCard/UserCard';
 import './People.css';
 
 class People extends Component {
