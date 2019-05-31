@@ -11,6 +11,11 @@ export const authSuccess = (token, user) => ({
   user,
 });
 
+export const notifFetch = notifications => ({
+  type: actionTypes.NOTIF_FETCH,
+  notifications,
+});
+
 export const authFail = error => ({
   type: actionTypes.AUTH_FAIL,
   error,
@@ -38,6 +43,22 @@ const getUser = async (token) => {
   return user;
 };
 
+const getNotif = async (token) => {
+  let notif = false;
+
+  await axios
+    .get('http://localhost:8080/api/notifchat/getallnotif', { headers: { Authorization: `bearer ${token}` } })
+    .then((res) => {
+      notif = res.data.resultNotif;
+      // console.log(notif);
+    })
+    .catch(() => {
+      notif = false;
+    });
+
+  return notif;
+};
+
 export const auth = (mail, password) => (dispatch) => {
   dispatch(authStart());
 
@@ -50,6 +71,8 @@ export const auth = (mail, password) => (dispatch) => {
       if (user) {
         localStorage.setItem('token', token);
         dispatch(authSuccess(token, user));
+        const notifications = await getNotif(token, user.idUser);
+        dispatch(notifFetch(notifications));
       } else {
         dispatch(
           authFail({
@@ -70,8 +93,10 @@ export const authCheckState = () => async (dispatch) => {
     dispatch(logout());
   } else {
     getUser(token)
-      .then((user) => {
+      .then(async (user) => {
         dispatch(authSuccess(token, user));
+        const notifications = await getNotif(token);
+        dispatch(notifFetch(notifications));
       })
       .catch(() => {
         dispatch(logout());

@@ -12,6 +12,10 @@
   transition: box-shadow 0.2s ease-in-out;
 }
 
+.ChatLauncher > .MuiBadge-root-1 > .MuiBadge-badge-2 {
+  position: relative;
+}
+
 .ChatLauncher:before {
   content: '';
   position: relative;

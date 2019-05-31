@@ -24,18 +24,26 @@ class UserCard extends Component {
     this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     this.socket.on('USER-STATUS', (id, isOnline) => {
       const { data: { idUser } } = this.props;
-      console.log(id, isOnline, idUser);
       if (id === idUser) {
-        this.setState({ online: isOnline });
+        console.log(id, isOnline, idUser);
+        if (this._isMounted) {
+          this.setState({ online: isOnline });
+          console.log('hi');
+        }
       }
     });
   }
 
   componentDidMount() {
-    /* this.getLikeStatus();
+    this._isMounted = true;
+    this.getLikeStatus();
     this.getTags();
     const { data: { isOnline } } = this.props;
-    this.setState({ online: isOnline }); */
+    this.setState({ online: isOnline });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   getLikeStatus = () => {

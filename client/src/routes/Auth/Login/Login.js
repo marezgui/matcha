@@ -13,7 +13,7 @@ class Login extends Component {
     password: '',
     errors: {},
     formIsValid: false,
-    restore: false,
+    restore: false, // restore password
   };
 
   addError = (field, msg) => {
@@ -51,7 +51,6 @@ class Login extends Component {
     event.preventDefault();
     const { mail, password } = this.state;
     const { onAuth } = this.props;
-
     onAuth(mail, password);
   };
 
@@ -62,7 +61,7 @@ class Login extends Component {
   };
 
   autoLog2 = () => { // To remove
-    const [mail, password] = ['alice.roy@example.com', 'Password1234'];
+    const [mail, password] = ['rosemary.hunter@example.com', 'Password1234'];
     const { onAuth } = this.props;
     onAuth(mail, password);
   };

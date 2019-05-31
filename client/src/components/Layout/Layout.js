@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
+import Chat from '../Chat/Chat';
 import './Layout.css';
 
 class Layout extends Component {
@@ -29,7 +30,7 @@ class Layout extends Component {
 
   render() {
     const { showSideDrawer } = this.state;
-    const { children } = this.props;
+    const { children, user: { userIsComplete } } = this.props;
 
     return (
       <>
@@ -38,6 +39,7 @@ class Layout extends Component {
 
         <section className="Content">
           {children}
+          {userIsComplete && (<Chat />)}
         </section>
       </>
     );

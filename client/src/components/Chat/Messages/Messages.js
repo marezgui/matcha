@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import io from 'socket.io-client';
-import Button from '../../UI/Button/Button';
+import { Send } from '@material-ui/icons';
+import Input from '../../UI/Input/Input';
 import './Messages.css';
 
 class Messages extends Component {
@@ -18,12 +19,15 @@ class Messages extends Component {
       const { idMatche } = this.props;
       if (data.matcheId === idMatche) {
         const { messages } = this.state;
-        this.setState({ messages: messages.concat(data) });
+        if (this._isMounted) {
+          this.setState({ messages: messages.concat(data) });
+        }
       }
     });
   }
 
   componentDidMount() {
+    this._isMounted = true;
     const { idMatche, token } = this.props;
     const headers = { headers: { Authorization: `bearer ${token}` } };
 
@@ -35,6 +39,16 @@ class Messages extends Component {
         this.setState({ messages: res.data.resultMessage });
         // console.log(res.data);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  componentDidUpdate() {
+    // eslint-disable-next-line react/no-string-refs
+    const el = this.refs.MessagesBody;
+    el.scrollTop = el.scrollHeight;
   }
 
     handleInput = (e) => {
@@ -63,13 +77,6 @@ class Messages extends Component {
       }
     }
 
-
-    componentDidUpdate() {
-      // eslint-disable-next-line react/no-string-refs
-      const el = this.refs.MessagesBody;
-      el.scrollTop = el.scrollHeight;
-    }
-
     render() {
       const { back, idMatche, user: { idUser } } = this.props;
       const { messages, toSend } = this.state;
@@ -79,29 +86,39 @@ class Messages extends Component {
       return (
         <div className="Messages">
           <div className="MessagesHeader">
-            <p onClick={back} className="Pointer"> Back </p>
+            <p onClick={back} className="Pointer" style={{ paddingLeft: '2px' }}>
+              <i className="far fa-arrow-alt-circle-left" />
+              {' '}
+              Back to conversations
+            </p>
           </div>
           <div className="MessagesBody" ref="MessagesBody">
             <div>
               {messages.map(({ idMessage, sendUserId, message, date }) => (
-                <p
-                  key={idMessage || Math.random()} // REMOVE RANDOM
-                  className={idUser === sendUserId ? senderClasses : receiverClasses}
-                >
-                  {`${message}`}
-                </p>
+                <div className="MessageContainer" key={idMessage || Math.random()}>
+                  {' '}
+                  {/* REMOVE RANDOM */}
+                  <p className={idUser === sendUserId ? senderClasses : receiverClasses}>
+                    {`${message}`}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
           <div className="MessagesFooter">
             <form>
               <div className="MessagesInput">
-                <input type="text" value={toSend} onChange={this.handleInput} />
+                <input
+                  className="InputMessage"
+                  type="text"
+                  value={toSend}
+                  onChange={this.handleInput}
+                />
               </div>
               <div className="MessagesSend">
-                <Button clicked={this.sendMessage}>
-                  Send
-                </Button>
+                <button style={{ border: '0', backgroundColor: 'transparent' }} type="submit" onClick={this.sendMessage}>
+                  <Send />
+                </button>
               </div>
             </form>
           </div>

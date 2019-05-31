@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Badge } from '@material-ui/core';
 import openChat from '../../../assets/images/openChat.svg';
 import close from '../../../assets/images/close.png';
 import './Launcher.css';
@@ -32,8 +33,11 @@ class Chat extends Component {
         <div>
           <div className={launcherClasses.join(' ')} onClick={this.onClickHandler} role="presentation">
             <img className="OpenIcon" src={close} alt="close" />
-            <img className="ClosedIcon" src={openChat} alt="open" />
+            <Badge badgeContent={10} color="secondary" invisible={!closed}>
+              <img className="ClosedIcon" src={openChat} alt="open" />
+            </Badge>
           </div>
+
 
           <div className={windowClasses.join(' ')}>
             <div className="ChatHeader">

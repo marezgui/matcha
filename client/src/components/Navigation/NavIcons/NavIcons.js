@@ -2,31 +2,42 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
+import axios from 'axios';
 import { Alert, Account } from '../../UI/Icons/Icons';
 import Dropdown from '../../UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
-// eslint-disable-next-line max-len
 class navIcons extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notifications: 0,
+      notSeenNotif: 0,
     };
     this.socket = io('localhost:8080');
     this.socket.on('RELOAD-NOTIFICATION-FOR', (id) => {
       const { user: { idUser } } = this.props;
       if (id === idUser) {
-        const { notifications } = this.state;
-        this.setState({ notifications: notifications + 1 });
+        this.updateNoficationBadge();
       }
     });
   }
 
-  render() {
-    const { sideDrawerComponent,
-      user: { firstName, lastName, photo, photo: { master } } } = this.props;
+  updateNoficationBadge = () => {
     const { notifications } = this.state;
+    this.setState({ notifications: notifications + 1 });
+  }
+
+  render() {
+    const { sideDrawerComponent, notif,
+      user: { firstName, lastName, photo, photo: { master } } } = this.props;
+    let notifications = 0;
+    if (notif !== null) {
+      notif.forEach((el) => {
+        if (el[4] !== 'NEWMESSAGE') {
+          notifications += 1;
+        }
+      });
+    }
     return (
       <ul className="NavIcons">
         <li>
@@ -65,6 +76,6 @@ class navIcons extends Component {
   }
 }
 
-const mapStateToProps = state => ({ user: state.auth.user });
+const mapStateToProps = state => ({ user: state.auth.user, notif: state.notif.notifications });
 
 export default connect(mapStateToProps)(navIcons);

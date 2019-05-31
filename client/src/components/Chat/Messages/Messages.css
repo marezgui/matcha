@@ -1,25 +1,34 @@
 .Messages {
-    border: 1px solid black;
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
+.MessagesHeader {
+    background-color: #755139;
+    color: white;
+}
+
 .MessagesBody {
-    border: 1px solid black;
     flex: 1;
     overflow: auto;
     padding: 10px;
+    -webkit-overflow-scrolling: touch;
+    background-color: rgb(242, 223, 192);
+}
+
+.MessageContainer {
+    display: flex;
+    margin: 4px 0;
 }
 
 .Sender, .Receiver {
-    width: auto;
+    display: inline-block;
     max-width: 80%;
-    padding: 5px;
+    padding: 6px;
     margin: 10px 0;
-    border-radius: 5px;
+    border-radius: 10px;
     word-wrap: break-word;
-    white-space: pre-wrap;
     overflow-y: auto;
 }
 
@@ -37,7 +46,6 @@
 }
 
 .MessagesFooter {
-    border: 1px solid black;
 }
 
 .MessagesFooter > form {
@@ -46,10 +54,17 @@
 }
 
 .MessagesInput {
-    /* border: 1px solid black; */
+    flex: 1;
+}
+
+.InputMessage {
+    width: 100%;
+    height: 2.1em;
+    border-radius: 3px;
+    border: 1px solid #40a4c8;
+    margin: 2px;
 }
 
 .MessagesSend {
-    /* border: 1px solid black; */
-    width: 20%;
+    margin: auto;
 }
