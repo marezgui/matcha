@@ -10,9 +10,9 @@ const editLog = (idUser, status) => {
       [status, idUser],
       (err, res) => {
         if (err.error) {
-          console.log('error edit log');
+          // console.log('error edit log');
         }
-        console.log(`edit logs${res}`);
+        // console.log(`edit logs${res}`);
       });
   }
 };

@@ -63,6 +63,13 @@ class Messages extends Component {
       }
     }
 
+
+    componentDidUpdate() {
+      // eslint-disable-next-line react/no-string-refs
+      const el = this.refs.MessagesBody;
+      el.scrollTop = el.scrollHeight;
+    }
+
     render() {
       const { back, idMatche, user: { idUser } } = this.props;
       const { messages, toSend } = this.state;
@@ -74,7 +81,7 @@ class Messages extends Component {
           <div className="MessagesHeader">
             <p onClick={back} className="Pointer"> Back </p>
           </div>
-          <div className="MessagesBody">
+          <div className="MessagesBody" ref="MessagesBody">
             <div>
               {messages.map(({ idMessage, sendUserId, message, date }) => (
                 <p
