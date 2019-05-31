@@ -10,7 +10,7 @@
     "client": "npm start --prefix client",
     "server": "nodemon server",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
-    "test": "cd client && npm install && npm run build && cd .. && NODE_ENV=production nodemon server ",
+    "test": "cd client && npm run build && cd .. && NODE_ENV=production nodemon server ",
     "prod": "NODE_ENV=production nodemon server",
     "start": "node server",
     "postbuild": "cd client && npm install && npm run build"
