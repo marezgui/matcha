@@ -7,6 +7,7 @@ import socket from 'socket.io';
 import cors from 'cors';
 import { db } from './database';
 import importuser from './database/importuser';
+// eslint-disable-next-line import/no-cycle
 import routerApp from './api/router';
 import socketFunction from './api/socket/controllers';
 import reactServer from './reactServer';
@@ -16,12 +17,14 @@ dotenv.load();
 const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
-const io = socket(server);
+export const io = socket(server);
 
 const whitelist = ['http://localhost:3000'];
 const corsOptions = {
   origin(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (process.env.NODE_ENV === 'devloppement') {
+      callback(null, true);
+    } else if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

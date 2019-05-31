@@ -3,6 +3,8 @@ import geolib from 'geolib';
 import sortJsonArray from 'sort-json-array';
 import * as mod from '../models/socialmod';
 import { likeNotif, unlikeNotif, matcheNotif } from './notifchatctrl';
+// eslint-disable-next-line import/no-cycle
+import { io } from '../../server';
 
 //
 // ─── GET LIST OF BLOCKED USERS ──────────────────────────────────────────────────
@@ -140,10 +142,7 @@ export const getAllUserMatcheMore = async (req, res) => {
       res.status(303).json({ error: err.error }); return;
     }
     let usermatche;
-    if (success[0].userId1 === req.user.idUser)
-      usermatche = success[0].userId2;
-    else
-      usermatche = success[0].userId1;
+    if (success[0].userId1 === req.user.idUser) { usermatche = success[0].userId2; } else { usermatche = success[0].userId1; }
     res.status(200).json({ usermatche }); // return a tab
   });
 };
@@ -258,6 +257,9 @@ export const like = async (req, res) => {
       matcheNotif(req.user.idUser, id);
       console.log(`create matche ${success}`);
     });
+
+    io.emit('NEW-MATCHE', req.user.idUser, id); // ----> il faut que tu regarde cet event
+
   }
   mod.editLike(id, 1, (err, success) => {
     if (err) {
@@ -304,6 +306,9 @@ export const unLike = async (req, res) => {
       }
       console.log(`remove matche ${success}`);
     });
+
+    io.emit('REMOVE-MATCHE', req.user.idUser, id); // ----> il faut que tu regarde cet event
+
   }
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -435,6 +440,9 @@ export const blockUser = async (req, res) => {
       }
       console.log(`remove matche ${success}`);
     });
+
+    io.emit('REMOVE-MATCHE', req.user.idUser, id); // ----> il faut que tu regarde cet event
+
   }
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
@@ -468,6 +476,9 @@ export const blockUser = async (req, res) => {
       console.log({ message: `User ${id} report ${success}` });
     });
   }
+
+  io.emit('BLOCK-USER', req.user.idUser, id); // ----> il faut que tu regarde cet event
+
   return mod.blockUser(req.user.idUser, id, (err, success) => {
     if (err) {
       res.status(303).json({ error: err.error }); return;
@@ -504,7 +515,7 @@ export const unBlockUser = async (req, res) => {
       if (err) {
         console.log(err);
       }
-      console.log(`add report ${success}`);
+      console.log(`remove report ${success}`);
     });
     mod.unReport(req.user.idUser, id, (err, success) => {
       if (err) {
@@ -512,6 +523,9 @@ export const unBlockUser = async (req, res) => {
       }
       console.log({ message: `User ${id} unreport ${success}` });
     });
+
+    io.emit('UNBLOCK-USER', req.user.idUser, id); // ----> il faut que tu regarde cet event
+
   }
   return mod.unBlockUser(req.user.idUser, id, (err, success) => {
     if (err) {
@@ -677,7 +691,7 @@ const getUserNoTags = async (user, count, start, ageMin, ageMax,
         }
       }
       if (c !== 0) {
-        result++;
+        result += 1;
         c = 0;
         continue;
       }

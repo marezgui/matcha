@@ -50,12 +50,7 @@ export const getAllNotif = async (req, res) => {
   const result = [];
   for (let i = 0; i < resultNotif.length; i += 1) {
     result[i] = [];
-    result[i].push(Number(resultNotif[i].idNotification));
-    result[i].push(Number(resultNotif[i].userId));
-    result[i].push(Number(resultNotif[i].userIdSender));
-    result[i].push(resultNotif[i].vue);
-    result[i].push(resultNotif[i].type);
-    result[i].push(resultNotif[i].message);
+    result[i].push(resultNotif[i]);
   }
   res.status(200).json({ resultNotif: result });
 };

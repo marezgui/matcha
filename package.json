@@ -8,9 +8,11 @@
     "server-install": "cd server && npm i",
     "install": "concurrently \"npm run server-install\" \"npm run client-install\"",
     "client": "npm start --prefix client",
-    "server": "nodemon server",
+    "server": " NODE_ENV=devloppement nodemon server",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
     "test": "cd client && npm run build && cd .. && NODE_ENV=production nodemon server ",
+    "42CorrectionInstall": "cd server && npm i && cd ../client && npm i && npm run build ",
+    "42CorrectionRun": "NODE_ENV=production nodemon server",
     "prod": "NODE_ENV=production nodemon server",
     "start": "node server",
     "postbuild": "cd client && npm install && npm run build"
