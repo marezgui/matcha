@@ -18,16 +18,16 @@ class Chat extends Component {
     const headers = { headers: { Authorization: `bearer ${token}` } };
 
     axios
-      .get('social/getallusermatche', headers)
+      .get('http://localhost:8080/api/social/getallusermatche', headers)
       .then((res1) => {
         res1.data.result.forEach((id) => {
           axios
-            .get(`social/getallusermatchemore/${id}`, headers)
+            .get(`http://localhost:8080/api/social/getallusermatchemore/${id}`, headers)
             .then((res2) => {
               const { usermatche } = res2.data;
 
               axios
-                .get(`users/id/${res2.data.usermatche}`, headers)
+                .get(`http://localhost:8080/api/users/id/${res2.data.usermatche}`, headers)
                 .then((res3) => {
                   const { matches } = this.state;
                   const { user } = res3.data;

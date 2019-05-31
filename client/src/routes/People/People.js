@@ -20,7 +20,7 @@ class People extends Component {
     const { token } = this.props;
 
     axios
-      .post(`social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
+      .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         this.setState({ users: res.data.resultData.users });
         // console.log(res.data.resultData.newStart);
@@ -35,7 +35,7 @@ class People extends Component {
       const { count, start } = this.state; // To REMOVE find a solution!
       // console.log('fetch', count, start);
       axios
-        .post(`social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
+        .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
           this.setState({ users: users.concat(res.data.resultData.users) });
           // console.log(res.data.resultData.newStart);

@@ -10,6 +10,8 @@
     "client": "npm start --prefix client",
     "server": "nodemon server",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
+    "test": "cd client && npm install && npm run build && cd .. && NODE_ENV=production nodemon server ",
+    "prod": "NODE_ENV=production nodemon server",
     "start": "node server",
     "postbuild": "cd client && npm install && npm run build"
   },
@@ -39,6 +41,7 @@
   },
   "dependencies": {
     "geolib": "^2.0.24",
+    "path": "^0.12.7",
     "sort-json-array": "^0.1.7",
     "ws": "^7.0.0"
   }

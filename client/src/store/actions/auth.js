@@ -27,7 +27,7 @@ const getUser = async (token) => {
   let user = false;
 
   await axios
-    .get('users/me', { headers: { Authorization: `bearer ${token}` } })
+    .get('http://localhost:8080/api/users/me', { headers: { Authorization: `bearer ${token}` } })
     .then((res) => {
       user = res.data;
     })
@@ -42,7 +42,7 @@ export const auth = (mail, password) => (dispatch) => {
   dispatch(authStart());
 
   axios
-    .post('users/login', { mail, password })
+    .post('http://localhost:8080/api/users/login', { mail, password })
     .then(async (res) => {
       const { token } = res.data;
       const user = await getUser(token);

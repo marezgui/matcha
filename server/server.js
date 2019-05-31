@@ -4,10 +4,12 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import dotenv from 'dotenv';
 import socket from 'socket.io';
+import cors from 'cors';
 import { db } from './database';
 import importuser from './database/importuser';
 import routerApp from './api/router';
 import socketFunction from './api/socket/controllers';
+import reactServer from './reactServer';
 
 dotenv.load();
 
@@ -15,6 +17,19 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
+
+const whitelist = ['http://localhost:3000'];
+const corsOptions = {
+  origin(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+// Then pass them to cors:
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,6 +39,10 @@ app.use(routerApp);
 socketFunction(io); // fonction socket.io
 
 server.listen(PORT, () => { console.log(`Server listening on port ${PORT}!`); });
+
+if (process.env.NODE_ENV === 'production') {
+  reactServer();
+}
 
 db.query('SELECT NOW()', (err, res) => {
   if (err.error) { return console.log(err.error); }

@@ -6,7 +6,7 @@ import notifchatRoute from './routes/notifchatroutes';
 
 const routerApp = express.Router();
 
-routerApp.route('/')
+routerApp.route('/api/')
   .all((req, res) => {
     res.json({ message: 'Welcome to --- MATCHA -- ',
       methode: `you are using ${req.method} methode` });

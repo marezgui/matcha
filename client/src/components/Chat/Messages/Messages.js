@@ -30,7 +30,7 @@ class Messages extends Component {
     // console.log(idMatche, usermatche);
 
     axios
-      .get(`notifchat/getmesageofmatche/${idMatche}`, headers)
+      .get(`http://localhost:8080/api/notifchat/getmesageofmatche/${idMatche}`, headers)
       .then((res) => {
         this.setState({ messages: res.data.resultMessage });
         // console.log(res.data);

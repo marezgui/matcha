@@ -32,14 +32,14 @@ class ProfilePage extends Component {
     const { idUser } = data;
 
     axios
-      .get(`social/getuserreported/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .get(`http://localhost:8080/api/social/getuserreported/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
           this.setState({ reported: true });
         }
       });
     axios
-      .get(`social/getuserblocked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .get(`http://localhost:8080/api/social/getuserblocked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
           this.setState({ blocked: true });
@@ -58,13 +58,13 @@ class ProfilePage extends Component {
     if (reported) {
       // this.setState({ reported: false });
       axios
-        .delete(`social/report/${idUser}`, headers)
+        .delete(`http://localhost:8080/api/social/report/${idUser}`, headers)
         .then(res => this.setState({ reported: false }))
         .catch(err => console.log(err.response.data.error));
     } else {
       // this.setState({ reported: true });
       axios
-        .post(`social/report/${idUser}`, null, headers)
+        .post(`http://localhost:8080/api/social/report/${idUser}`, null, headers)
         .then(res => this.setState({ reported: true }))
         .catch(err => console.log(err.response.data.error));
     }
@@ -81,13 +81,13 @@ class ProfilePage extends Component {
     if (blocked) {
       // this.setState({ blocked: false });
       axios
-        .delete(`social/block/${idUser}`, headers)
+        .delete(`http://localhost:8080/api/social/block/${idUser}`, headers)
         .then(res => this.setState({ blocked: false }))
         .catch(err => console.log(err.response.data.error));
     } else {
       // this.setState({ blocked: true });
       axios
-        .post(`social/block/${idUser}`, null, headers)
+        .post(`http://localhost:8080/api/social/block/${idUser}`, null, headers)
         .then(res => this.setState({ blocked: true }))
         .catch(err => console.log(err.response.data.error));
     }

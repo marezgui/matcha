@@ -43,7 +43,7 @@ class UserCard extends Component {
     const { idUser } = data;
 
     axios
-      .get(`social/getuserliked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .get(`http://localhost:8080/api/social/getuserliked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
           this.setState({ liked: true });
@@ -57,7 +57,7 @@ class UserCard extends Component {
     const { idUser } = data;
 
     axios
-      .get(`users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .get(`http://localhost:8080/api/users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         this.setState({ tags: res.data.usertag });
       })
@@ -75,13 +75,13 @@ class UserCard extends Component {
     if (liked) {
       this.setState({ liked: false });
       axios
-        .delete(`social/like/${idUser}`, headers)
+        .delete(`http://localhost:8080/api/social/like/${idUser}`, headers)
         .then(res => this.setState({ liked: false }))
         .catch(err => console.log(err.response.data.error));
     } else {
       this.setState({ liked: true });
       axios
-        .post(`social/like/${idUser}`, null, headers)
+        .post(`http://localhost:8080/api/social/like/${idUser}`, null, headers)
         .then(res => this.setState({ liked: true }))
         .catch(err => console.log(err.response.data.error));
     }

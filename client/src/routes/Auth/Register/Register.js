@@ -67,7 +67,7 @@ class Register extends Component {
     this.setState({ loading: true });
 
     axios
-      .post('users/add', values)
+      .post('http://localhost:8080/api/users/add', values)
       .then(() => {
         this.setState({ loading: false });
         this.setState({ registered: true });
