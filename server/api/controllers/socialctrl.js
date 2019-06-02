@@ -443,6 +443,9 @@ export const blockUser = async (req, res) => {
     io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
     // console.log(`idmatche remove : ${idMatche}`);
 
+    const delNewMessageNotif = util.promisify(mod.delNewMessageNotif);
+    await delNewMessageNotif(req.user.idUser, id).then(data => data).catch(err => err);
+
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
         //    console.log(err);
