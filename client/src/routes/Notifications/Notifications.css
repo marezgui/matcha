@@ -10,7 +10,9 @@
 }
 
 .NotificationsListHeader {
-    margin-bottom: 5px;
+    margin: 5px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .NotificationsListBody {

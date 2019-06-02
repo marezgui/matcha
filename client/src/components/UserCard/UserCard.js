@@ -65,6 +65,7 @@ class UserCard extends Component {
       .get(`http://localhost:8080/api/users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (this._isMounted) { this.setState({ tags: res.data.usertag }); }
+        // console.log(res.data.usertag);
       })
       .catch(err => console.log(err.response.data.error));
   }
@@ -80,13 +81,19 @@ class UserCard extends Component {
       this.setState({ liked: false });
       axios
         .delete(`http://localhost:8080/api/social/like/${idUser}`, headers)
-        .then(() => this.setState({ liked: false }))
+        .then(() => {
+          this.setState({ liked: false });
+          this.socket.emit('CREATE-NOTIFICATION', idUser);
+        })
         .catch(err => console.log(err.response.data.error));
     } else {
       this.setState({ liked: true });
       axios
         .post(`http://localhost:8080/api/social/like/${idUser}`, null, headers)
-        .then(() => this.setState({ liked: true }))
+        .then(() => {
+          this.setState({ liked: true });
+          this.socket.emit('CREATE-NOTIFICATION', idUser);
+        })
         .catch(err => console.log(err.response.data.error));
     }
   }

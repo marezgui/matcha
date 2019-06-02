@@ -9,7 +9,7 @@ import './People.css';
 class People extends Component {
   state = {
     users: [],
-    count: 10,
+    count: 20,
     start: 0,
     hasMore: true,
   };

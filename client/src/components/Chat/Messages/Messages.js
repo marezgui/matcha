@@ -12,7 +12,7 @@ class Messages extends Component {
       messages: [],
       toSend: '',
     };
-    this.socket = io('localhost:8080');
+    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     this.socket.on('RECEIVE_MESSAGE', (data) => {
       // console.log('receive', data);
       const { idMatche } = this.props;

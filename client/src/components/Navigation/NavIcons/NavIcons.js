@@ -11,8 +11,9 @@ class navIcons extends Component {
     super(props);
     this.state = {
     };
-    this.socket = io('localhost:8080');
+    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     this.socket.on('RELOAD-NOTIFICATION-FOR', (id) => {
+      console.log(id);
       const { user: { idUser } } = this.props;
       if (id === idUser) {
         this.updateNoficationBadge();
@@ -31,7 +32,7 @@ class navIcons extends Component {
     let notifications = 0;
     if (notif !== null) {
       notif.forEach((el) => {
-        if (el[0].type !== 'NEWMESSAGE') {
+        if (el[0].type !== 'NEWMESSAGE' && !el[0].vue) {
           notifications += 1;
         }
       });

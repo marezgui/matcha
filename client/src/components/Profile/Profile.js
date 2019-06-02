@@ -193,16 +193,24 @@ class ProfilePage extends Component {
               </p>
             </div>
             <div className="ProfileBio">
-              <p style={{ color: 'rgba(0,0,0,.6)' }}> Biography </p>
+              <p style={{ color: 'rgba(0,0,0,.6)' }}>
+                <i className="fas fa-book-open" />
+                {' '}
+                Biography
+              </p>
               <p>
                 {bio}
               </p>
             </div>
             <div className="ProfileTags">
-              <p style={{ color: 'rgba(0,0,0,.6)' }}> Tags </p>
-              <p>
-                {meta.tags.map((tag, id) => (<Chip key={id} style={{ height: '14px' }} label={tag} />))}
+              <p style={{ color: 'rgba(0,0,0,.6)' }}>
+                <i className="fas fa-tag" />
+                {' '}
+              Tags
               </p>
+              <div className="TagsList">
+                {meta.tags.map((tag, id) => (<Chip key={id} style={{ height: '14px', marginRight: '2px' }} label={tag} />))}
+              </div>
             </div>
             <div className="Report">
               <p style={{ marginLeft: 'auto', padding: '5px' }}>

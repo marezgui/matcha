@@ -17,12 +17,12 @@ class Chat extends Component {
       matcheWith: null,
       loading: true,
     };
-    this.socket = io('localhost:8080');
-    this.socket.on('NEW-MATCHE', (idUser, id) => {
-      console.log('new-matche', idUser, id);
+    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
+    this.socket.on('NEW-MATCHE', (idMatche) => {
+      console.log('new-matche', idMatche);
     });
-    this.socket.on('REMOVE-MATCHE', (idUser, id) => {
-      console.log('new-unmatche', idUser, id);
+    this.socket.on('REMOVE-MATCHE', (idMatche) => {
+      console.log('new-unmatche', idMatche);
     });
   }
 
