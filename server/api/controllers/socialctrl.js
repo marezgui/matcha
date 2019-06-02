@@ -261,7 +261,7 @@ export const like = async (req, res) => {
     const getIdMatche = util.promisify(mod.getIdMatche);
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
     io.emit('NEW-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-
+    console.log(`idmatche : ${idMatche}`);
   }
   mod.editLike(id, 1, (err, success) => {
     if (err) {
@@ -299,14 +299,14 @@ export const unLike = async (req, res) => {
   if (blockedvalue === true) {
     return res.status(303).json({ error: 'you have blocked this user' });
   }
-
-  const getIdMatche = util.promisify(mod.getIdMatche);
-  const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-  io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (matchevalue === true) {
+
+    const getIdMatche = util.promisify(mod.getIdMatche);
+    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
+    console.log(`idmatche : ${idMatche}`);
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
         console.log(err);
