@@ -28,14 +28,14 @@ const socketFunction = (io) => {
     process.setMaxListeners(0);
     process.on('uncaughtException', (err) => {
       // console.error(err.stack);
-      console.log('Node NOT Exiting...');
+      // console.log('Node NOT Exiting...');
     });
 
     client.on('USER-LOGIN', (idUser) => {
       // eslint-disable-next-line no-param-reassign
       client.userid = idUser;
       if (idUser !== undefined) {
-        console.log(`connect :${idUser}`);
+        // console.log(`connect :${idUser}`);
       }
       editLog(idUser, true);
       io.emit('USER-STATUS', idUser, true); // ----> il faut que tu regarde cet event
@@ -43,7 +43,7 @@ const socketFunction = (io) => {
 
     client.on('USER-LOGOUT', (idUser) => {
       if (idUser !== undefined) {
-        console.log(`logout : ${idUser}`);
+        // console.log(`logout : ${idUser}`);
       }
       editLog(idUser, false);
       io.emit('USER-STATUS', idUser, false); // ----> il faut que tu regarde cet event
@@ -51,7 +51,7 @@ const socketFunction = (io) => {
 
     client.on('disconnect', () => {
       if (client.userid !== undefined) {
-        console.log(`disconnect :${client.userid}`);
+        // console.log(`disconnect :${client.userid}`);
       }
       editLog(client.userid, false);
       io.emit('USER-STATUS', client.userid, false);

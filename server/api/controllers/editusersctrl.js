@@ -39,12 +39,12 @@ export const checkUserIsComplete = async (req, res) => {
     err = 6;
   } else if (err === 0) {
     if (user.userIsComplete === false) {
-      await checkUserComplete(user.idUser, true).then().catch((error) => { console.log(`[Error]: ${error}`); });
+      await checkUserComplete(user.idUser, true).then().catch(error => error);// console.log(`[Error]: ${error}`); });
     } res.status(200).json({ message: 'Profil Complite' });
 
   } else if (err !== 0) {
     if (user.userIsComplete === true) {
-      await checkUserComplete(user.idUser, false).then().catch((error) => { console.log(`[Error]: ${error}`); });
+      await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
     } res.status(303).json({ error: `Profil NOT Complite ${err}` });
   }
 };

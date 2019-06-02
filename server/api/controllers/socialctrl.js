@@ -16,7 +16,7 @@ export const getUserBlockedList = async (req, res) => {
   }
   const { user } = req;
   const blockedornot = util.promisify(mod.getUserBlockedList);
-  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
   res.status(200).json({ blockedTab });
 };
 
@@ -30,7 +30,7 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
   }
   const { user } = req;
   const userdata = util.promisify(mod.getUsersVal);
-  const data = await userdata(user).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
+  const data = await userdata(user).then(datauser => datauser).catch(err => err);// { console.log(`[Error]: ${err}`); });
   let scoreMin = null;
   let scoreMax = null;
   let distanceMin = null;
@@ -41,7 +41,7 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
   let reportMax = null;
   let c = 0;
   const blockedornot = util.promisify(mod.getUserBlockedList);
-  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
   for (let i = 0; i < data.length; i += 1) {
     for (let j = 0; j < blockedTab.length; j += 1) {
       if (blockedTab[j].blockedUserId === data[i].idUser) {
@@ -100,7 +100,7 @@ export const getUserLiked = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
@@ -159,7 +159,7 @@ export const getUserMatche = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
@@ -183,7 +183,7 @@ export const getUserReported = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
@@ -207,7 +207,7 @@ export const getUserBlocked = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
@@ -231,38 +231,38 @@ export const like = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
-  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
     return res.status(303).json({ error: 'you have blocked this user' });
   }
   const likedornot = util.promisify(mod.getUserLiked);
-  const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (likevalue === true) {
     return res.status(303).json({ error: 'you already like this user' });
   }
   const matchedornot = util.promisify(mod.getUserMatche);
-  const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   const matchereeci = util.promisify(mod.getUserLiked);
-  const likereci = await matchereeci(id, req.user.idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const likereci = await matchereeci(id, req.user.idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if ((matchevalue === false) && (likereci === true)) {
     const createMatche = util.promisify(mod.createMatche);
-    await createMatche(req.user.idUser, id).then(data => console.log(data)).catch((err) => { console.log(`[Error]: ${err}`); });
+    await createMatche(req.user.idUser, id).then().catch(err => err);// { console.log(`[Error]: ${err}`); });
     const getIdMatche = util.promisify(mod.getIdMatche);
-    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     io.emit('NEW-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-    console.log(`idmatche new : ${idMatche}`);
+  //  console.log(`idmatche new : ${idMatche}`);
   }
   mod.editLike(id, 1, (err, success) => {
     if (err) {
-      console.log(err);
+      //    console.log(err);
     }
     likeNotif(req.user.idUser, id);
-    console.log(`add like ${success}`);
+  //  console.log(`add like ${success}`);
   });
   return mod.like(req.user.idUser, id, (err, success) => {
     if (err) {
@@ -284,42 +284,46 @@ export const unLike = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
-  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
     return res.status(303).json({ error: 'you have blocked this user' });
   }
   const matchedornot = util.promisify(mod.getUserMatche);
-  const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (matchevalue === true) {
 
     const getIdMatche = util.promisify(mod.getIdMatche);
-    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-    console.log(`idmatche remove : ${idMatche}`);
+
+    const delNewMessageNotif = util.promisify(mod.delNewMessageNotif);
+    await delNewMessageNotif(req.user.idUser, id).then(data => data).catch(err => err);
+
+    //   console.log(`idmatche remove : ${idMatche}`);
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
-        console.log(err);
+        //    console.log(err);
       }
-      console.log(`remove matche ${success}`);
+      // console.log(`remove matche ${success}`);
     });
 
   }
   const likedornot = util.promisify(mod.getUserLiked);
-  const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (likevalue === false) {
     return res.status(303).json({ error: 'you already unlike this user' });
   }
   mod.editLike(id, Number(-1), (err, success) => {
     if (err) {
-      console.log(err);
+      //    console.log(err);
     }
     unlikeNotif(req.user.idUser, id);
-    console.log(`remove like ${success}`);
+  //  console.log(`remove like ${success}`);
   });
   return mod.unLike(req.user.idUser, id, (err, success) => {
     if (err) {
@@ -341,25 +345,25 @@ export const reportUser = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
-  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
     return res.status(303).json({ error: 'you have blocked this user' });
   }
   const reportornot = util.promisify(mod.getUserReported);
-  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (reportvalue === true) {
     return res.status(303).json({ error: 'you already report this user' });
   }
   mod.editReport(id, 1, (err, success) => {
     if (err) {
-      console.log(err);
+      //    console.log(err);
     }
-    console.log(`add report ${success}`);
+  //  console.log(`add report ${success}`);
   });
   return mod.report(req.user.idUser, id, (err, success) => {
     if (err) {
@@ -381,25 +385,25 @@ export const unReportUser = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
-  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
     return res.status(303).json({ error: 'you have blocked this user' });
   }
   const reportornot = util.promisify(mod.getUserReported);
-  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (reportvalue === false) {
     return res.status(303).json({ error: 'you already unreport this user' });
   }
   mod.editReport(id, Number(-1), (err, success) => {
     if (err) {
-      console.log(err);
+      //   console.log(err);
     }
-    console.log(`remove report ${success}`);
+  //  console.log(`remove report ${success}`);
   });
   return mod.unReport(req.user.idUser, id, (err, success) => {
     if (err) {
@@ -421,61 +425,61 @@ export const blockUser = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
-  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (blockedvalue === true) {
     return res.status(303).json({ error: 'you already have blocked this user' });
   }
   const matchedornot = util.promisify(mod.getUserMatche);
-  const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (matchevalue === true) {
 
     const getIdMatche = util.promisify(mod.getIdMatche);
-    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-    console.log(`idmatche remove : ${idMatche}`);
+    // console.log(`idmatche remove : ${idMatche}`);
 
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
-        console.log(err);
+        //    console.log(err);
       }
-      console.log(`remove matche ${success}`);
+    //  console.log(`remove matche ${success}`);
     });
   }
   const likedornot = util.promisify(mod.getUserLiked);
-  const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (likevalue === true) {
     mod.editLike(id, Number(-1), (err, success) => {
       if (err) {
-        console.log(err);
+        //    console.log(err);
       }
-      console.log(`remove like ${success}`);
+      //   console.log(`remove like ${success}`);
     });
     mod.unLike(req.user.idUser, id, (err, success) => {
       if (err) {
-        console.log({ error: err.error });
+        //    console.log({ error: err.error });
       }
-      console.log({ message: `User ${id} unliked ${success}` });
+    // console.log({ message: `User ${id} unliked ${success}` });
     });
   }
   const reportornot = util.promisify(mod.getUserReported);
-  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (reportvalue === false) {
     mod.editReport(id, 1, (err, success) => {
       if (err) {
-        console.log(err);
+        //   console.log(err);
       }
-      console.log(`add report ${success}`);
+      // console.log(`add report ${success}`);
     });
     mod.report(req.user.idUser, id, (err, success) => {
       if (err) {
-        console.log({ error: err.error });
+      //  console.log({ error: err.error });
       }
-      console.log({ message: `User ${id} report ${success}` });
+      // console.log({ message: `User ${id} report ${success}` });
     });
   }
 
@@ -501,29 +505,29 @@ export const unBlockUser = async (req, res) => {
     return res.status(303).json({ error: 'Id must be a number' });
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     return res.status(303).json({ error: 'User dosnt exist' });
   }
   const blockedornot = util.promisify(mod.getUserBlocked);
-  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedvalue = await blockedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (blockedvalue === false) {
     return res.status(303).json({ error: 'you already have unblocked this user' });
   }
   const reportornot = util.promisify(mod.getUserReported);
-  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const reportvalue = await reportornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (reportvalue === false) {
     mod.editReport(id, -1, (err, success) => {
       if (err) {
-        console.log(err);
+        //    console.log(err);
       }
-      console.log(`remove report ${success}`);
+    //  console.log(`remove report ${success}`);
     });
     mod.unReport(req.user.idUser, id, (err, success) => {
       if (err) {
-        console.log({ error: err.error });
+      //  console.log({ error: err.error });
       }
-      console.log({ message: `User ${id} unreport ${success}` });
+    // console.log({ message: `User ${id} unreport ${success}` });
     });
 
     io.emit('UNBLOCK-USER', req.user.idUser, id); // ----> il faut que tu regarde cet event
@@ -569,7 +573,7 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
   let newStart = start;
   const checkTags = util.promisify(mod.getTagOfUsers);
   for (let i = 0; i < tags.length; i += 1) {
-    const taglist = await checkTags(user.idUser, tags[i]).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
+    const taglist = await checkTags(user.idUser, tags[i]).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (taglist !== '') {
       for (let j = 0; j < taglist.length; j += 1) {
         tagid.push(taglist[j].userId);
@@ -592,7 +596,7 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
   let c = 0;
   const blockedornot = util.promisify(mod.getUserBlockedList);
   const getUserFunction = util.promisify(mod.getuserbyIdUser);
-  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
   for (newStart; newStart < goodTagId.length; newStart += 1) {
     if (result >= count) {
       break;
@@ -609,7 +613,7 @@ const getUserwithTags = async (user, count, start, ageMin, ageMax,
       result++;
       continue;
     }
-    const getUser = await getUserFunction(goodTagId[newStart]).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
+    const getUser = await getUserFunction(goodTagId[newStart]).then(datauser => datauser).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (getUser === undefined) {
       break;
     }
@@ -674,10 +678,10 @@ const getUserNoTags = async (user, count, start, ageMin, ageMax,
   let newStart = start;
   const resultData = { users: [], newStart };
   const blockedornot = util.promisify(mod.getUserBlockedList);
-  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch((err) => { console.log(`[Error]: ${err}`); });
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
   const getUserFct = util.promisify(mod.getUsersForMe);
   while (result < count) {
-    const getUser = await getUserFct(user, scoreMin, scoreMax, 150, start).then(datauser => datauser).catch((err) => { console.log(`[Error]: ${err}`); });
+    const getUser = await getUserFct(user, scoreMin, scoreMax, 150, start).then(datauser => datauser).catch(err => err);// { console.log(`[Error]: ${err}`); });
     for (let i = 0; i < 150; i += 1) {
       if (result >= count) {
         break;

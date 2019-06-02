@@ -46,7 +46,7 @@ const sendmailnotif = (typeNotif, mail) => {
 export const getAllNotif = async (req, res) => {
   const { user } = req;
   const ResGetAllNotif = util.promisify(mod.getAllNotif);
-  const resultNotif = await ResGetAllNotif(user.idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultNotif = await ResGetAllNotif(user.idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   const result = [];
   for (let i = 0; i < resultNotif.length; i += 1) {
     result[i] = [];
@@ -61,7 +61,7 @@ export const getAllNotif = async (req, res) => {
 export const getAllMessage = async (req, res) => {
   const { user } = req;
   const getUserMatche = util.promisify(getAllUserMatche);
-  const resultMatche = await getUserMatche(user.idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultMatche = await getUserMatche(user.idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   const result = [];
   const message = [];
   for (let i = 0; i < resultMatche.length; i += 1) {
@@ -69,7 +69,7 @@ export const getAllMessage = async (req, res) => {
   }
   const getAllMessageOfMatch = util.promisify(mod.getAllMessageOfMatch);
   for (let i = 0; i < result.length; i += 1) {
-    const resultMessage = await getAllMessageOfMatch(result[i]).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const resultMessage = await getAllMessageOfMatch(result[i]).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     message[i] = [];
     message[i].push(result[i]);
     message[i].push(resultMessage);
@@ -86,7 +86,7 @@ export const getMessageOfMatche = async (req, res) => {
     res.status(303).json({ error: 'matche must be a number' });
   }
   const getAllMessageOfMatch = util.promisify(mod.getAllMessageOfMatch);
-  const resultMessage = await getAllMessageOfMatch(matche).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultMessage = await getAllMessageOfMatch(matche).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   res.status(200).json({ resultMessage });
 };
 
@@ -95,17 +95,17 @@ export const getMessageOfMatche = async (req, res) => {
 //
 const sendNotifNewMessage = async (matcheId, sendUserId) => {
   const getsdmatchid = util.promisify(mod.getSecondMatcheId);
-  const idUser = await getsdmatchid(matcheId, sendUserId).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const idUser = await getsdmatchid(matcheId, sendUserId).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   const getuser = util.promisify(getuserbyIdUser);
-  const resultuser = await getuser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultuser = await getuser(idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultuser.notifications === true) {
     const getnotifmail = util.promisify(mod.notifStatusMail);
-    const sendmailval = await getnotifmail(resultuser.idUser, 'NEWMESSAGE').then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const sendmailval = await getnotifmail(resultuser.idUser, 'NEWMESSAGE').then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (sendmailval === true) { sendmailnotif('NEWMESSAGE', resultuser.mail); }
   }
   mod.addNotif(resultuser.idUser, sendUserId, 'NEWMESSAGE', 'You have a new message', (err, success) => {
-    if (err) { console.log(err); }
-    if (success) { console.log(success); }
+    // if (err) { console.log(err); }
+    // if (success) { console.log(success); }
   });
 };
 
@@ -114,16 +114,16 @@ const sendNotifNewMessage = async (matcheId, sendUserId) => {
 //
 export const likeNotif = async (idSend, id2) => {
   const getuser = util.promisify(getuserbyIdUser);
-  const sender = await getuser(idSend).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-  const user2 = await getuser(id2).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const sender = await getuser(idSend).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
+  const user2 = await getuser(id2).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (user2.notifications === true) {
     const getnotifmail = util.promisify(mod.notifStatusMail);
-    const sendmailval = await getnotifmail(user2.idUser, 'LIKE').then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const sendmailval = await getnotifmail(user2.idUser, 'LIKE').then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (sendmailval === true) { sendmailnotif('LIKE', user2.mail); }
   }
   mod.addNotif(user2.idUser, sender.idUser, 'LIKE', `${sender.firstName} have like you`, (err, success) => {
-    if (err) { console.log(err); }
-    if (success) { console.log(success); }
+  //  if (err) { console.log(err); }
+  //  if (success) { console.log(success); }
   });
 };
 
@@ -132,16 +132,16 @@ export const likeNotif = async (idSend, id2) => {
 //
 export const unlikeNotif = async (idSend, id2) => {
   const getuser = util.promisify(getuserbyIdUser);
-  const sender = await getuser(idSend).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-  const user2 = await getuser(id2).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const sender = await getuser(idSend).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
+  const user2 = await getuser(id2).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (user2.notifications === true) {
     const getnotifmail = util.promisify(mod.notifStatusMail);
-    const sendmailval = await getnotifmail(user2.idUser, 'UNLIKE').then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const sendmailval = await getnotifmail(user2.idUser, 'UNLIKE').then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (sendmailval === true) { sendmailnotif('UNLIKE', user2.mail); }
   }
   mod.addNotif(user2.idUser, sender.idUser, 'UNLIKE', `${sender.firstName} have unlike you`, (err, success) => {
-    if (err) { console.log(err); }
-    if (success) { console.log(success); }
+  //  if (err) { console.log(err); }
+  //  if (success) { console.log(success); }
   });
 };
 
@@ -150,25 +150,25 @@ export const unlikeNotif = async (idSend, id2) => {
 //
 export const matcheNotif = async (idSend, id2) => {
   const getuser = util.promisify(getuserbyIdUser);
-  const sender = await getuser(idSend).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
-  const user2 = await getuser(id2).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const sender = await getuser(idSend).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
+  const user2 = await getuser(id2).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (user2.notifications === true) {
     const getnotifmail = util.promisify(mod.notifStatusMail);
-    const sendmailval = await getnotifmail(user2.idUser, 'MATCHE').then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const sendmailval = await getnotifmail(user2.idUser, 'MATCHE').then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (sendmailval === true) { sendmailnotif('MATCHE', user2.mail); }
   }
   mod.addNotif(user2.idUser, sender.idUser, 'MATCHE', `${sender.firstName} have matche with you`, (err, success) => {
-    if (err) { console.log(err); }
-    if (success) { console.log(success); }
+  //  if (err) { console.log(err); }
+  //  if (success) { console.log(success); }
   });
   if (sender.notifications === true) {
     const getnotifmail = util.promisify(mod.notifStatusMail);
-    const sendmailval = await getnotifmail(sender.idUser, 'MATCHE').then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const sendmailval = await getnotifmail(sender.idUser, 'MATCHE').then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (sendmailval === true) { sendmailnotif('MATCHE', sender.mail); }
   }
   mod.addNotif(sender.idUser, user2.idUser, 'MATCHE', `${user2.firstName} have matche with you`, (err, success) => {
-    if (err) { console.log(err); }
-    if (success) { console.log(success); }
+  //  if (err) { console.log(err); }
+  //  if (success) { console.log(success); }
   });
 };
 
@@ -177,8 +177,8 @@ export const matcheNotif = async (idSend, id2) => {
 //
 export const addNewMessageToDatabase = async (matcheId, sendUserId, message) => {
   mod.addMessageToDatabase(matcheId, sendUserId, message, (err, success) => {
-    if (err) { console.log(err); }
-    if (success) { console.log(success); }
+  //  if (err) { console.log(err); }
+  //  if (success) { console.log(success); }
   });
   sendNotifNewMessage(matcheId, sendUserId);
 };
@@ -225,16 +225,16 @@ export const notifVue = async (req, res) => {
     return;
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     res.status(303).json({ error: 'User dosnt exist' });
     return;
   }
   const getuser = util.promisify(getuserbyIdUser);
-  const resultuser = await getuser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultuser = await getuser(idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultuser.notifications === true) {
     const getnotifmail = util.promisify(mod.notifStatusMail);
-    const sendmailval = await getnotifmail(resultuser.idUser, 'VUE').then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    const sendmailval = await getnotifmail(resultuser.idUser, 'VUE').then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     if (sendmailval === true) { sendmailnotif('VUE', resultuser.mail); }
   }
   mod.addNotif(resultuser.idUser, user.idUser, 'VUE', `${user.firstName} visited your profile`, (err, success) => {

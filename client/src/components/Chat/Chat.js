@@ -20,10 +20,10 @@ class Chat extends Component {
     };
     this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     this.socket.on('NEW-MATCHE', (idMatche) => {
-      console.log('new-matche', idMatche);
+      // console.log('new-matche', idMatche);
     });
     this.socket.on('REMOVE-MATCHE', (idMatche) => {
-      console.log('new-unmatche', idMatche);
+      // console.log('new-unmatche', idMatche);
     });
   }
 

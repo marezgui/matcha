@@ -315,6 +315,20 @@ export const getAllUserMatcheMore = (idUser, idMatche, callback) => {
 };
 
 //
+// ─── DEL NOTIF NEW MESSAGE ──────────────────────────────────────────────────────
+//
+export const delNewMessageNotif = async (id1, id2, callback) => {
+  db.query('DELETE FROM "notification" WHERE "type" = $3 AND (("userId" = $1 AND "userIdSender" = $2) OR ("userId" = $2 AND "userIdSender" = $1))',
+    [id1, id2, 'NEWMESSAGE'],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+//
 // ─── GET ID MATCHE ──────────────────────────────────────────────────────────────
 //
 export const getIdMatche = (idUser, id, callback) => {

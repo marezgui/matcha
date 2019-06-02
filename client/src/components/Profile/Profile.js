@@ -63,13 +63,13 @@ class ProfilePage extends Component {
       axios
         .delete(`http://localhost:8080/api/social/report/${idUser}`, headers)
         .then(res => this.setState({ reported: false }))
-        .catch(err => console.log(err.response.data.error));
+        .catch(err => err);// console.log(err.response.data.error));
     } else {
       // this.setState({ reported: true });
       axios
         .post(`http://localhost:8080/api/social/report/${idUser}`, null, headers)
         .then(res => this.setState({ reported: true }))
-        .catch(err => console.log(err.response.data.error));
+        .catch(err => err);// console.log(err.response.data.error));
     }
   }
 
@@ -85,13 +85,13 @@ class ProfilePage extends Component {
       axios
         .delete(`http://localhost:8080/api/social/block/${idUser}`, headers)
         .then(res => this.setState({ blocked: false }))
-        .catch(err => console.log(err.response.data.error));
+        .catch(err => err);// console.log(err.response.data.error));
     } else {
       // this.setState({ blocked: true });
       axios
         .post(`http://localhost:8080/api/social/block/${idUser}`, null, headers)
         .then(res => this.setState({ blocked: true }))
-        .catch(err => console.log(err.response.data.error));
+        .catch(err => err);// console.log(err.response.data.error));
     }
   }
 

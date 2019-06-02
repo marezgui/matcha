@@ -55,7 +55,7 @@ class UserCard extends Component {
           if (this._isMounted) { this.setState({ liked: true }); }
         }
       })
-      .catch(err => console.log(err.response.data.error));
+      .catch(err => err);// console.log(err.response.data.error));
   }
 
   getTags = () => {
@@ -67,7 +67,7 @@ class UserCard extends Component {
         if (this._isMounted) { this.setState({ tags: res.data.usertag }); }
         // console.log(res.data.usertag);
       })
-      .catch(err => console.log(err.response.data.error));
+      .catch(err => err);// console.log(err.response.data.error));
   }
 
   changeLikeStatus = async () => {
@@ -85,7 +85,7 @@ class UserCard extends Component {
           this.setState({ liked: false });
           this.socket.emit('CREATE-NOTIFICATION', idUser);
         })
-        .catch(err => console.log(err.response.data.error));
+        .catch(err => err);// console.log(err.response.data.error));
     } else {
       this.setState({ liked: true });
       axios
@@ -94,7 +94,7 @@ class UserCard extends Component {
           this.setState({ liked: true });
           this.socket.emit('CREATE-NOTIFICATION', idUser);
         })
-        .catch(err => console.log(err.response.data.error));
+        .catch(err => err);// console.log(err.response.data.error));
     }
   }
 

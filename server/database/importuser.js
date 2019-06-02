@@ -26,7 +26,7 @@ const getuserresult = util.promisify(getuser);
 const importuser = async (numberuser) => {
 
   let result = await getuserresult(numberuser).then(data => JSON.parse(data.body))
-    .catch((err) => { console.log(err); });
+    .catch(err => err);// { console.log(err); });
 
   result = result.results;
 
@@ -92,10 +92,10 @@ const importuser = async (numberuser) => {
       [password, firstName, lastName, mail, username, bio,
         activate, photo, dateOfBirth, location, score, report, userIsComplete], (err) => {
         if (err.error) {
-          console.log(err.error);
+        //  console.log(err.error);
 
         }
-        console.log(`user :${mail}`);
+        // console.log(`user :${mail}`);
       });
 
   }

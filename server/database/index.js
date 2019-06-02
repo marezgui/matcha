@@ -14,7 +14,7 @@ class Database {
     });
 
     this._pool.on('error', (err, client) => {
-      console.error('Unexpected error on idle PostgreSQL client.', err);
+      // console.error('Unexpected error on idle PostgreSQL client.', err);
       process.exit(-1);
     });
   }
@@ -28,7 +28,7 @@ class Database {
       client.query(query, params, (err, res) => {
         done();
         if (err) {
-          console.log(err.stack);
+          // console.log(err.stack);
           return callback({ error: 'Database error.' }, null);
         }
         callback({}, res.rows);

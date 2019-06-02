@@ -67,7 +67,7 @@ export const changePassword = async (req, res) => {
   password = await hash(password, 5).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   await mod.delRestoreKey(mail, (err, success) => {
     if (err) {
-      console.log(err + success);
+      // console.log(err + success);
     }
   });
   await mod.edituserPassword(mail, password, (err, success) => {
@@ -158,13 +158,13 @@ export const login = async (req, res) => {
       if (err) {
         mod.delRestoreKey(mail, (errRestore, successRestore) => {
           if (errRestore) {
-            console.log(errRestore + successRestore);
+            // console.log(errRestore + successRestore);
           }
         });
         res.status(303).json({ error: err.error });
-        return;
+
       }
-      console.log(`user login ${success}`);
+      // console.log(`user login ${success}`);
     });
     return res.json({ message: 'Connection Validate', token });
   }
@@ -177,7 +177,7 @@ export const login = async (req, res) => {
 export const confirmmail = async (req, res) => {
   const key = req.params.CONFIRMKEY;
   const checkkey = util.promisify(mod.checkkey);
-  const goodkey = await checkkey(key).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  const goodkey = await checkkey(key).then(data => data).catch(err => err);// { console.error(`[Error]: ${err}`); });
   if (goodkey === -1) {
     return res.status(201).json({ error: 'Key not found' });
   }
@@ -225,7 +225,7 @@ export const getUserDistance = async (req, res) => {
   }
   const { user } = req;
   const finduser = util.promisify(mod.getuserbyIdUser);
-  const resultuser = await finduser(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultuser = await finduser(idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultuser === undefined) {
     res.status(303).json({ error: 'User dosnt exist' });
     return;
@@ -248,7 +248,7 @@ export const getUserDistance = async (req, res) => {
 export const getalltag = async (req, res) => {
   const findtag = util.promisify(mod.getalltag);
   const result = [];
-  const resulttag = await findtag().then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resulttag = await findtag().then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   for (let i = 0; i < resulttag.length; i += 1) {
     result.push(resulttag[i].tag);
   }
@@ -265,14 +265,14 @@ export const getusertag = async (req, res) => {
     return;
   }
   const userexist = util.promisify(mod.testUserId);
-  const resultexist = await userexist(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resultexist = await userexist(idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   if (resultexist === false) {
     res.status(303).json({ error: 'User dosnt exist' });
     return;
   }
   const findtag = util.promisify(mod.getusertag);
   const result = [];
-  const resulttag = await findtag(idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+  const resulttag = await findtag(idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
   for (let i = 0; i < resulttag.length; i += 1) {
     result.push(resulttag[i].tag);
   }
@@ -293,12 +293,12 @@ export const deluser = async (req, res) => {
     return res.status(303).json({ error: 'Empty form' });
   }
   const getuserbyMail = util.promisify(mod.getuserbyMail);
-  const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  const resultUserMail = await getuserbyMail(mail).then(data => data).catch(err => err);// { console.error(`[Error]: ${err}`); });
   if (resultUserMail === undefined) {
     return res.status(303).json({ error: 'Unknow user mail' });
   }
   const hashcmp = util.promisify(bcrypt.compare);
-  const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch(err => err);// { console.error(`[Error]: ${err}`); });
   if (passwdcmp === true) {
     return mod.deluser(req.user.idUser, (err, success) => {
       if (err) {
