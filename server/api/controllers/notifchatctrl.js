@@ -188,7 +188,23 @@ export const addNewMessageToDatabase = async (matcheId, sendUserId, message) => 
 //
 export const getNotifAtVue = (req, res) => {
   const { user } = req;
-  mod.getNotifVue(user.idUser, (err, success) => {
+  const type = req.params.TYPE;
+  if (type !== 'VUE' && type !== 'LIKE' && type !== 'UNLIKE' && type !== 'MATCHE' && type !== 'NEWMESSAGE' && type !== 'OTHER') {
+    res.status(303).json({ error: 'error TYPE' });
+    return;
+  }
+  mod.getNotifVue(user.idUser, type, (err, success) => {
+    if (err) { return res.status(303).json({ error: 'error' }); }
+    return res.status(200).json({ message: `ok${success}` });
+  });
+};
+
+//
+// ─── DEL NOTIF ──────────────────────────────────────────────────────────────────
+//
+export const delNotif = (req, res) => {
+  const { user } = req;
+  mod.delNotif(user.idUser, (err, success) => {
     if (err) { return res.status(303).json({ error: 'error' }); }
     return res.status(200).json({ message: `ok${success}` });
   });

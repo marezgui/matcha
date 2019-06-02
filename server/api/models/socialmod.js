@@ -315,6 +315,24 @@ export const getAllUserMatcheMore = (idUser, idMatche, callback) => {
 };
 
 //
+// ─── GET ID MATCHE ──────────────────────────────────────────────────────────────
+//
+export const getIdMatche = (idUser, id, callback) => {
+  db.query('SELECT "matche" FROM "matche" WHERE ("userId1" = $1 AND "userId2" = $2) OR ("userId1" = $2 AND "userId2" = $1)',
+    [idUser, id],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      if (res[0]) {
+        callback(null, res[0].idMatche);
+      } else {
+        callback(null, false);
+      }
+    });
+};
+
+//
 // ─── GET USER MATCHE ────────────────────────────────────────────────────────────
 //
 export const getUserMatche = (idUser, id, callback) => {
