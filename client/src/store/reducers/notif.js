@@ -3,11 +3,17 @@ import * as actionTypes from '../actions/actionTypes';
 
 const inititalState = {
   notifications: null,
+  messages: null,
+  count: {
+    alert: 0,
+    chat: 0,
+  },
 };
 
 const fetchNotifSuccess = (state, action) =>
   updateObject(state, {
     notifications: action.notifications,
+    count: action.count,
   });
 
 const authLogout = state =>

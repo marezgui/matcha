@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 import Chat from '../Chat/Chat';
@@ -31,6 +32,27 @@ class Layout extends Component {
 
     this.socket = io('localhost:8080', connectionOptions);
     this.socket.emit('USER-LOGIN', userId);
+    this.socket.on('RELOAD-NOTIFICATION-FOR', (id) => {
+      // console.log(id);
+      if (id === idUser) {
+        if (this._isMounted) { this.updateNofication(); }
+      }
+    });
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  updateNofication = () => {
+    const { onNotif, token } = this.props;
+
+    console.log('notif+');
+    onNotif(token);
   }
 
   sideDrawerClosedHandler = () => {
@@ -64,4 +86,8 @@ const mapStateToProps = state => ({
   token: state.auth.token,
 });
 
-export default connect(mapStateToProps)(Layout);
+const mapDispatchToProps = dispatch => ({
+  onNotif: token => dispatch(actions.getNotif(token)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

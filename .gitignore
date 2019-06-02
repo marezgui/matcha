@@ -36,6 +36,7 @@ build/Release
 node_modules/
 ErrorBoundary/
 jspm_packages/
+build/
 package-lock.json
 
 

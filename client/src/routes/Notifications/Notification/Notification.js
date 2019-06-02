@@ -26,7 +26,7 @@ class Notification extends Component {
     }
 
     render() {
-      const { content: { userIdSender, type, message, vue } } = this.props;
+      const { content: { type, message } } = this.props; // userIdSender, vue
       const { loading, user: {
         firstName,
         photo,

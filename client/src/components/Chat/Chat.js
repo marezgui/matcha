@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { Avatar } from '@material-ui/core';
+import * as actions from '../../store/actions/index';
 import ChatWidget from '../UI/ChatWidget/ChatWidget';
 import Messages from './Messages/Messages';
 import Spinner from '../UI/Spinner/Spinner';
@@ -67,6 +68,17 @@ class Chat extends Component {
     this.setState({ clickedMatche, matcheWith });
   }
 
+  resetBadge = () => {
+    const { token, onNotif } = this.props;
+
+    axios
+      .get('http://localhost:8080/api/notifchat/getnotifvue/NEWMESSAGE', { headers: { Authorization: `bearer ${token}` } })
+      .then(() => {
+        // console.log(res);
+        onNotif(token);
+      });
+  }
+
   render() {
     const { loading, matches, clickedMatche, matcheWith } = this.state;
 
@@ -102,7 +114,7 @@ class Chat extends Component {
     }
 
     return (
-      <ChatWidget>
+      <ChatWidget clicked={this.resetBadge}>
         {content}
       </ChatWidget>
     );
@@ -114,4 +126,8 @@ const mapStateToProps = state => ({
   token: state.auth.token,
 });
 
-export default connect(mapStateToProps)(Chat);
+const mapDispatchToProps = dispatch => ({
+  onNotif: token => dispatch(actions.getNotif(token)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);

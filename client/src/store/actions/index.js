@@ -3,3 +3,7 @@ export {
   logout,
   authCheckState
 } from './auth';
+
+export {
+  getNotif,
+} from './notif';

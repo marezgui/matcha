@@ -80,7 +80,7 @@ class Messages extends Component {
   }
 
   render() {
-    const { back, idMatche, user: { idUser } } = this.props;
+    const { back, user: { idUser } } = this.props; // idMatche
     const { messages, toSend } = this.state;
     const senderClasses = ['Sender'];
     const receiverClasses = ['Receiver'];

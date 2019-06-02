@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Badge } from '@material-ui/core';
+import { connect } from 'react-redux';
 import openChat from '../../../assets/images/openChat.svg';
 import close from '../../../assets/images/close.png';
 import './Launcher.css';
 import './Window.css';
 import './Header.css';
 
-class Chat extends Component {
+class ChatWidget extends Component {
     state = {
       closed: true,
     }
@@ -18,7 +19,7 @@ class Chat extends Component {
     }
 
     render() {
-      const { children } = this.props;
+      const { children, count: { chat } } = this.props;
       const { closed } = this.state;
 
       const launcherClasses = ['ChatLauncher', 'Pointer'];
@@ -30,10 +31,10 @@ class Chat extends Component {
       }
 
       return (
-        <div>
+        <div onClick={this.props.clicked}>
           <div className={launcherClasses.join(' ')} onClick={this.onClickHandler} role="presentation">
             <img className="OpenIcon" src={close} alt="close" />
-            <Badge badgeContent={10} color="secondary" invisible={!closed}>
+            <Badge badgeContent={chat} color="secondary" invisible={!closed || chat === 0}>
               <img className="ClosedIcon" src={openChat} alt="open" />
             </Badge>
           </div>
@@ -55,4 +56,8 @@ class Chat extends Component {
     }
 }
 
-export default Chat;
+const mapStateToProps = state => ({
+  count: state.notif.count,
+});
+
+export default connect(mapStateToProps)(ChatWidget);

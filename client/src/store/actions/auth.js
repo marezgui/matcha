@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
+import * as actions from './index';
 
 export const authStart = () => ({
   type: actionTypes.AUTH_START,
@@ -9,11 +10,6 @@ export const authSuccess = (token, user) => ({
   type: actionTypes.AUTH_SUCCESS,
   token,
   user,
-});
-
-export const notifFetch = notifications => ({
-  type: actionTypes.NOTIF_FETCH,
-  notifications,
 });
 
 export const authFail = error => ({
@@ -43,22 +39,6 @@ const getUser = async (token) => {
   return user;
 };
 
-const getNotif = async (token) => {
-  let notif = false;
-
-  await axios
-    .get('http://localhost:8080/api/notifchat/getallnotif', { headers: { Authorization: `bearer ${token}` } })
-    .then((res) => {
-      notif = res.data.resultNotif;
-      // console.log(notif);
-    })
-    .catch(() => {
-      notif = false;
-    });
-
-  return notif;
-};
-
 export const auth = (mail, password) => (dispatch) => {
   dispatch(authStart());
 
@@ -71,8 +51,7 @@ export const auth = (mail, password) => (dispatch) => {
       if (user) {
         localStorage.setItem('token', token);
         dispatch(authSuccess(token, user));
-        const notifications = await getNotif(token, user.idUser);
-        dispatch(notifFetch(notifications));
+        dispatch(actions.getNotif(token));
       } else {
         dispatch(
           authFail({
@@ -95,8 +74,7 @@ export const authCheckState = () => async (dispatch) => {
     getUser(token)
       .then(async (user) => {
         dispatch(authSuccess(token, user));
-        const notifications = await getNotif(token);
-        dispatch(notifFetch(notifications));
+        dispatch(actions.getNotif(token));
       })
       .catch(() => {
         dispatch(logout());

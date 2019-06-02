@@ -1,47 +1,24 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
 import { Alert, Account } from '../../UI/Icons/Icons';
 import Dropdown from '../../UI/Dropdown/Dropdown';
 import './NavIcons.scss';
 
 class navIcons extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
-    this.socket.on('RELOAD-NOTIFICATION-FOR', (id) => {
-      console.log(id);
-      const { user: { idUser } } = this.props;
-      if (id === idUser) {
-        this.updateNoficationBadge();
-      }
-    });
-  }
+  state = {
 
-  updateNoficationBadge = () => {
-    const { notifications } = this.state;
-    this.setState({ notifications: notifications + 1 });
   }
 
   render() {
-    const { sideDrawerComponent, notif,
+    const { sideDrawerComponent, count: { alert },
       user: { firstName, lastName, photo, photo: { master } } } = this.props;
-    let notifications = 0;
-    if (notif !== null) {
-      notif.forEach((el) => {
-        if (el[0].type !== 'NEWMESSAGE' && !el[0].vue) {
-          notifications += 1;
-        }
-      });
-    }
+
     return (
       <ul className="NavIcons">
         <li>
           <NavLink to="/notifications">
-            <Alert badge={notifications} />
+            <Alert badge={alert} />
             {sideDrawerComponent && <span className="textIcons">Notifications</span> }
           </NavLink>
           {/* {!sideDrawerComponent && (
@@ -75,6 +52,9 @@ class navIcons extends Component {
   }
 }
 
-const mapStateToProps = state => ({ user: state.auth.user, notif: state.notif.notifications });
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  count: state.notif.count,
+});
 
 export default connect(mapStateToProps)(navIcons);

@@ -10,8 +10,13 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     const { user } = this.props;
-    this.setState({ user });
+    if (this._isMounted) { this.setState({ user }); }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handelChange = (e) => {

@@ -15,15 +15,20 @@ class People extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     const { count, start } = this.state;
     const { token } = this.props;
 
     axios
       .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
-        this.setState({ users: res.data.resultData.users });
+        if (this._isMounted) { this.setState({ users: res.data.resultData.users }); }
         // console.log(res.data.resultData.newStart);
       });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   fetchImages = () => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import axios from 'axios';
+import * as actions from '../../store/actions/index';
 import Notification from './Notification/Notification';
 import './Notifications.css';
 
@@ -15,17 +16,56 @@ class Notifications extends Component {
   }
 
   componentDidMount = () => {
+    this._isMounted = true;
     const { token } = this.props;
+    const type = ['MATCHE', 'LIKE', 'UNLIKE', 'VUE', 'OTHER'];
 
-    axios // notif vue
-      .get('http://localhost:8080/api/notifchat//getnotifvue/MATCHE', { headers: { Authorization: `bearer ${token}` } })
-      .then((res) => { console.log(res); })
-      .catch((err) => { console.log(err.response); });
+    type.map(kind => (
+      axios
+        .get(`http://localhost:8080/api/notifchat/getnotifvue/${kind}`, { headers: { Authorization: `bearer ${token}` } })
+        .then(() => {
+          // console.log(res);
+        })
+        .catch(() => {
+          // console.log(err.response);
+        })
+    ));
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  clearNotifList = () => {
+    const { token, onNotif } = this.props;
+
+    axios
+      .delete('http://localhost:8080/api/notifchat/delnotif', { headers: { Authorization: `bearer ${token}` } })
+      .then(() => {
+        // console.log(res);
+        onNotif(token);
+      });
   }
 
   render() {
     const { notif, token } = this.props;
+    const alert = notif.filter(el => (el[0].type !== 'NEWMESSAGE'));
 
+    let notifications = (
+      <>
+        {alert.map(el => (
+          <Notification
+            key={el[0].idNotification}
+            content={el[0]}
+            token={token}
+          />
+        ))}
+      </>
+    );
+
+    if (!alert.length) {
+      notifications = (<p> no notifications  </p>);
+    }
     // console.log(notif);
 
     return (
@@ -36,7 +76,7 @@ class Notifications extends Component {
               <strong> Notifications </strong>
             </p>
             <p>
-              <span className="Pointer">
+              <span className="Pointer" onClick={this.clearNotifList} role="presentation">
                 <span style={{ fontSize: '0.9em' }}>
                   <i className="far fa-times-circle" />
                 </span>
@@ -46,13 +86,7 @@ class Notifications extends Component {
             </p>
           </div>
           <div className="NotificationsListBody">
-            {notif.filter(el => (el[0].type !== 'NEWMESSAGE')).map(el => (
-              <Notification
-                key={el[0].idNotification}
-                content={el[0]}
-                token={token}
-              />
-            ))}
+            {notifications}
           </div>
         </section>
       </section>
@@ -65,4 +99,8 @@ const mapStateToProps = state => ({
   token: state.auth.token,
 });
 
-export default connect(mapStateToProps)(Notifications);
+const mapDispatchToProps = dispatch => ({
+  onNotif: token => dispatch(actions.getNotif(token)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
