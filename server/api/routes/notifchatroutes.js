@@ -19,7 +19,7 @@ notifchatRoute.route('/delnotif/')
   .delete(checklog, notifchatCtrl.delNotif);
 notifchatRoute.route('/getnotifvue/:TYPE')
   .get(checklog, notifchatCtrl.getNotifAtVue);
-notifchatRoute.route('/notifvue/:id')
+notifchatRoute.route('/notifvue/:id') // permet d'envoyer une notif a une second user si son profil a ete vu
   .get(checklog, notifchatCtrl.notifVue);
 
 export default notifchatRoute;
