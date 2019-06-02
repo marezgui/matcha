@@ -250,18 +250,12 @@ export const like = async (req, res) => {
   const matchereeci = util.promisify(mod.getUserLiked);
   const likereci = await matchereeci(id, req.user.idUser).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if ((matchevalue === false) && (likereci === true)) {
-    mod.createMatche(req.user.idUser, id, (err, success) => {
-      if (err) {
-        console.log(err);
-      }
-      matcheNotif(req.user.idUser, id);
-      console.log(`create matche ${success}`);
-    });
-
+    const createMatche = util.promisify(mod.createMatche);
+    await createMatche(req.user.idUser, id).then(data => console.log(data)).catch((err) => { console.log(`[Error]: ${err}`); });
     const getIdMatche = util.promisify(mod.getIdMatche);
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
     io.emit('NEW-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-    console.log(`idmatche : ${idMatche}`);
+    console.log(`idmatche new : ${idMatche}`);
   }
   mod.editLike(id, 1, (err, success) => {
     if (err) {
@@ -306,7 +300,7 @@ export const unLike = async (req, res) => {
     const getIdMatche = util.promisify(mod.getIdMatche);
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
     io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-    console.log(`idmatche : ${idMatche}`);
+    console.log(`idmatche remove : ${idMatche}`);
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
         console.log(err);
@@ -439,15 +433,18 @@ export const blockUser = async (req, res) => {
   const matchedornot = util.promisify(mod.getUserMatche);
   const matchevalue = await matchedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
   if (matchevalue === true) {
+
+    const getIdMatche = util.promisify(mod.getIdMatche);
+    const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
+    io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
+    console.log(`idmatche remove : ${idMatche}`);
+
     mod.delMatche(req.user.idUser, id, (err, success) => {
       if (err) {
         console.log(err);
       }
       console.log(`remove matche ${success}`);
     });
-
-    io.emit('REMOVE-MATCHE', req.user.idUser, id); // ----> il faut que tu regarde cet event
-
   }
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch((err) => { console.log(`[Error]: ${err}`); });
