@@ -17,6 +17,7 @@ dotenv.load();
 const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
+
 export const io = socket(server);
 
 const whitelist = ['http://localhost:3000'];

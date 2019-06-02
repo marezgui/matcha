@@ -22,6 +22,8 @@ const editLog = (idUser, status) => {
 //
 const socketFunction = (io) => {
 
+  io.set('transports', ['websocket']);
+
   io.on('connection', (client) => {
     process.setMaxListeners(0);
     process.on('uncaughtException', (err) => {
@@ -31,19 +33,26 @@ const socketFunction = (io) => {
 
     client.on('USER-LOGIN', (idUser) => {
       // eslint-disable-next-line no-param-reassign
-      // console.log(`connect :${idUser}`);
+      client.userid = idUser;
+      if (idUser !== undefined) {
+        console.log(`connect :${idUser}`);
+      }
       editLog(idUser, true);
       io.emit('USER-STATUS', idUser, true); // ----> il faut que tu regarde cet event
     });
 
     client.on('USER-LOGOUT', (idUser) => {
-      // console.log(`logout : ${idUser}`);
+      if (idUser !== undefined) {
+        console.log(`logout : ${idUser}`);
+      }
       editLog(idUser, false);
       io.emit('USER-STATUS', idUser, false); // ----> il faut que tu regarde cet event
     });
 
     client.on('disconnect', () => {
-      // console.log(`disconnect :${client.userid}`);
+      if (client.userid !== undefined) {
+        console.log(`disconnect :${client.userid}`);
+      }
       editLog(client.userid, false);
       io.emit('USER-STATUS', client.userid, false);
     });
