@@ -10,10 +10,15 @@ const fetchNotifSuccess = (state, action) =>
     notifications: action.notifications,
   });
 
+const authLogout = state =>
+  updateObject(state, { notifications: null });
+
 const reducer = (state = inititalState, action) => {
   switch (action.type) {
     case actionTypes.NOTIF_FETCH:
       return fetchNotifSuccess(state, action);
+    case actionTypes.AUTH_LOGOUT:
+      return authLogout(state, action);
     default:
       return state;
   }

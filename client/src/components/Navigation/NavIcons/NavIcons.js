@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
-import axios from 'axios';
 import { Alert, Account } from '../../UI/Icons/Icons';
 import Dropdown from '../../UI/Dropdown/Dropdown';
 import './NavIcons.scss';
@@ -11,7 +10,6 @@ class navIcons extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notSeenNotif: 0,
     };
     this.socket = io('localhost:8080');
     this.socket.on('RELOAD-NOTIFICATION-FOR', (id) => {
@@ -33,7 +31,7 @@ class navIcons extends Component {
     let notifications = 0;
     if (notif !== null) {
       notif.forEach((el) => {
-        if (el[4] !== 'NEWMESSAGE') {
+        if (el[0].type !== 'NEWMESSAGE') {
           notifications += 1;
         }
       });
@@ -45,12 +43,12 @@ class navIcons extends Component {
             <Alert badge={notifications} />
             {sideDrawerComponent && <span className="textIcons">Notifications</span> }
           </NavLink>
-          {!sideDrawerComponent && (
+          {/* {!sideDrawerComponent && (
           <Dropdown>
             <p>Notifications</p>
             <p>Notifications</p>
           </Dropdown>
-          )}
+          )} */}
         </li>
         <li className={sideDrawerComponent && 'SideMyAccount'}>
           <NavLink to="/profile" className="sideProfile">

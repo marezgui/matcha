@@ -25,10 +25,9 @@ class UserCard extends Component {
     this.socket.on('USER-STATUS', (id, isOnline) => {
       const { data: { idUser } } = this.props;
       if (id === idUser) {
-        console.log(id, isOnline, idUser);
+        // console.log(id, isOnline, idUser);
         if (this._isMounted) {
           this.setState({ online: isOnline });
-          console.log('hi');
         }
       }
     });
@@ -39,7 +38,7 @@ class UserCard extends Component {
     this.getLikeStatus();
     this.getTags();
     const { data: { isOnline } } = this.props;
-    this.setState({ online: isOnline });
+    if (this._isMounted) { this.setState({ online: isOnline }); }
   }
 
   componentWillUnmount() {
@@ -47,50 +46,47 @@ class UserCard extends Component {
   }
 
   getLikeStatus = () => {
-    const { data, token } = this.props;
-    const { idUser } = data;
+    const { data: { idUser }, token } = this.props;
 
     axios
       .get(`http://localhost:8080/api/social/getuserliked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
-          this.setState({ liked: true });
+          if (this._isMounted) { this.setState({ liked: true }); }
         }
       })
       .catch(err => console.log(err.response.data.error));
   }
 
   getTags = () => {
-    const { token, data } = this.props;
-    const { idUser } = data;
+    const { data: { idUser }, token } = this.props;
 
     axios
       .get(`http://localhost:8080/api/users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
-        this.setState({ tags: res.data.usertag });
+        if (this._isMounted) { this.setState({ tags: res.data.usertag }); }
       })
       .catch(err => console.log(err.response.data.error));
   }
 
-  changeLikeStatus = () => { // async
-    const { data, token } = this.props;
+  changeLikeStatus = async () => {
+    const { data: { idUser }, token } = this.props;
     const { liked } = this.state;
 
-    const { idUser } = data;
     const headers = { headers: { Authorization: `bearer ${token}` } };
-    this.getLikeStatus(); // await
+    await this.getLikeStatus();
 
     if (liked) {
       this.setState({ liked: false });
       axios
         .delete(`http://localhost:8080/api/social/like/${idUser}`, headers)
-        .then(res => this.setState({ liked: false }))
+        .then(() => this.setState({ liked: false }))
         .catch(err => console.log(err.response.data.error));
     } else {
       this.setState({ liked: true });
       axios
         .post(`http://localhost:8080/api/social/like/${idUser}`, null, headers)
-        .then(res => this.setState({ liked: true }))
+        .then(() => this.setState({ liked: true }))
         .catch(err => console.log(err.response.data.error));
     }
   }
@@ -101,11 +97,15 @@ class UserCard extends Component {
 
   profileHandler = () => {
     const { modal } = this.state;
+    const { data: { idUser }, token } = this.props;
 
     this.setState(prevState => ({ modal: !prevState.modal }), () => {
       if (modal) document.body.classList.remove('ModalOpen'); // Prevent Body scroll
       else document.body.classList.add('ModalOpen');
     });
+    axios
+      .get(`http://localhost:8080/api/notifchat/notifvue/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .catch(() => { });
   }
 
   render() {
@@ -244,6 +244,8 @@ class UserCard extends Component {
           <Profile
             data={data}
             meta={meta}
+            online={online}
+            onlineClasses={onlineClasses}
             settings={settings}
             handleProfile={this.profileHandler}
             handleLike={this.changeLikeStatus}

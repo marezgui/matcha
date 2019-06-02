@@ -1,0 +1,19 @@
+.Notifications {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.NotificationsList {
+}
+
+.NotificationsListHeader {
+    margin-bottom: 5px;
+}
+
+.NotificationsListBody {
+    box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
+    padding: 20px;
+}

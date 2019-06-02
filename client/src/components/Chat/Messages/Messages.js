@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { Send } from '@material-ui/icons';
-import Input from '../../UI/Input/Input';
 import './Messages.css';
 
 class Messages extends Component {
@@ -24,6 +23,7 @@ class Messages extends Component {
         }
       }
     });
+    this.msgRef = React.createRef();
   }
 
   componentDidMount() {
@@ -36,13 +36,11 @@ class Messages extends Component {
     axios
       .get(`http://localhost:8080/api/notifchat/getmesageofmatche/${idMatche}`, headers)
       .then((res) => {
-        this.setState({ messages: res.data.resultMessage });
+        if (this._isMounted) {
+          this.setState({ messages: res.data.resultMessage });
+        }
         // console.log(res.data);
       });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   componentDidUpdate() {
@@ -51,80 +49,84 @@ class Messages extends Component {
     el.scrollTop = el.scrollHeight;
   }
 
-    handleInput = (e) => {
-      const { value } = e.target;
-      this.setState({ toSend: value });
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  handleInput = (e) => {
+    const { value } = e.target;
+    this.setState({ toSend: value });
+  }
+
+  emitNotification = () => {
+    const { usermatche } = this.props;
+    this.socket.emit('CREATE-NOTIFICATION', usermatche);
+  }
+
+  sendMessage = (e) => {
+    e.preventDefault();
+    const { idMatche, user: { idUser } } = this.props;
+    const { toSend } = this.state;
+    if (toSend !== '') {
+      const data = {
+        matcheId: idMatche,
+        sendUserId: idUser,
+        message: toSend,
+      };
+      this.socket.emit('SEND_MESSAGE', data);
+      this.setState({ toSend: '' });
+      this.emitNotification();
     }
+  }
 
-    emitNotification = () => {
-      const { usermatche } = this.props;
-      this.socket.emit('CREATE-NOTIFICATION', usermatche);
-    }
+  render() {
+    const { back, idMatche, user: { idUser } } = this.props;
+    const { messages, toSend } = this.state;
+    const senderClasses = ['Sender'];
+    const receiverClasses = ['Receiver'];
 
-    sendMessage = (e) => {
-      e.preventDefault();
-      const { idMatche, user: { idUser } } = this.props;
-      const { toSend } = this.state;
-      if (toSend !== '') {
-        const data = {
-          matcheId: idMatche,
-          sendUserId: idUser,
-          message: toSend,
-        };
-        this.socket.emit('SEND_MESSAGE', data);
-        this.setState({ toSend: '' });
-        this.emitNotification();
-      }
-    }
-
-    render() {
-      const { back, idMatche, user: { idUser } } = this.props;
-      const { messages, toSend } = this.state;
-      const senderClasses = ['Sender'];
-      const receiverClasses = ['Receiver'];
-
-      return (
-        <div className="Messages">
-          <div className="MessagesHeader">
-            <p onClick={back} className="Pointer" style={{ paddingLeft: '2px' }}>
-              <i className="far fa-arrow-alt-circle-left" />
-              {' '}
-              Back to conversations
-            </p>
-          </div>
-          <div className="MessagesBody" ref="MessagesBody">
-            <div>
-              {messages.map(({ idMessage, sendUserId, message, date }) => (
-                <div className="MessageContainer" key={idMessage || Math.random()}>
-                  {' '}
-                  {/* REMOVE RANDOM */}
-                  <p className={idUser === sendUserId ? senderClasses : receiverClasses}>
-                    {`${message}`}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="MessagesFooter">
-            <form>
-              <div className="MessagesInput">
-                <input
-                  className="InputMessage"
-                  type="text"
-                  value={toSend}
-                  onChange={this.handleInput}
-                />
+    return (
+      <div className="Messages">
+        <div className="MessagesHeader">
+          <p onClick={back} className="Pointer" style={{ paddingLeft: '2px' }}>
+            <i className="far fa-arrow-alt-circle-left" />
+            {' '}
+            Back to conversations
+          </p>
+        </div>
+        {/* eslint-disable-next-line react/no-string-refs */}
+        <div className="MessagesBody" ref="MessagesBody">
+          <div>
+            {messages.map(({ idMessage, sendUserId, message }) => (
+              // date is avaible / Remove Random
+              <div className="MessageContainer" key={idMessage || Math.random()}>
+                <p className={idUser === sendUserId ? senderClasses : receiverClasses}>
+                  {`${message}`}
+                </p>
               </div>
-              <div className="MessagesSend">
-                <button style={{ border: '0', backgroundColor: 'transparent' }} type="submit" onClick={this.sendMessage}>
-                  <Send />
-                </button>
-              </div>
-            </form>
+            ))}
           </div>
         </div>
-      );
-    }
+        <div className="MessagesFooter">
+          <form>
+            <div className="MessagesInput">
+              <input
+                className="InputMessage"
+                type="text"
+                value={toSend}
+                onChange={this.handleInput}
+              />
+            </div>
+            <div className="MessagesSend">
+              <button style={{ border: '0', backgroundColor: 'transparent' }} type="submit" onClick={this.sendMessage}>
+                <Send />
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => ({

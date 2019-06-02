@@ -1,0 +1,55 @@
+.Notification {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 5px;
+    box-shadow: 0px 0px 20px 0px rgba(15, 15, 15, 0.2);
+}
+
+.NotificationIcon {
+    margin: auto;
+    font-size: 2em;
+}
+
+.NotificationAvatar {
+    margin: auto;
+}
+
+.NotificationInfo {
+    flex: 1;
+    margin: auto;
+    padding: 6px;
+}
+
+.NotificationInfo > p {
+    text-align: center;
+}
+
+/* ICON COLORS */
+
+.notifLike {
+    color: #BD3D3A;
+}
+
+.notifUnlike {
+    color: rgb(92, 100, 97);
+}
+
+.notifVue {
+    color: #4F84C4;
+}
+
+.notifMatche {
+    background: linear-gradient(to right, #ff0066 0%, #3366ff 100%);
+    border-radius: 50%;
+    color: white;
+    padding: 1px;
+}
+
+.notifNewMsg {
+    color: #3F69AA;
+}
+
+.notifOther {
+    color: burlywood;
+}

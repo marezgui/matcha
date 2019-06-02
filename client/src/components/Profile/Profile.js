@@ -17,7 +17,12 @@ class ProfilePage extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.getReportStatus();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   onClickHandler = () => {
@@ -28,8 +33,7 @@ class ProfilePage extends Component {
   }
 
   getReportStatus = () => {
-    const { data, token } = this.props;
-    const { idUser } = data;
+    const { data: { idUser }, token } = this.props;
 
     axios
       .get(`http://localhost:8080/api/social/getuserreported/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
@@ -48,10 +52,9 @@ class ProfilePage extends Component {
   }
 
   changeReportStatus = async () => {
-    const { data, token } = this.props;
+    const { data: { idUser }, token } = this.props;
     const { reported } = this.state;
 
-    const { idUser } = data;
     const headers = { headers: { Authorization: `bearer ${token}` } };
     await this.getReportStatus();
 
@@ -71,10 +74,9 @@ class ProfilePage extends Component {
   }
 
   changeBlockStatus = async () => {
-    const { data, token } = this.props;
+    const { data: { idUser }, token } = this.props;
     const { blocked } = this.state;
 
-    const { idUser } = data;
     const headers = { headers: { Authorization: `bearer ${token}` } };
     await this.getReportStatus();
 
@@ -94,23 +96,21 @@ class ProfilePage extends Component {
   }
 
   render() {
-    const { data, settings, meta, handleLike } = this.props;
+    const { data, online, onlineClasses, settings, meta, handleLike } = this.props;
+    const { blocked, reported, showBackdrop } = this.state;
     const { idUser,
       username,
       firstName,
       bio,
       dateOfBirth,
       photo,
+      master = photo.master,
       score,
       genre,
       orientation,
       connexionLog,
       location } = data;
-    const { blocked, reported, showBackdrop } = this.state;
-
     const title = `${username.charAt(0).toUpperCase() + username.slice(1)}`;
-
-    const { master } = photo;
 
     let reportStatus = 'Report';
     let blockStatus = 'Block';
@@ -132,11 +132,10 @@ class ProfilePage extends Component {
               </Slider>
             </div>
             <div className="ProfileHeader">
-              <div className="Status">
+              <div className={onlineClasses.join(' ')}>
                 <span>
                   <i className="fas fa-circle" />
-                  {' '}
-                  {getLastLog(connexionLog)}
+                  {online ? 'Online' : getLastLog(connexionLog)}
                 </span>
               </div>
               <span>
