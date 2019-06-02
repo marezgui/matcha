@@ -18,7 +18,7 @@ export const getAllMessageOfMatch = (idMatch, callback) => {
 // ─── GET ALL NOTIFS ─────────────────────────────────────────────────────────────
 //
 export const getAllNotif = (id, callback) => {
-  db.query('SELECT * FROM "notification" WHERE "userId" = $1',
+  db.query('SELECT * FROM "notification" WHERE "userId" = $1 ORDER BY "notification"."idNotification" DESC',
     [id],
     (err, res) => {
       if (err.error) {
@@ -44,8 +44,22 @@ export const addMessageToDatabase = (matcheId, sendUserId, message, callback) =>
 //
 // ─── SET LES NOTIFS A VUE ───────────────────────────────────────────────────────
 //
-export const getNotifVue = (idUser, callback) => {
-  db.query('UPDATE "notification" SET "vue" = true WHERE "userId" = $2 AND "vue" = false',
+export const getNotifVue = (idUser, type, callback) => {
+  db.query('UPDATE "notification" SET "vue" = true WHERE "userId" = $1 AND "vue" = false AND "type" = $2',
+    [idUser, type],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, res);
+    });
+};
+
+//
+// ─── DEL NOTIFS ─────────────────────────────────────────────────────────────────
+//
+export const delNotif = (idUser, callback) => {
+  db.query('DELETE FROM "notification" WHERE "notification"."userId" = $1 AND "notification"."vue" = true',
     [idUser],
     (err, res) => {
       if (err.error) {

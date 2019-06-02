@@ -15,7 +15,9 @@ notifchatRoute.route('/getallmesage/')
   .get(checklog, notifchatCtrl.getAllMessage);
 notifchatRoute.route('/getallnotif/')
   .get(checklog, notifchatCtrl.getAllNotif);
-notifchatRoute.route('/getnotifvue/')
+notifchatRoute.route('/delnotif/')
+  .delete(checklog, notifchatCtrl.delNotif);
+notifchatRoute.route('/getnotifvue/:TYPE')
   .get(checklog, notifchatCtrl.getNotifAtVue);
 notifchatRoute.route('/notifvue/:id')
   .get(checklog, notifchatCtrl.notifVue);
