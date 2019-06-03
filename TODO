@@ -31,10 +31,9 @@ Pour le back :
       ✔ get matche more virer user "me" @done(19-05-28 23:56)
 
       ✔ routes notifications socket @done(19-05-30 12:04)
-      ☐ trouver erreur proxy
-      ☐ filtre de recherche
+      ✔ trouver erreur proy @done(19-06-03 14:20)
 
-  ☐ tester sql insections @started(19-05-24 01:55)
+  ✔ tester sql insections @started(19-05-24 01:55) @done(19-06-03 14:20) @lasted(1w3d12h25m48s)
 
 Pour le front :
     Components:
@@ -57,5 +56,6 @@ Pour le front :
             - Afficher les tags dans UserCard et Profile.
             - Ajouter les Filtres de recherches.
             - Ajouter les options de trie.
+            - filtre de recherche
     Regex:
         - Changer les regex mail et bio.
