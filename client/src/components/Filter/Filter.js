@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import './Filter.css';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
