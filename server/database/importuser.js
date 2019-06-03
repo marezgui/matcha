@@ -95,7 +95,7 @@ const importuser = async (numberuser) => {
         //  console.log(err.error);
 
         }
-        // console.log(`user :${mail}`);
+        console.log(`user :${username}  Password : Password1234`);
       });
 
   }

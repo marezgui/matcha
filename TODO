@@ -1,39 +1,18 @@
-☐                                                                        OBJECTIF FINIR LE 6 JUIN
-Pour le back :
-  ✔ faire un code plus propre et bien lisible @done(19-05-24 01:54)
-  ✔ routes pour modifier le mot de passe @done(19-05-24 01:54)
-  ✔ route mot de passe oublier @done(19-05-24 01:54)
-  Pour les verif :
-    ✔ fonction qui set les verif a true @done(19-05-24 01:54)
-    ✔ verifier que l'utilistaur a bien completerson profil @done(19-05-24 01:54)
-    ✔ verifier que l'utilisateur passif a lui aussi completer son profil @done(19-05-24 01:54)
-  Pour les notifs/chat :
-    ✔ ce renseigner sur socket.io @done(19-05-24 01:54)
-    cree les routes et les fonctions lorsqu'un user est :
-        ✔ liker par un autre                     (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 03:15)
-        ✔ matche avec un autre                   (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 03:15)
-        ✔ lorsqu il delike / unmatche            (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 03:16)
-        ✔ lorsqu on ajoute un novveau message    (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 02:45)
-        ✔ vue                                    (il y a une route pour celle la !!!) @done(19-05-24 02:02)
-        ✔ faire une fonction qui set les notif a vue @done(19-05-24 01:54)
-        ✔ faire une fonction aui envoi les notifs par mail @done(19-05-24 01:55)
-    cree une foncton pour :
-      ✔ ajouter un message dans la bdd @done(19-05-24 01:55)
-      ✔ recuperer l'historiaue des message de la bdd @done(19-05-24 01:55)
-      ✔ resuperer historique message de tous les matches @done(19-05-24 01:55)
-      ✔ ajouter la fonction dans socket.io @done(19-05-24 01:55)
-      ✔ recuperer toute les notifs @done(19-05-24 10:55)
-      ✔ gerer le fait que l'user soit en ligne @done(19-05-24 01:55)
-      ✔ tablau user is ogin @done(19-05-24 13:52)
-      ✔ event notif @done(19-05-26 10:50)
+Modifs avant de rendre :
+  connexion avec username et pas avec mail:
+    ✔ pour le back @done(19-06-04 01:09)
+    - pour le front
 
-      ✔ init match @done(19-05-28 23:56)
-      ✔ get matche more virer user "me" @done(19-05-28 23:56)
+    - Finir les filtres de recherche
+    - finir les page activation et mot de passe oublie
 
-      ✔ routes notifications socket @done(19-05-30 12:04)
-      ✔ trouver erreur proy @done(19-06-03 14:20)
+    - finir filtres de recherche
+    la page de yassin :
+      - la gestion et l'import des photos  aussi
+      - la localisation
+      - uprrimer mon compte
 
-  ✔ tester sql insections @started(19-05-24 01:55) @done(19-06-03 14:20) @lasted(1w3d12h25m48s)
+    -page avec la liste des user au'on a bloquer pour pouvoir les debloquer
 
 Pour le front :
     Components:
@@ -59,3 +38,40 @@ Pour le front :
             - filtre de recherche
     Regex:
         - Changer les regex mail et bio.
+
+
+Pour le back :
+✔ faire un code plus propre et bien lisible @done(19-05-24 01:54)
+✔ routes pour modifier le mot de passe @done(19-05-24 01:54)
+✔ route mot de passe oublier @done(19-05-24 01:54)
+Pour les verif :
+  ✔ fonction qui set les verif a true @done(19-05-24 01:54)
+  ✔ verifier que l'utilistaur a bien completerson profil @done(19-05-24 01:54)
+  ✔ verifier que l'utilisateur passif a lui aussi completer son profil @done(19-05-24 01:54)
+Pour les notifs/chat :
+  ✔ ce renseigner sur socket.io @done(19-05-24 01:54)
+  cree les routes et les fonctions lorsqu'un user est :
+      ✔ liker par un autre                     (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 03:15)
+      ✔ matche avec un autre                   (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 03:15)
+      ✔ lorsqu il delike / unmatche            (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 03:16)
+      ✔ lorsqu on ajoute un novveau message    (cette notification n'a pas besoin de route je la met dans la fonction directement) @done(19-05-24 02:45)
+      ✔ vue                                    (il y a une route pour celle la !!!) @done(19-05-24 02:02)
+      ✔ faire une fonction qui set les notif a vue @done(19-05-24 01:54)
+      ✔ faire une fonction aui envoi les notifs par mail @done(19-05-24 01:55)
+  cree une foncton pour :
+    ✔ ajouter un message dans la bdd @done(19-05-24 01:55)
+    ✔ recuperer l'historiaue des message de la bdd @done(19-05-24 01:55)
+    ✔ resuperer historique message de tous les matches @done(19-05-24 01:55)
+    ✔ ajouter la fonction dans socket.io @done(19-05-24 01:55)
+    ✔ recuperer toute les notifs @done(19-05-24 10:55)
+    ✔ gerer le fait que l'user soit en ligne @done(19-05-24 01:55)
+    ✔ tablau user is ogin @done(19-05-24 13:52)
+    ✔ event notif @done(19-05-26 10:50)
+
+    ✔ init match @done(19-05-28 23:56)
+    ✔ get matche more virer user "me" @done(19-05-28 23:56)
+
+    ✔ routes notifications socket @done(19-05-30 12:04)
+    ✔ trouver erreur proy @done(19-06-03 14:20)
+
+✔ tester sql insections @started(19-05-24 01:55) @done(19-06-03 14:20) @lasted(1w3d12h25m48s)
