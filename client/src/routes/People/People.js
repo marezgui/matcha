@@ -4,6 +4,7 @@ import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import UserCard from '../../components/UserCard/UserCard';
+import Filter from '../../components/Filter/Filter';
 import './People.css';
 
 class People extends Component {
@@ -54,9 +55,7 @@ class People extends Component {
     return (
       <section className="People">
         <aside className="PeopleFilterBox">
-          <section className="PeopleFilterBoxContent">
-            Filter / Sort
-          </section>
+          <Filter />
         </aside>
         <InfiniteScroll
           dataLength={users.length}
