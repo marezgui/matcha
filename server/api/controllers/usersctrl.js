@@ -31,11 +31,11 @@ export const getForgotPasswordKey = async (req, res) => {
   const restoreKey = await resultrestoreKey(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (restoreKey) {
     sendmail(mail, 'Matcha Forgot password',
-      `Hello ${resultUserMail.firstName}, You have forgot your password on MATCHA, for set a new password past this link into your webrother : http://LINK/${restoreKey} , thanks`,
+      `Hello ${resultUserMail.firstName}, You have forgot your password on MATCHA, for set a new password past this link into your webrother : http://localhost:3000/?restorekey=${restoreKey} , thanks`,
       `Hello ${resultUserMail.firstName},</br>
       You have forgot your password on MATCHA,</br>
       for set a new password click on this link :</br>
-      <a href="http://LINK/${restoreKey}">http://LINK/${restoreKey}</a></br>
+      <a href="http://localhost:3000/?restorekey=${restoreKey}">http://localhost:3000/?restorekey=${restoreKey}</a></br>
       Thanks,</br>
       Matcha Team`);
     return res.status(200).json({ message: 'Done, check your mail' });
@@ -121,11 +121,11 @@ export const adduser = async (req, res) => {
   const confirmKey = await getConfirmKey(req).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (confirmKey) {
     sendmail(mail, 'Matcha confirmation mail',
-      `Hello ${firstName}, You have bee registred on MATCHA, for activate your account past this link into your webrother : http://LINK/${confirmKey} , thanks`,
+      `Hello ${firstName}, You have bee registred on MATCHA, for activate your account past this link into your webrother : http://localhost:3000/?confirmkey=${confirmKey} , thanks`,
       `Hello ${firstName},</br>
       You have bee registred on MATCHA,</br>
       for activate your account click on this link :</br>
-      <a href="http://LINK/${confirmKey}">http://LINK/${confirmKey}</a></br>
+      <a href="http://localhost:3000/?confirmkey=${confirmKey}">http://localhost:3000/?confirmkey=${confirmKey}</a></br>
       Thanks,</br>
       Matcha Team`);
     return res.status(200).json({ message: 'Inscription done, check your mail' });
