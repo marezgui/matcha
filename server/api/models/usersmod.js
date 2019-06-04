@@ -18,9 +18,9 @@ export const getRestoreKey = (mail, callback) => {
 //
 // ─── DELETE RESTORE KEY ─────────────────────────────────────────────────────────
 //
-export const delRestoreKey = (mail, callback) => {
-  db.query('UPDATE "users" SET "restoreKey" = NULL WHERE "mail" = $1',
-    [mail], (err) => {
+export const delRestoreKey = (username, callback) => {
+  db.query('UPDATE "users" SET "restoreKey" = NULL WHERE "username" = $1',
+    [username], (err) => {
       if (err.error) {
         callback(err, null);
       }
@@ -193,10 +193,10 @@ export const getuserbyUsername = (username, callback) => {
 //
 // ─── UPDATE LAST CONNEXION LOG ──────────────────────────────────────────────────
 //
-export const connexionLog = (mail, status, callback) => {
+export const connexionLog = (username, status, callback) => {
   const time = 'NOW()';
-  db.query('UPDATE "users" SET "connexionLog" = $1, "isOnline" = $3 WHERE "mail" = $2',
-    [time, mail, status],
+  db.query('UPDATE "users" SET "connexionLog" = $1, "isOnline" = $3 WHERE "username" = $2',
+    [time, username, status],
     (err, res) => {
       if (err.error) {
         callback(err, null);
