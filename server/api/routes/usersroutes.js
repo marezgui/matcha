@@ -13,8 +13,8 @@ usersRoute.route('/add')
   .post(usersCtrl.adduser); // add a new user return a key for confirm account
 usersRoute.route('/confirmkey/:CONFIRMKEY')
   .put(usersCtrl.confirmmail); // activate account
-usersRoute.route('/forgotpassword/:username')
-  .get(usersCtrl.getForgotPasswordKey);
+usersRoute.route('/forgotpassword/')
+  .post(usersCtrl.getForgotPasswordKey);
 usersRoute.route('/forgotpassword/:FPASSWORDKEY')
   .put(usersCtrl.changePassword);
 usersRoute.route('/login') // pour ce log avec passport et OBTENIR UN TOKEN

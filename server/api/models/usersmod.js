@@ -4,10 +4,10 @@ import { db } from '../../database';
 //
 // ─── FORGOT PASSWORD KEY ────────────────────────────────────────────────────────
 //
-export const getRestoreKey = (mail, callback) => {
+export const getRestoreKey = (username, callback) => {
   const restoreKey = uniqid('restoreKey--');
-  db.query('UPDATE "users" SET "restoreKey" = $2 WHERE "mail" = $1',
-    [mail, restoreKey], (err) => {
+  db.query('UPDATE "users" SET "restoreKey" = $2 WHERE "username" = $1',
+    [username, restoreKey], (err) => {
       if (err.error) {
         callback(err, null);
       }
@@ -31,10 +31,10 @@ export const delRestoreKey = (username, callback) => {
 //
 // ─── EDIT USER PASSWORD ─────────────────────────────────────────────────────────
 //
-export const edituserPassword = (mail, password, callback) => {
+export const edituserPassword = (username, password, callback) => {
   if (password) {
-    db.query('UPDATE "users" SET "password" = $1 WHERE "mail" = $2',
-      [password, mail],
+    db.query('UPDATE "users" SET "password" = $1 WHERE "username" = $2',
+      [password, username],
       (err, res) => {
         if (err.error) {
           callback(err, null);
@@ -56,7 +56,7 @@ export const checkForgotKey = (restoreKey, callback) => {
     if (res[0] === undefined) {
       data = -1;
     } else {
-      data = res[0].mail;
+      data = res[0].username;
     }
     callback(null, data);
   });

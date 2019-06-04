@@ -18,21 +18,22 @@ const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
 // ─── GET FORGOT PASSWORD KEY ────────────────────────────────────────────────────
 //
 export const getForgotPasswordKey = async (req, res) => {
-  const { username } = req.params;
+  const { username } = req.body;
   if (!VERIF_LN_REGEX.test(username)) {
-    return res.status(303).json({ error: 'Invalid mail.' });
+    return res.status(303).json({ error: 'Invalid username.' });
   }
   const getuserbyUsername = util.promisify(mod.getuserbyUsername);
-  const resultUserMail = await getuserbyUsername(username).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
-  if (resultUserMail === undefined) {
-    return res.status(303).json({ error: 'Unknow User email' });
+  const resultUserUsername = await getuserbyUsername(username).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
+  // console.log(username);
+  if (resultUserUsername === undefined) {
+    return res.status(303).json({ error: 'Unknow Username' });
   }
   const resultrestoreKey = util.promisify(mod.getRestoreKey);
-  const restoreKey = await resultrestoreKey(resultUserMail.mail).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
+  const restoreKey = await resultrestoreKey(resultUserUsername.username).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
   if (restoreKey) {
-    sendmail(resultUserMail.mail, 'Matcha Forgot password',
-      `Hello ${resultUserMail.firstName}, You have forgot your password on MATCHA, for set a new password past this link into your webrother : http://localhost:3000/?restorekey=${restoreKey} , thanks`,
-      `Hello ${resultUserMail.firstName},</br>
+    sendmail(resultUserUsername.mail, 'Matcha Forgot password',
+      `Hello ${resultUserUsername.firstName}, You have forgot your password on MATCHA, for set a new password past this link into your webrother : http://localhost:3000/?restorekey=${restoreKey} , thanks`,
+      `Hello ${resultUserUsername.firstName},</br>
       You have forgot your password on MATCHA,</br>
       for set a new password click on this link :</br>
       <a href="http://localhost:3000/?restorekey=${restoreKey}">http://localhost:3000/?restorekey=${restoreKey}</a></br>
@@ -51,7 +52,7 @@ export const changePassword = async (req, res) => {
   const checkpasswordkey = util.promisify(mod.checkForgotKey);
   const mail = await checkpasswordkey(key).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
   if (mail === -1) {
-    res.status(201).json({ error: 'Key not found' });
+    res.status(303).json({ error: 'Key not found' });
     return;
   }
   let { password } = req.body;
@@ -142,28 +143,28 @@ export const login = async (req, res) => {
     return res.status(303).json({ error: 'Empty form' });
   }
   const getuserbyUsername = util.promisify(mod.getuserbyUsername);
-  const resultUserMail = await getuserbyUsername(username).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
-  if (resultUserMail === undefined) {
+  const resultUserUsername = await getuserbyUsername(username).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
+  if (resultUserUsername === undefined) {
     return res.status(303).json({ error: 'Unknow username' });
   }
   const hashcmp = util.promisify(bcrypt.compare);
-  const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
-  if (resultUserMail.activate === false) {
-    return res.status(303).json({ error: `Your account is not activated yet. ${resultUserMail.mail}` });
+  const passwdcmp = await hashcmp(password, resultUserUsername.password).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
+  if (resultUserUsername.activate === false) {
+    return res.status(303).json({ error: `Your account is not activated yet. ${resultUserUsername.mail}` });
   }
   if (passwdcmp === true) {
-    const payload = { idUser: resultUserMail.idUser };
+    const payload = { idUser: resultUserUsername.idUser };
     const token = jwt.sign(payload, op.opts.secretOrKey);
     mod.connexionLog(username, true, (err, success) => {
       if (err) {
-        mod.delRestoreKey(username, (errRestore, successRestore) => {
-          if (errRestore) {
-            // console.log(errRestore + successRestore);
-          }
-        });
+
         res.status(303).json({ error: err.error });
 
-      }
+      }mod.delRestoreKey(username, (errRestore, successRestore) => {
+        if (errRestore) {
+          // console.log(errRestore + successRestore);
+        }
+      });
       // console.log(`user login ${success}`);
     });
     return res.json({ message: 'Connection Validate', token });
@@ -293,12 +294,12 @@ export const deluser = async (req, res) => {
     return res.status(303).json({ error: 'Empty form' });
   }
   const getuserbyUsername = util.promisify(mod.getuserbyUsername);
-  const resultUserMail = await getuserbyUsername(username).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
-  if (resultUserMail === undefined) {
+  const resultUserUsername = await getuserbyUsername(username).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
+  if (resultUserUsername === undefined) {
     return res.status(303).json({ error: 'Unknow username' });
   }
   const hashcmp = util.promisify(bcrypt.compare);
-  const passwdcmp = await hashcmp(password, resultUserMail.password).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
+  const passwdcmp = await hashcmp(password, resultUserUsername.password).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
   if (passwdcmp === true) {
     return mod.deluser(req.user.idUser, (err, success) => {
       if (err) {

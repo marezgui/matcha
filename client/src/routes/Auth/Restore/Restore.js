@@ -62,6 +62,7 @@ class Restore extends Component {
     }
 
     render() {
+
       const { errors, password1, password2, formIsValid, matchError } = this.state;
 
       return (

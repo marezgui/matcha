@@ -82,7 +82,7 @@ class Login extends Component {
     event.preventDefault();
     const { login } = this.state;
     axios
-      .get(`http://localhost:8080/api/users/forgotpassword/${login}`)
+      .post('http://localhost:8080/api/users/forgotpassword/', { username: login })
       .then(() => {
         this.setState({ errorRestore: '', checkMail: true });
         setTimeout(() => {

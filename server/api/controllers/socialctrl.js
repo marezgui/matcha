@@ -786,7 +786,7 @@ export const getUsersForMe = async (req, res) => {
     scoreMin = 0;
   }
   if (scoreMax === undefined || scoreMax === '') {
-    scoreMax = null;
+    scoreMax = 1000000;
   }
   if (tags === undefined || tags === '') {
     tags = null;
