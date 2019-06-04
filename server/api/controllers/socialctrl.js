@@ -254,9 +254,9 @@ export const like = async (req, res) => {
     await createMatche(req.user.idUser, id).then().catch(err => err);// { console.log(`[Error]: ${err}`); });
     const getIdMatche = util.promisify(mod.getIdMatche);
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
-    io.emit('NEW-MATCHE', idMatche); // ----> il faut que tu regarde cet event
-  //  console.log(`idmatche new : ${idMatche}`);
-  matcheNotif(req.user.idUser, id);
+    io.emit('NEW-MATCHE', idMatche, req.user.idUser, id); // ----> il faut que tu regarde cet event
+    //  console.log(`idmatche new : ${idMatche}`);
+    matcheNotif(req.user.idUser, id);
   //  console.log(`remove like ${success}`)
   }
   mod.editLike(id, 1, (err, success) => {
@@ -301,7 +301,7 @@ export const unLike = async (req, res) => {
 
     const getIdMatche = util.promisify(mod.getIdMatche);
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
-    io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
+    io.emit('REMOVE-MATCHE', idMatche, req.user.idUser, id); // ----> il faut que tu regarde cet event
 
     const delNewMessageNotif = util.promisify(mod.delNewMessageNotif);
     await delNewMessageNotif(req.user.idUser, id).then(data => data).catch(err => err);
@@ -442,7 +442,7 @@ export const blockUser = async (req, res) => {
 
     const getIdMatche = util.promisify(mod.getIdMatche);
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
-    io.emit('REMOVE-MATCHE', idMatche); // ----> il faut que tu regarde cet event
+    io.emit('REMOVE-MATCHE', idMatche, req.user.idUser, id); // ----> il faut que tu regarde cet event
     // console.log(`idmatche remove : ${idMatche}`);
 
     const delNewMessageNotif = util.promisify(mod.delNewMessageNotif);
