@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import Snackbar from '@material-ui/core/Snackbar';
 import * as actions from '../../../store/actions/index';
 import Restore from '../Restore/Restore';
 import { checkInputValidity } from '../../../shared/utility';
@@ -19,6 +20,13 @@ class Login extends Component {
     checkMail: false,
     errorRestore: '',
     restoreKey: '',
+    restored: false,
+    snackbar: {
+      open: false,
+      vertical: 'top',
+      horizontal: 'center',
+      message: 'Hello !',
+    },
   };
 
   componentDidMount() {
@@ -28,6 +36,24 @@ class Login extends Component {
       const params = new URLSearchParams(search);
       const restoreKey = params.get('restorekey');
       this.setState({ restoreKey });
+
+      const confirmKey = params.get('confirmkey');
+      if (confirmKey) {
+        const { snackbar } = this.state;
+        axios
+          .put(`http://localhost:8080/api/users/confirmkey/${confirmKey}`)
+          .then((res) => {
+            this.setState({ snackbar: { ...snackbar,
+              open: true,
+              message: 'Your account has been activated' } });
+            console.log(res.data);
+          })
+          .catch((err) => {
+            this.setState({ snackbar: { ...snackbar,
+              open: true,
+              message: err.response.data.error } });
+          });
+      }
     }
   }
 
@@ -74,7 +100,11 @@ class Login extends Component {
   };
 
   restored = () => {
+    const { snackbar } = this.state;
     this.setState({ restore: false, restoreKey: '' });
+    this.setState({ snackbar: { ...snackbar,
+      open: true,
+      message: 'Your password has been restored' } });
   }
 
   handleRestore = () => {
@@ -113,7 +143,8 @@ class Login extends Component {
 
   render() {
     const { errors, login, password, formIsValid,
-      restore, checkMail, errorRestore, restoreKey } = this.state;
+      restore, checkMail, errorRestore, restoreKey,
+      snackbar, snackbar: { vertical, horizontal, open, message } } = this.state;
     const { error, loading, isAuthenticated } = this.props;
 
     let form = <Spinner />;
@@ -207,6 +238,24 @@ class Login extends Component {
         </div>
         <Button clicked={this.autoLog2}> LogUser2 </Button>
         {/* TO REMOVE */}
+
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          key={`${vertical},${horizontal}`}
+          open={open}
+          onClose={() => this.setState({ snackbar: { ...snackbar, open: false } })}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={(
+            <span id="message-id">
+              {' '}
+              {message}
+              {' '}
+            </span>
+)}
+        />
+
         {form}
         {authRedirect}
         <p className="RestoreLink Pointer" role="presentation" onClick={this.handleRestore}>
