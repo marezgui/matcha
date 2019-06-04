@@ -12,7 +12,7 @@ class navIcons extends Component {
 
   render() {
     const { sideDrawerComponent, count: { alert },
-      user: { firstName, lastName, photo, photo: { master } } } = this.props;
+      user: { firstName, lastName, photo } } = this.props;
 
     return (
       <ul className="NavIcons">
@@ -30,7 +30,7 @@ class navIcons extends Component {
         </li>
         <li className={sideDrawerComponent && 'SideMyAccount'}>
           <NavLink to="/profile" className="sideProfile">
-            <Account data={photo[master] || firstName[0]} />
+            <Account data={photo ? photo[photo.master] : firstName[0]} />
             {sideDrawerComponent && (
             <span style={{ paddingLeft: '10px' }}>
               {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`}
