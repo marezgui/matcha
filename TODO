@@ -12,7 +12,7 @@ Modifs avant de rendre :
       - la localisation
       - uprrimer mon compte
 
-    -page avec la liste des user au'on a bloquer pour pouvoir les debloquer
+    - page avec la liste des user au'on a bloquer pour pouvoir les debloquer
 
 Pour le front :
     Components:
@@ -24,7 +24,7 @@ Pour le front :
         Notifications:
             ✔ Lister tous les Likes/Visites/Matchs. @done(19-06-04 02:18)
 
-        A creer: 
+        A creer:
           - Activation du compte.
           ✔ Mot de passe oublié. @done(19-06-04 07:28)
 
@@ -40,7 +40,7 @@ Pour le front :
       ✔ LIKE / UNLIKE en temps reel. @done(19-06-04 07:28)
       ✔ Nouveau msg notif. @done(19-06-04 02:21)
 
-    
+
     Regex:
         ✔ Changer les regex mail et bio. @done(19-06-04 07:27)
         ✔ Login avec username. @done(19-06-04 07:28)
