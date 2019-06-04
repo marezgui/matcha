@@ -14,15 +14,28 @@ class Chat extends Component {
     super(props);
     this.state = {
       matches: [],
+      matchedId: [],
       clickedMatche: false,
       matcheWith: null,
       loading: true,
     };
     this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
-    this.socket.on('NEW-MATCHE', (idMatche) => {
+    this.socket.on('NEW-MATCHE', () => { // idMatche
+      if (this._isMounted) {
+        this.setState({ matches: [] }, () => {
+          this.setState({ clickedMatche: false });
+          this.componentDidMount();
+        });
+      }
       // console.log('new-matche', idMatche);
     });
-    this.socket.on('REMOVE-MATCHE', (idMatche) => {
+    this.socket.on('REMOVE-MATCHE', () => {
+      if (this._isMounted) {
+        this.setState({ matches: [] }, () => {
+          this.setState({ clickedMatche: false });
+          this.componentDidMount();
+        });
+      }
       // console.log('new-unmatche', idMatche);
     });
   }
@@ -39,8 +52,10 @@ class Chat extends Component {
           axios
             .get(`http://localhost:8080/api/social/getallusermatchemore/${id}`, headers)
             .then((res2) => {
+              // console.log(res2);
+              const { matchedId } = this.state;
               const { usermatche } = res2.data;
-
+              this.setState({ matchedId: matchedId.concat(usermatche) });
               axios
                 .get(`http://localhost:8080/api/users/id/${res2.data.usermatche}`, headers)
                 .then((res3) => {
@@ -50,12 +65,14 @@ class Chat extends Component {
                   const matche = { id, usermatche, username, avatar: photo[master] };
 
                   if (this._isMounted) {
-                    this.setState({ matches: matches.concat(matche), loading: false });
+                    this.setState({ matches: matches.concat(matche) });
                   }
+
                   // console.log(user.username);
                 });
             });
         });
+        if (this._isMounted) { this.setState({ loading: false }); }
       })
       .catch((err) => { console.log(err.response.data); });
   }
@@ -75,7 +92,7 @@ class Chat extends Component {
       .get('http://localhost:8080/api/notifchat/getnotifvue/NEWMESSAGE', { headers: { Authorization: `bearer ${token}` } })
       .then(() => {
         // console.log(res);
-        onNotif(token);
+        setTimeout(() => { onNotif(token); }, 500);
       });
   }
 

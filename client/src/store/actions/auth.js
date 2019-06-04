@@ -39,11 +39,11 @@ const getUser = async (token) => {
   return user;
 };
 
-export const auth = (mail, password) => (dispatch) => {
+export const auth = (username, password) => (dispatch) => {
   dispatch(authStart());
 
   axios
-    .post('http://localhost:8080/api/users/login', { mail, password })
+    .post('http://localhost:8080/api/users/login', { username, password })
     .then(async (res) => {
       const { token } = res.data;
       const user = await getUser(token);

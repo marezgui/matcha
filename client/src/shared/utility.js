@@ -61,7 +61,7 @@ const convertUTCDateToLocalDate = (date) => {
 
 export const getLastLog = (lastLog) => {
   const date = new Date(lastLog);
-  const localTime = convertUTCDateToLocalDate(date);
+  // const localTime = convertUTCDateToLocalDate(date);
 
-  return moment(localTime).from(Date.now());
+  return moment(date).from(Date.now());
 };

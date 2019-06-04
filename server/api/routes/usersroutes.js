@@ -13,7 +13,7 @@ usersRoute.route('/add')
   .post(usersCtrl.adduser); // add a new user return a key for confirm account
 usersRoute.route('/confirmkey/:CONFIRMKEY')
   .put(usersCtrl.confirmmail); // activate account
-usersRoute.route('/forgotpassword/')
+usersRoute.route('/forgotpassword/:username')
   .get(usersCtrl.getForgotPasswordKey);
 usersRoute.route('/forgotpassword/:FPASSWORDKEY')
   .put(usersCtrl.changePassword);

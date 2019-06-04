@@ -18,7 +18,7 @@ Pour le front :
     Components:
         ✔ Creer un Modal afin afficher le Profil. @done(17-05-24)
         ✔ Afficher le profil de l'User dans un Modal. @started(18-05-24 11:00) @done(19-05-24 10:39) @lasted(52w23h39m31s)
-        - Afficher la distance dans UserCard et Profile.
+        ✔ Afficher la distance dans UserCard et Profile. @done(19-06-04 07:28)
 
     Pages:
         Notifications:
@@ -26,7 +26,7 @@ Pour le front :
 
         A creer: 
           - Activation du compte.
-          - Mot de passe oublié.
+          ✔ Mot de passe oublié. @done(19-06-04 07:28)
 
         People:
             ✔ Afficher le Profil dans un Modal (onClick). @done(19-06-04 02:18)
@@ -36,14 +36,14 @@ Pour le front :
             - filtre de recherche
     
     Socket: 
-      - ADD / REMOVE Matche en temps reel.
-      - LIKE / UNLIKE en temps reel.
+      ✔ ADD / REMOVE Matche en temps reel. @done(19-06-04 07:28)
+      ✔ LIKE / UNLIKE en temps reel. @done(19-06-04 07:28)
       ✔ Nouveau msg notif. @done(19-06-04 02:21)
 
     
     Regex:
-        - Changer les regex mail et bio.
-        - Login avec username.
+        ✔ Changer les regex mail et bio. @done(19-06-04 07:27)
+        ✔ Login avec username. @done(19-06-04 07:28)
 
 
 Pour le back :

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { Image } from 'semantic-ui-react';
 import Chip from '@material-ui/core/Chip';
+import io from 'socket.io-client';
 import Slider from 'react-slick';
 import { getAge, getLastLog } from '../../shared/utility';
 import Modal from '../UI/Modal/Modal';
@@ -10,15 +11,28 @@ import Backdrop from '../UI/Backdrop/Backdrop';
 import './Profile.scss';
 
 class ProfilePage extends Component {
-  state = {
-    reported: false,
-    blocked: false,
-    showBackdrop: true,
+  constructor(props) {
+    super(props);
+    this.state = {
+      reported: false,
+      blocked: false,
+      showBackdrop: true,
+    };
+    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
   }
 
   componentDidMount() {
     this._isMounted = true;
-    this.getReportStatus();
+    if (this._isMounted) {
+      this.getReportStatus();
+      const { data: { idUser }, token } = this.props;
+      axios
+        .get(`http://localhost:8080/api/notifchat/notifvue/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+        .then((res) => {
+          this.socket.emit('CREATE-NOTIFICATION', idUser);
+        })
+        .catch(() => { });
+    }
   }
 
   componentWillUnmount() {

@@ -51,8 +51,8 @@ class Layout extends Component {
   updateNofication = () => {
     const { onNotif, token } = this.props;
 
-    // console.log('notif+');
-    onNotif(token);
+    console.log('notif+');
+    setTimeout(() => { onNotif(token); }, 500);
   }
 
   sideDrawerClosedHandler = () => {

@@ -17,14 +17,16 @@ class Notifications extends Component {
 
   componentDidMount = () => {
     this._isMounted = true;
-    const { token } = this.props;
+    const { token, onNotif } = this.props;
     const type = ['MATCHE', 'LIKE', 'UNLIKE', 'VUE', 'OTHER'];
 
     type.map(kind => (
       axios
         .get(`http://localhost:8080/api/notifchat/getnotifvue/${kind}`, { headers: { Authorization: `bearer ${token}` } })
         .then(() => {
-          // console.log(res);
+          if (this._isMounted) {
+            setTimeout(() => { onNotif(token); }, 500);
+          }
         })
         .catch(() => {
           // console.log(err.response);
@@ -43,7 +45,7 @@ class Notifications extends Component {
       .delete('http://localhost:8080/api/notifchat/delnotif', { headers: { Authorization: `bearer ${token}` } })
       .then(() => {
         // console.log(res);
-        onNotif(token);
+        setTimeout(() => { onNotif(token); }, 500);
       });
   }
 

@@ -18,7 +18,7 @@ const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
 // ─── GET FORGOT PASSWORD KEY ────────────────────────────────────────────────────
 //
 export const getForgotPasswordKey = async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.params;
   if (!VERIF_LN_REGEX.test(username)) {
     return res.status(303).json({ error: 'Invalid mail.' });
   }
@@ -154,9 +154,9 @@ export const login = async (req, res) => {
   if (passwdcmp === true) {
     const payload = { idUser: resultUserMail.idUser };
     const token = jwt.sign(payload, op.opts.secretOrKey);
-    mod.connexionLog(mail, true, (err, success) => {
+    mod.connexionLog(username, true, (err, success) => {
       if (err) {
-        mod.delRestoreKey(mail, (errRestore, successRestore) => {
+        mod.delRestoreKey(username, (errRestore, successRestore) => {
           if (errRestore) {
             // console.log(errRestore + successRestore);
           }

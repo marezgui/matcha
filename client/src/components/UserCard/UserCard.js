@@ -16,6 +16,7 @@ class UserCard extends Component {
     super(props);
     this.state = {
       online: false,
+      distance: null,
       liked: false,
       tags: [],
       showLink: false,
@@ -37,12 +38,26 @@ class UserCard extends Component {
     this._isMounted = true;
     this.getLikeStatus();
     this.getTags();
+    this.getDistance();
     const { data: { isOnline } } = this.props;
     if (this._isMounted) { this.setState({ online: isOnline }); }
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  getDistance = () => {
+    if (this._isMounted) {
+      const { data: { idUser }, token } = this.props;
+
+      axios
+        .get(`http://localhost:8080/api/users/userdistance/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+        .then((res) => {
+          this.setState({ distance: res.data.distance });
+          console.log(res);
+        });
+    }
   }
 
   getLikeStatus = () => {
@@ -104,21 +119,17 @@ class UserCard extends Component {
 
   profileHandler = () => {
     const { modal } = this.state;
-    const { data: { idUser }, token } = this.props;
 
     this.setState(prevState => ({ modal: !prevState.modal }), () => {
       if (modal) document.body.classList.remove('ModalOpen'); // Prevent Body scroll
       else document.body.classList.add('ModalOpen');
     });
-    axios
-      .get(`http://localhost:8080/api/notifchat/notifvue/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
-      .catch(() => { });
   }
 
   render() {
     const { data } = this.props;
     const { online, liked, showLink, tags, modal } = this.state;
-
+    let { distance } = this.state;
     const { idUser,
       firstName,
       bio,
@@ -143,6 +154,8 @@ class UserCard extends Component {
         },
       ],
     };
+
+    if (distance) distance = distance.toFixed(1);
 
     let likeStatus = (<i className="far fa-heart" />);
     let showLinkClasses = ['Biography', 'Hide'];
@@ -195,6 +208,8 @@ class UserCard extends Component {
                   <span>
                     <i className="fas fa-map-marker-alt" />
                     {` ${location.city}`}
+                    <br />
+                    {distance && `${distance}Km`}
                   </span>
                   <span>
                     {{
