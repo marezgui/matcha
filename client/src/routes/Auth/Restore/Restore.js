@@ -57,8 +57,11 @@ class Restore extends Component {
       axios
         .put(`http://localhost:8080/api/users/forgotpassword/${restoreKey}`, { password })
         .then(() => {
-          const { handleRestore } = this.props;
-          handleRestore();
+          const { restored } = this.props;
+          restored();
+        })
+        .catch((err) => {
+          this.setState({ matchError: err.response.data.error });
         });
       console.log(password1, password2);
     }

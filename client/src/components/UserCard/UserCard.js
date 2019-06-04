@@ -55,7 +55,7 @@ class UserCard extends Component {
         .get(`http://localhost:8080/api/users/userdistance/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
           this.setState({ distance: res.data.distance });
-          console.log(res);
+          // console.log(res);
         });
     }
   }

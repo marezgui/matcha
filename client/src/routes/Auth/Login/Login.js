@@ -73,6 +73,10 @@ class Login extends Component {
     onAuth(login, password);
   };
 
+  restored = () => {
+    this.setState({ restore: false, restoreKey: '' });
+  }
+
   handleRestore = () => {
     const { restore } = this.state;
     this.setState({ restore: !restore, restoreKey: '' });
@@ -115,7 +119,7 @@ class Login extends Component {
     let form = <Spinner />;
 
     if (restoreKey) {
-      form = <Restore restoreKey={restoreKey} handleRestore={this.handleRestore} />;
+      form = <Restore restoreKey={restoreKey} restored={this.restored} />;
     } else if (restore) {
       if (checkMail) {
         form = (
