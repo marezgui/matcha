@@ -75,7 +75,7 @@ class Login extends Component {
 
   handleRestore = () => {
     const { restore } = this.state;
-    this.setState({ restore: !restore });
+    this.setState({ restore: !restore, restoreKey: '' });
   }
 
   submitRestore = (event) => {
@@ -115,7 +115,7 @@ class Login extends Component {
     let form = <Spinner />;
 
     if (restoreKey) {
-      form = <Restore key={restoreKey} />;
+      form = <Restore restoreKey={restoreKey} handleRestore={this.handleRestore} />;
     } else if (restore) {
       if (checkMail) {
         form = (

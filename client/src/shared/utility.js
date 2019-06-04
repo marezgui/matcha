@@ -48,16 +48,16 @@ export const getAge = (dateOfBirth) => {
   return Math.abs(age.getUTCFullYear() - 1970);
 };
 
-const convertUTCDateToLocalDate = (date) => {
-  const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+// const convertUTCDateToLocalDate = (date) => {
+//   const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
-  const offset = date.getTimezoneOffset() / 60;
-  const hours = date.getHours();
+//   const offset = date.getTimezoneOffset() / 60;
+//   const hours = date.getHours();
 
-  newDate.setHours(hours - offset);
+//   newDate.setHours(hours - offset);
 
-  return newDate;
-};
+//   return newDate;
+// };
 
 export const getLastLog = (lastLog) => {
   const date = new Date(lastLog);

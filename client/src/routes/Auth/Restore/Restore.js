@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import axios from 'axios';
 import Input from '../../../components/UI/Input/Input';
 import Button from '../../../components/UI/Button/Button';
@@ -52,17 +51,19 @@ class Restore extends Component {
 
     submitRestore = (e) => {
       e.preventDefault();
-      const { key } = this.props;
+      const { restoreKey } = this.props;
       const { password1, password2 } = this.state;
       const password = password1;
       axios
-        .put(`http://localhost:8080/api/users/forgotpassword/${key}`, { password })
-        .then((res) => { console.log(res); });
+        .put(`http://localhost:8080/api/users/forgotpassword/${restoreKey}`, { password })
+        .then(() => {
+          const { handleRestore } = this.props;
+          handleRestore();
+        });
       console.log(password1, password2);
     }
 
     render() {
-
       const { errors, password1, password2, formIsValid, matchError } = this.state;
 
       return (
