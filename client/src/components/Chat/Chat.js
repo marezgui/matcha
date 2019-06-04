@@ -20,14 +20,15 @@ class Chat extends Component {
       loading: true,
     };
     this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
-    this.socket.on('NEW-MATCHE', () => { // idMatche
+    // eslint-disable-next-line no-unused-vars
+    this.socket.on('NEW-MATCHE', (idMatche, idUser, id) => {
       if (this._isMounted) {
+        this.socket.emit('CREATE-NOTIFICATION', idUser);
         this.setState({ matches: [] }, () => {
           this.setState({ clickedMatche: false });
           this.componentDidMount();
         });
       }
-      // console.log('new-matche', idMatche);
     });
     this.socket.on('REMOVE-MATCHE', () => {
       if (this._isMounted) {
