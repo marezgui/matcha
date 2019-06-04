@@ -256,6 +256,8 @@ export const like = async (req, res) => {
     const idMatche = await getIdMatche(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
     io.emit('NEW-MATCHE', idMatche); // ----> il faut que tu regarde cet event
   //  console.log(`idmatche new : ${idMatche}`);
+  matcheNotif(req.user.idUser, id);
+  //  console.log(`remove like ${success}`)
   }
   mod.editLike(id, 1, (err, success) => {
     if (err) {
@@ -322,9 +324,9 @@ export const unLike = async (req, res) => {
     if (err) {
       //    console.log(err);
     }
-    unlikeNotif(req.user.idUser, id);
-  //  console.log(`remove like ${success}`);
   });
+  unlikeNotif(req.user.idUser, id);
+  //  console.log(`remove like ${success}`);
   return mod.unLike(req.user.idUser, id, (err, success) => {
     if (err) {
       res.status(303).json({ error: err.error }); return;
@@ -452,6 +454,8 @@ export const blockUser = async (req, res) => {
       }
     //  console.log(`remove matche ${success}`);
     });
+    unlikeNotif(req.user.idUser, id);
+    //  console.log(`remove like ${success}`);
   }
   const likedornot = util.promisify(mod.getUserLiked);
   const likevalue = await likedornot(req.user.idUser, id).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
