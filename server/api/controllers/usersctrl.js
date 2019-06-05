@@ -180,7 +180,7 @@ export const confirmmail = async (req, res) => {
   const checkkey = util.promisify(mod.checkkey);
   const goodkey = await checkkey(key).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
   if (goodkey === -1) {
-    return res.status(201).json({ error: 'Key not found' });
+    return res.status(303).json({ error: 'Key not found' });
   }
   return mod.activeuser(goodkey, (err, success) => {
     if (err) {
