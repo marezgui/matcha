@@ -23,7 +23,9 @@ class People extends Component {
     axios
       .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
-        if (this._isMounted) { this.setState({ users: res.data.resultData.users }); }
+        if (this._isMounted) {
+          this.setState({ users: res.data.resultData.users });
+        }
         // console.log(res.data.resultData.newStart);
       });
   }
@@ -42,9 +44,13 @@ class People extends Component {
       axios
         .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
-          this.setState({ users: users.concat(res.data.resultData.users) });
+          if (this._isMounted) {
+            this.setState({ users: users.concat(res.data.resultData.users) });
+          }
           // console.log(res.data.resultData.newStart);
-          if (!res.data.resultData.users.length) this.setState({ hasMore: false });
+          if (!res.data.resultData.users.length) {
+            if (this._isMounted) { this.setState({ hasMore: false }); }
+          }
         });
     });
   };

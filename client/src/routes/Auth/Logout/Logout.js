@@ -6,10 +6,15 @@ import * as actions from '../../../store/actions';
 
 class Logout extends React.Component {
   componentDidMount() {
+    this._isMounted = true;
     const { onLogout, user: { idUser } } = this.props;
     this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     this.socket.emit('USER-LOGOUT', idUser);
     onLogout();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

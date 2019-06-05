@@ -20,7 +20,6 @@ class Login extends Component {
     checkMail: false,
     errorRestore: '',
     restoreKey: '',
-    restored: false,
     snackbar: {
       open: false,
       vertical: 'top',
@@ -31,29 +30,31 @@ class Login extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    if (this._isMounted) {
-      const { location: { search } } = this.props;
-      const params = new URLSearchParams(search);
-      const restoreKey = params.get('restorekey');
-      this.setState({ restoreKey });
+    const { location: { search } } = this.props;
+    const params = new URLSearchParams(search);
+    const restoreKey = params.get('restorekey');
+    this.setState({ restoreKey });
 
-      const confirmKey = params.get('confirmkey');
-      if (confirmKey) {
-        const { snackbar } = this.state;
-        axios
-          .put(`http://localhost:8080/api/users/confirmkey/${confirmKey}`)
-          .then((res) => {
+    const confirmKey = params.get('confirmkey');
+    if (confirmKey) {
+      const { snackbar } = this.state;
+      axios
+        .put(`http://localhost:8080/api/users/confirmkey/${confirmKey}`)
+        .then((res) => {
+          if (this._isMounted) {
             this.setState({ snackbar: { ...snackbar,
               open: true,
               message: 'Your account has been activated' } });
-            console.log(res.data);
-          })
-          .catch((err) => {
+          }
+          console.log(res.data);
+        })
+        .catch((err) => {
+          if (this._isMounted) {
             this.setState({ snackbar: { ...snackbar,
               open: true,
               message: err.response.data.error } });
-          });
-      }
+          }
+        });
     }
   }
 
@@ -118,13 +119,19 @@ class Login extends Component {
     axios
       .post('http://localhost:8080/api/users/forgotpassword/', { username: login })
       .then(() => {
-        this.setState({ errorRestore: '', checkMail: true });
+        if (this._isMounted) {
+          this.setState({ errorRestore: '', checkMail: true });
+        }
         setTimeout(() => {
-          this.setState({ checkMail: false, restore: false });
+          if (this._isMounted) {
+            this.setState({ checkMail: false, restore: false });
+          }
         }, 4000);
       })
       .catch((err) => {
-        this.setState({ errorRestore: err.response.data.error });
+        if (this._isMounted) {
+          this.setState({ errorRestore: err.response.data.error });
+        }
         // console.log(err.response.data.error);
       });
   }
@@ -137,6 +144,12 @@ class Login extends Component {
 
   autoLog2 = () => { // To remove
     const [login, password] = ['yellowzebra609', 'Password1234'];
+    const { onAuth } = this.props;
+    onAuth(login, password);
+  };
+
+  autoLog3 = () => { // To remove
+    const [login, password] = ['test', 'Password1234'];
     const { onAuth } = this.props;
     onAuth(login, password);
   };
@@ -237,6 +250,9 @@ class Login extends Component {
           <Button clicked={this.autoLog}> LogUser1 </Button>
         </div>
         <Button clicked={this.autoLog2}> LogUser2 </Button>
+        <div>
+          <Button clicked={this.autoLog3}> LogNewUser </Button>
+        </div>
         {/* TO REMOVE */}
 
         <Snackbar

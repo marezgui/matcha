@@ -52,7 +52,9 @@ class Layout extends Component {
     const { onNotif, token } = this.props;
 
     console.log('notif+');
-    setTimeout(() => { onNotif(token); }, 500);
+    setTimeout(() => {
+      onNotif(token);
+    }, 500);
   }
 
   sideDrawerClosedHandler = () => {

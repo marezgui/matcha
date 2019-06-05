@@ -27,9 +27,7 @@ class UserCard extends Component {
       const { data: { idUser } } = this.props;
       if (id === idUser) {
         // console.log(id, isOnline, idUser);
-        if (this._isMounted) {
-          this.setState({ online: isOnline });
-        }
+        if (this._isMounted) { this.setState({ online: isOnline }); }
       }
     });
   }
@@ -48,16 +46,16 @@ class UserCard extends Component {
   }
 
   getDistance = () => {
-    if (this._isMounted) {
-      const { data: { idUser }, token } = this.props;
+    const { data: { idUser }, token } = this.props;
 
-      axios
-        .get(`http://localhost:8080/api/users/userdistance/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
-        .then((res) => {
+    axios
+      .get(`http://localhost:8080/api/users/userdistance/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        if (this._isMounted) {
           this.setState({ distance: res.data.distance });
-          // console.log(res);
-        });
-    }
+        }
+        // console.log(res);
+      });
   }
 
   getLikeStatus = () => {
@@ -67,7 +65,9 @@ class UserCard extends Component {
       .get(`http://localhost:8080/api/social/getuserliked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
-          if (this._isMounted) { this.setState({ liked: true }); }
+          if (this._isMounted) {
+            this.setState({ liked: true });
+          }
         }
       })
       .catch(err => err);// console.log(err.response.data.error));
@@ -79,7 +79,9 @@ class UserCard extends Component {
     axios
       .get(`http://localhost:8080/api/users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
-        if (this._isMounted) { this.setState({ tags: res.data.usertag }); }
+        if (this._isMounted) {
+          this.setState({ tags: res.data.usertag });
+        }
         // console.log(res.data.usertag);
       })
       .catch(err => err);// console.log(err.response.data.error));
@@ -97,7 +99,9 @@ class UserCard extends Component {
       axios
         .delete(`http://localhost:8080/api/social/like/${idUser}`, headers)
         .then(() => {
-          this.setState({ liked: false });
+          if (this._isMounted) {
+            this.setState({ liked: false });
+          }
           this.socket.emit('CREATE-NOTIFICATION', idUser);
         })
         .catch(err => err);// console.log(err.response.data.error));
@@ -106,7 +110,9 @@ class UserCard extends Component {
       axios
         .post(`http://localhost:8080/api/social/like/${idUser}`, null, headers)
         .then(() => {
-          this.setState({ liked: true });
+          if (this._isMounted) {
+            this.setState({ liked: true });
+          }
           this.socket.emit('CREATE-NOTIFICATION', idUser);
         })
         .catch(err => err);// console.log(err.response.data.error));

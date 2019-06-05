@@ -12,7 +12,7 @@ class Profile extends Component {
   componentDidMount() {
     this._isMounted = true;
     const { user } = this.props;
-    if (this._isMounted) { this.setState({ user }); }
+    this.setState({ user });
   }
 
   componentWillUnmount() {

@@ -22,10 +22,10 @@ class Chat extends Component {
     this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
     // eslint-disable-next-line no-unused-vars
     this.socket.on('NEW-MATCHE', (idMatche, idUser, id) => {
+      this.socket.emit('CREATE-NOTIFICATION', idUser);
       if (this._isMounted) {
-        this.socket.emit('CREATE-NOTIFICATION', idUser);
         this.setState({ matches: [] }, () => {
-          this.setState({ clickedMatche: false });
+          if (this._isMounted) { this.setState({ clickedMatche: false }); }
           this.componentDidMount();
         });
       }
@@ -33,11 +33,11 @@ class Chat extends Component {
     this.socket.on('REMOVE-MATCHE', () => {
       if (this._isMounted) {
         this.setState({ matches: [] }, () => {
-          this.setState({ clickedMatche: false });
+          if (this._isMounted) { this.setState({ clickedMatche: false }); }
           this.componentDidMount();
         });
       }
-      // console.log('new-unmatche', idMatche);
+    // console.log('new-unmatche', idMatche);
     });
   }
 
@@ -56,7 +56,9 @@ class Chat extends Component {
               // console.log(res2);
               const { matchedId } = this.state;
               const { usermatche } = res2.data;
-              this.setState({ matchedId: matchedId.concat(usermatche) });
+              if (this._isMounted) {
+                this.setState({ matchedId: matchedId.concat(usermatche) });
+              }
               axios
                 .get(`http://localhost:8080/api/users/id/${res2.data.usermatche}`, headers)
                 .then((res3) => {
@@ -64,7 +66,6 @@ class Chat extends Component {
                   const { user } = res3.data;
                   const { username, photo, master = photo.master } = user;
                   const matche = { id, usermatche, username, avatar: photo[master] };
-
                   if (this._isMounted) {
                     this.setState({ matches: matches.concat(matche) });
                   }
@@ -73,7 +74,9 @@ class Chat extends Component {
                 });
             });
         });
-        if (this._isMounted) { this.setState({ loading: false }); }
+        if (this._isMounted) {
+          this.setState({ loading: false });
+        }
       })
       .catch((err) => { console.log(err.response.data); });
   }

@@ -17,7 +17,9 @@ class Notification extends Component {
       axios
         .get(`http://localhost:8080/api/users/id/${userIdSender}`, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
-          if (this._isMounted) { this.setState({ user: res.data.user, loading: false }); }
+          if (this._isMounted) {
+            this.setState({ user: res.data.user, loading: false });
+          }
         });
     }
 

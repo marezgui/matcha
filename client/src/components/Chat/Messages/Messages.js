@@ -18,9 +18,7 @@ class Messages extends Component {
       const { idMatche } = this.props;
       if (data.matcheId === idMatche) {
         const { messages } = this.state;
-        if (this._isMounted) {
-          this.setState({ messages: messages.concat(data) });
-        }
+        if (this._isMounted) { this.setState({ messages: messages.concat(data) }); }
       }
     });
     this.msgRef = React.createRef();
@@ -36,9 +34,9 @@ class Messages extends Component {
     axios
       .get(`http://localhost:8080/api/notifchat/getmesageofmatche/${idMatche}`, headers)
       .then((res) => {
-        if (this._isMounted) {
-          this.setState({ messages: res.data.resultMessage });
-        }
+
+        if (this._isMounted) { this.setState({ messages: res.data.resultMessage }); }
+
         // console.log(res.data);
       });
   }

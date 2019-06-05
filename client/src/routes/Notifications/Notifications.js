@@ -24,9 +24,9 @@ class Notifications extends Component {
       axios
         .get(`http://localhost:8080/api/notifchat/getnotifvue/${kind}`, { headers: { Authorization: `bearer ${token}` } })
         .then(() => {
-          if (this._isMounted) {
-            setTimeout(() => { onNotif(token); }, 500);
-          }
+          setTimeout(() => {
+            onNotif(token);
+          }, 500);
         })
         .catch(() => {
           // console.log(err.response);
@@ -45,7 +45,9 @@ class Notifications extends Component {
       .delete('http://localhost:8080/api/notifchat/delnotif', { headers: { Authorization: `bearer ${token}` } })
       .then(() => {
         // console.log(res);
-        setTimeout(() => { onNotif(token); }, 500);
+        setTimeout(() => {
+          onNotif(token);
+        }, 500);
       });
   }
 

@@ -23,16 +23,15 @@ class ProfilePage extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    if (this._isMounted) {
-      this.getReportStatus();
-      const { data: { idUser }, token } = this.props;
-      axios
-        .get(`http://localhost:8080/api/notifchat/notifvue/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
-        .then((res) => {
-          this.socket.emit('CREATE-NOTIFICATION', idUser);
-        })
-        .catch(() => { });
-    }
+
+    this.getReportStatus();
+    const { data: { idUser }, token } = this.props;
+    axios
+      .get(`http://localhost:8080/api/notifchat/notifvue/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+      .then(() => {
+        this.socket.emit('CREATE-NOTIFICATION', idUser);
+      })
+      .catch(() => { });
   }
 
   componentWillUnmount() {
@@ -53,14 +52,18 @@ class ProfilePage extends Component {
       .get(`http://localhost:8080/api/social/getuserreported/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
-          this.setState({ reported: true });
+          if (this._isMounted) {
+            this.setState({ reported: true });
+          }
         }
       });
     axios
       .get(`http://localhost:8080/api/social/getuserblocked/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
         if (res.data.message === 'true') {
-          this.setState({ blocked: true });
+          if (this._isMounted) {
+            this.setState({ blocked: true });
+          }
         }
       });
   }
@@ -76,13 +79,19 @@ class ProfilePage extends Component {
       // this.setState({ reported: false });
       axios
         .delete(`http://localhost:8080/api/social/report/${idUser}`, headers)
-        .then(res => this.setState({ reported: false }))
+        .then(() => {
+          if (this._isMounted) {
+            this.setState({ reported: false });
+          }
+        })
         .catch(err => err);// console.log(err.response.data.error));
     } else {
       // this.setState({ reported: true });
       axios
         .post(`http://localhost:8080/api/social/report/${idUser}`, null, headers)
-        .then(res => this.setState({ reported: true }))
+        .then(() => {
+          if (this._isMounted) { this.setState({ reported: true }); }
+        })
         .catch(err => err);// console.log(err.response.data.error));
     }
   }
@@ -98,13 +107,17 @@ class ProfilePage extends Component {
       // this.setState({ blocked: false });
       axios
         .delete(`http://localhost:8080/api/social/block/${idUser}`, headers)
-        .then(res => this.setState({ blocked: false }))
+        .then(() => {
+          if (this._isMounted) { this.setState({ blocked: false }); }
+        })
         .catch(err => err);// console.log(err.response.data.error));
     } else {
       // this.setState({ blocked: true });
       axios
         .post(`http://localhost:8080/api/social/block/${idUser}`, null, headers)
-        .then(res => this.setState({ blocked: true }))
+        .then(() => {
+          if (this._isMounted) { this.setState({ blocked: true }); }
+        })
         .catch(err => err);// console.log(err.response.data.error));
     }
   }
