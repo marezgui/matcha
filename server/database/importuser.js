@@ -84,8 +84,8 @@ const importuser = async (numberuser) => {
       userIsComplete = Boolean(Math.round(Math.random()));
     }
     const type = ['M', 'W', 'O'];
-    const genre = type[Math.floor(Math.random() * 3) + 1];
-    const orientation = type[Math.floor(Math.random() * 3) + 1];
+    const genre = type[Math.floor(Math.random() * 3)];
+    const orientation = type[Math.floor(Math.random() * 3)];
 
 
     if (!MAIL_REGEX.test(mail)) {
