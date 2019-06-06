@@ -1,6 +1,6 @@
+/* eslint-disable prefer-destructuring */
 import util from 'util';
 import geolib from 'geolib';
-import sortJsonArray from 'sort-json-array';
 import * as mod from '../models/socialmod';
 import { likeNotif, unlikeNotif, matcheNotif } from './notifchatctrl';
 // eslint-disable-next-line import/no-cycle
@@ -59,8 +59,7 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
       { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
     );
     distance /= 1000;
-    const userAge = Math.floor((new Date() - data[i].dateOfBirth)
-    / 1000 / 60 / 60 / 24 / 365);
+    const userAge = data[i].age;
     scoreMin = scoreMin === null ? data[i].score : scoreMin;
     scoreMax = scoreMax === null ? data[i].score : scoreMax;
     distanceMin = distanceMin === null ? distance : distanceMin;
@@ -78,6 +77,16 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
     reportMin = reportMin > data[i].report ? data[i].report : reportMin;
     reportMax = reportMax < data[i].report ? data[i].report : reportMax;
   }
+
+  scoreMin = scoreMin === null ? 0 : scoreMin;
+  scoreMax = scoreMax === null ? 0 : scoreMax;
+  distanceMin = distanceMin === null ? 0 : distanceMin;
+  distanceMax = distanceMax === null ? 0 : distanceMax;
+  ageMin = ageMin === null ? 0 : ageMin;
+  ageMax = ageMax === null ? 0 : ageMax;
+  reportMin = reportMin === null ? 0 : reportMin;
+  reportMax = reportMax === null ? 0 : reportMax;
+
   res.status(200).json({ scoreMin,
     scoreMax,
     distanceMin,
@@ -86,6 +95,80 @@ export const getUserAgeDistanceScoreReport = async (req, res) => {
     ageMax,
     reportMin,
     reportMax });
+};
+
+//
+// ─── GET USERS VAL FOR SEARCH FUNCTION ──────────────────────────────────────────
+//
+export const getUserAgeDistanceScoreReportFct = async (req) => {
+  const { user } = req;
+  const userdata = util.promisify(mod.getUsersVal);
+  const data = await userdata(user).then(datauser => datauser).catch(err => err);
+  let scoreMin = null;
+  let scoreMax = null;
+  let distanceMin = null;
+  let distanceMax = null;
+  let ageMin = null;
+  let ageMax = null;
+  let reportMin = null;
+  let reportMax = null;
+  let c = 0;
+  const blockedornot = util.promisify(mod.getUserBlockedList);
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);
+  for (let i = 0; i < data.length; i += 1) {
+    for (let j = 0; j < blockedTab.length; j += 1) {
+      if (blockedTab[j].blockedUserId === data[i].idUser) {
+        c = 1;
+      } else if ((blockedTab[j].userId === data[i].idUser)) {
+        c = 1;
+      }
+    }
+    if (c !== 0) {
+      c = 0;
+      continue;
+    }
+    let distance = await geolib.getDistanceSimple(
+      { latitude: data[i].location.latitude, longitude: data[i].location.longitude },
+      { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
+    );
+    distance /= 1000;
+    const userAge = data[i].age;
+    scoreMin = scoreMin === null ? data[i].score : scoreMin;
+    scoreMax = scoreMax === null ? data[i].score : scoreMax;
+    distanceMin = distanceMin === null ? distance : distanceMin;
+    distanceMax = distanceMax === null ? distance : distanceMax;
+    ageMin = ageMin === null ? userAge : ageMin;
+    ageMax = ageMax === null ? userAge : ageMax;
+    reportMin = reportMin === null ? data[i].report : reportMin;
+    reportMax = reportMax === null ? data[i].report : reportMax;
+    scoreMin = scoreMin > data[i].score ? data[i].score : scoreMin;
+    scoreMax = scoreMax < data[i].score ? data[i].score : scoreMax;
+    distanceMin = distanceMin > distance ? distance : distanceMin;
+    distanceMax = distanceMax < distance ? distance : distanceMax;
+    ageMin = ageMin > userAge ? userAge : ageMin;
+    ageMax = ageMax < userAge ? userAge : ageMax;
+    reportMin = reportMin > data[i].report ? data[i].report : reportMin;
+    reportMax = reportMax < data[i].report ? data[i].report : reportMax;
+  }
+
+  scoreMin = scoreMin === null ? 0 : scoreMin;
+  scoreMax = scoreMax === null ? 0 : scoreMax;
+  distanceMin = distanceMin === null ? 0 : distanceMin;
+  distanceMax = distanceMax === null ? 0 : distanceMax;
+  ageMin = ageMin === null ? 0 : ageMin;
+  ageMax = ageMax === null ? 0 : ageMax;
+  reportMin = reportMin === null ? 0 : reportMin;
+  reportMax = reportMax === null ? 0 : reportMax;
+
+  const value = { scoreMin,
+    scoreMax,
+    distanceMin,
+    distanceMax,
+    ageMin,
+    ageMax,
+    reportMin,
+    reportMax };
+  return value;
 };
 
 //
@@ -567,234 +650,350 @@ export const unBlockUser = async (req, res) => {
       users : [],
       start: valeurDuProchainStart
     }
+
+    la fonction accepte les param :
+    count, start,
+    ageMin, ageMax,
+    distanceMin, distanceMax,
+    scoreMin, scoreMax,
+    tag,
+    trie, order.
+
+    trie = "distance" ou "age" ou "score" ou "tag"
+    order = 0 -> croissant  1 -> decroissant
     les tags sont separer par une virgule tags -> test1,test2 tag,test etc...
 */
 
 //
+// ─── GET USER PROFILE ───────────────────────────────────────────────────────────
+//
+const getUserProfile = async (tmpUsers, start, count, res) => {
+  let newStart = start;
+  const resultData = { users: [] };
+  let cpt = 0;
+  const getUserFunction = util.promisify(mod.getuserbyIdUser);
+
+  for (let j = start; j < tmpUsers.length; j += 1) {
+    if (cpt >= count) { break; }
+
+    const getUser = await getUserFunction(tmpUsers[j]).then(datauser => datauser).catch(err => err);
+    if (getUser === undefined) { continue; }
+
+    resultData.users.push(getUser);
+    cpt += 1;
+    newStart += 1;
+  }
+  resultData.newStart = newStart;
+  return res.status(200).json({ resultData });
+};
+
+//
 // ─── GET USER FOR ME WITH TAG ───────────────────────────────────────────────────
 //
-const getUserwithTags = async (user, count, start, ageMin, ageMax,
-  distanceMin, distanceMax, scoreMin, scoreMax, tags, res) => {
-  const tagid = [];
-  const goodTagId = [];
-  let newStart = start;
-  const checkTags = util.promisify(mod.getTagOfUsers);
-  for (let i = 0; i < tags.length; i += 1) {
-    const taglist = await checkTags(user.idUser, tags[i]).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
-    if (taglist !== '') {
-      for (let j = 0; j < taglist.length; j += 1) {
-        tagid.push(taglist[j].userId);
-      }
-    }
-  }
-  const uniq = [...new Set(tagid)];
-  let setcountid = 0;
-  for (let i = 0; i < uniq.length; i += 1) {
-    for (let j = 0; j < tagid.length; j += 1) {
-      if (uniq[i] === tagid[j]) {
-        setcountid += 1;
-        if (setcountid === tags.length) { goodTagId.push(uniq[i]); }
-      }
-    }
-    setcountid = 0;
-  }
-  const resultData = { users: [], newStart };
-  let result = 0;
+const getUserwithTags = async (user,
+  genre, orientation,
+  ageMin, ageMax,
+  distanceMin, distanceMax,
+  scoreMin, scoreMax,
+  tags,
+  trie, order,
+  count, start,
+  res) => {
+
   let c = 0;
+  let tmpUsers = [];
+
   const blockedornot = util.promisify(mod.getUserBlockedList);
-  const getUserFunction = util.promisify(mod.getuserbyIdUser);
-  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
-  for (newStart; newStart < goodTagId.length; newStart += 1) {
-    if (result >= count) {
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);
+
+  const getUserFct = util.promisify(mod.getUsersForMe);
+  let getUser;
+
+  if (trie === 'distance' || trie === 'tag') {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, 'score', order).then(datauser => datauser).catch(err => err);
+  } else {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, trie, order).then(datauser => datauser).catch(err => err);
+  }
+  const getTags = util.promisify(mod.getTagOfUsers);
+  for (let i = 0; i < getUser.length; i += 1) {
+
+    const taglistuser = await getTags(getUser[i].idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
+    if (taglistuser[0] === undefined) { continue; }
+
+    c = 1;
+    for (let k = 0; k < taglistuser.length; k += 1) {
+      for (let l = 0; l < tags.length; l += 1) {
+        if (taglistuser[k].tag === tags[l]) {
+          c = 0;
+        }
+      }
+    }
+
+    if (getUser[i] === undefined) {
       break;
     }
     for (let j = 0; j < blockedTab.length; j += 1) {
-      if (blockedTab[j].blockedUserId === goodTagId[newStart]) {
+      if (blockedTab[j].blockedUserId === getUser[i].idUser
+            || blockedTab[j].userId === getUser[i].idUser) {
         c = 1;
-      } else if ((blockedTab[j].userId === goodTagId[newStart])) {
-        c = 1;
+        break;
       }
     }
-    if (c !== 0) {
+    if (c === 1) {
       c = 0;
-      result++;
       continue;
     }
-    const getUser = await getUserFunction(goodTagId[newStart]).then(datauser => datauser).catch(err => err);// { console.log(`[Error]: ${err}`); });
-    if (getUser === undefined) {
-      break;
-    }
     let distance = await geolib.getDistanceSimple(
-      { latitude: getUser.location.latitude, longitude: getUser.location.longitude },
+      { latitude: getUser[i].location.latitude, longitude: getUser[i].location.longitude },
       { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
     );
     distance /= 1000;
-    const getUserAge = Math.floor((new Date() - getUser.dateOfBirth)
-                                            / 1000 / 60 / 60 / 24 / 365);
-    if (getUserAge < ageMin) {
-      resultData.start = newStart;
-      newStart += 1;
+
+    getUser[i].distance = distance;
+    if (getUser[i].distance < distanceMin || getUser[i].distance > distanceMax) {
       continue;
     }
-    if (ageMax != null) {
-      if (getUserAge > ageMax) {
-        resultData.start = newStart;
-        newStart += 1;
-        continue;
-      }
+
+    let tagofuser = '';
+
+    for (let k = 0; k < taglistuser.length; k += 1) {
+      if (k !== 0) { tagofuser += ', '; }
+      tagofuser += taglistuser[k].tag;
     }
-    if (getUser.score < scoreMin) {
-      resultData.start = newStart;
-      newStart += 1;
-      continue;
-    }
-    if (scoreMax != null) {
-      if (getUser.score > scoreMax) {
-        resultData.start = newStart;
-        newStart += 1;
-        continue;
-      }
-    }
-    if (distance < distanceMin) {
-      resultData.start = newStart;
-      newStart += 1;
-      continue;
-    }
-    if (distanceMax != null) {
-      if (distance > distanceMax) {
-        resultData.start = newStart;
-        newStart += 1;
-        continue;
-      }
-    }
-    resultData.users.push(getUser);
-    result += 1;
+
+    tmpUsers.push([getUser[i].idUser, distance, tagofuser]);
   }
-  resultData.newStart = newStart;
-  resultData.users = await sortJsonArray(resultData.users, 'connexionLog', 'des');
-  return res.status(200).json({ resultData });
+  if (trie === 'distance') {
+    if (order === 'ASC') {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return -1;
+        if (a[1] > b[1]) return 1;
+        return 0;
+      });
+    } else {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return 1;
+        if (a[1] > b[1]) return -1;
+        return 0;
+      });
+    }
+  } else if (trie === 'tag') {
+    if (order === 'ASC') {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[2] < b[2]) return -1;
+        if (a[2] > b[2]) return 1;
+        return 0;
+      });
+    } else {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[2] < b[2]) return 1;
+        if (a[2] > b[2]) return -1;
+        return 0;
+      });
+    }
+  }
+  console.log(tmpUsers);
+  const resultUser = [];
+  for (let j = 0; j < tmpUsers.length; j += 1) {
+    resultUser.push(tmpUsers[j][0]);
+  }
+  return getUserProfile(resultUser, start, count, res);
 };
 
 //
 // ─── GET USER FOR ME NO TAG ─────────────────────────────────────────────────────
 //
-const getUserNoTags = async (user, count, start, ageMin, ageMax,
-  distanceMin, distanceMax, scoreMin, scoreMax, res) => {
-  let result = 0;
+const getUserNoTags = async (user,
+  genre, orientation,
+  ageMin, ageMax,
+  distanceMin, distanceMax,
+  scoreMin, scoreMax,
+  trie, order,
+  count, start,
+  res) => {
+
   let c = 0;
-  let newStart = start;
-  const resultData = { users: [], newStart };
+  let tmpUsers = [];
+
   const blockedornot = util.promisify(mod.getUserBlockedList);
-  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);
+
   const getUserFct = util.promisify(mod.getUsersForMe);
-  while (result < count) {
-    const getUser = await getUserFct(user, scoreMin, scoreMax, 150, start).then(datauser => datauser).catch(err => err);// { console.log(`[Error]: ${err}`); });
-    for (let i = 0; i < 150; i += 1) {
-      if (result >= count) {
-        break;
-      }
-      if (getUser[i] === undefined) {
-        break;
-      }
-      for (let j = 0; j < blockedTab.length; j += 1) {
-        if (blockedTab[j].blockedUserId === getUser[i].idUser) {
-          c = 1;
-        } else if ((blockedTab[j].userId === getUser[i].idUser)) {
-          c = 1;
-        }
-      }
-      if (c !== 0) {
-        result += 1;
-        c = 0;
-        continue;
-      }
-      let distance = await geolib.getDistanceSimple(
-        { latitude: getUser[i].location.latitude, longitude: getUser[i].location.longitude },
-        { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
-      );
-      distance /= 1000;
-      const getUserAge = Math.floor((new Date() - getUser[i].dateOfBirth)
-                                            / 1000 / 60 / 60 / 24 / 365);
-      if (getUserAge < ageMin) {
-        resultData.start = newStart;
-        newStart += 1;
-        continue;
-      }
-      if (ageMax != null) {
-        if (getUserAge > ageMax) {
-          resultData.start = newStart;
-          newStart += 1;
-          continue;
-        }
-      }
-      if (distance < distanceMin) {
-        resultData.start = newStart;
-        newStart += 1;
-        continue;
-      }
-      if (distanceMax != null) {
-        if (distance > distanceMax) {
-          resultData.start = newStart;
-          newStart += 1;
-          continue;
-        }
-      }
-      resultData.users.push(getUser[i]);
-      newStart += 1;
-      result += 1;
-    }
-    if (getUser[149] === undefined) {
+  let getUser;
+
+  if (trie === 'distance') {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, 'score', order).then(datauser => datauser).catch(err => err);
+  } else {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, trie, order).then(datauser => datauser).catch(err => err);
+  }
+  for (let i = 0; i < getUser.length; i += 1) {
+    if (getUser[i] === undefined) {
       break;
     }
+    for (let j = 0; j < blockedTab.length; j += 1) {
+      if (blockedTab[j].blockedUserId === getUser[i].idUser
+          || blockedTab[j].userId === getUser[i].idUser) {
+        c = 1;
+        break;
+      }
+    }
+    if (c === 1) {
+      c = 0;
+      continue;
+    }
+    let distance = await geolib.getDistanceSimple(
+      { latitude: getUser[i].location.latitude, longitude: getUser[i].location.longitude },
+      { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
+    );
+    distance /= 1000;
+
+    getUser[i].distance = distance;
+    if (getUser[i].distance < distanceMin || getUser[i].distance > distanceMax) {
+      continue;
+    }
+    tmpUsers.push([getUser[i].idUser, distance]);
   }
-  resultData.newStart = newStart;
-  resultData.users = await sortJsonArray(resultData.users, 'connexionLog', 'des');
-  return res.status(200).json({ resultData });
+  if (trie === 'distance') {
+    if (order === 'ASC') {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return -1;
+        if (a[1] > b[1]) return 1;
+        return 0;
+      });
+    } else {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return 1;
+        if (a[1] > b[1]) return -1;
+        return 0;
+      });
+    }
+  }
+  const resultUser = [];
+  for (let j = 0; j < tmpUsers.length; j += 1) {
+    resultUser.push(tmpUsers[j][0]);
+  }
+  return getUserProfile(resultUser, start, count, res);
 };
 
 //
 // ─── GET USER FOR ME ────────────────────────────────────────────────────────────
 //
 export const getUsersForMe = async (req, res) => {
-  if (req.user.userIsComplete === false) {
+  const { user } = req;
+  let { genre, orientation } = user;
+  let { ageMin, ageMax,
+    distanceMin, distanceMax,
+    scoreMin, scoreMax,
+    tags,
+    trie, order } = req.body;
+  let { count, start } = req.params;
+
+  if (user.userIsComplete === false) {
     return res.status(303).json({ error: 'Complete your profile first.' });
   }
-  const { user } = req;
-  const count = Number(req.params.count);
-  const start = Number(req.params.start);
+
   if (isNaN(count)) {
     return res.status(303).json({ error: 'count must be a number' });
-  }
+  } if (count === undefined) { count = 25; }
+  count = Number(count);
+
   if (isNaN(start)) {
     return res.status(303).json({ error: 'start must be a number' });
-  }
-  let { ageMin, ageMax, distanceMin, distanceMax,
-    scoreMin, scoreMax, tags } = req.body;
-  if (ageMin === undefined || ageMin === '') {
+  } if (start === undefined) { start = 0; }
+  start = Number(start);
+
+  if (ageMin !== undefined && isNaN(ageMin)) {
+    return res.status(303).json({ error: 'age min must be a number' });
+  } if (ageMin === undefined) {
     ageMin = 0;
   }
-  if (ageMax === undefined || ageMax === '') {
-    ageMax = null;
+  if (ageMax !== undefined && isNaN(ageMax)) {
+    return res.status(303).json({ error: 'age max must be a number' });
   }
-  if (distanceMin === undefined || distanceMin === '') {
-    distanceMin = 0;
+
+  order = Number(order);
+  if (order === 0) {
+    order = 'ASC';
+  } else {
+    order = 'DESC';
   }
-  if (distanceMax === undefined || distanceMax === '') {
-    distanceMax = null;
+
+  if (trie === undefined) {
+    trie = 'score';
+  } else if (trie !== 'age' && trie !== 'distance' && trie !== 'score' && trie !== 'tag') {
+    return res.status(303).json({ error: 'Sort must be equal to age or dictance or score or tag' });
+  } else if (trie === 'age') {
+    trie = 'dateOfBirth';
   }
-  if (scoreMin === undefined || scoreMin === '') {
+
+  if (genre === 'O') {
+    genre = 'BI';
+  }
+  if (orientation === 'BI') {
+    orientation = 'O';
+  }
+
+  if (scoreMin !== undefined && isNaN(scoreMin)) {
+    return res.status(303).json({ error: 'score min must be a number' });
+  } if (scoreMin === undefined) {
     scoreMin = 0;
   }
-  if (scoreMax === undefined || scoreMax === '') {
-    scoreMax = 1000000;
+  if (scoreMax !== undefined && isNaN(scoreMax)) {
+    return res.status(303).json({ error: 'score max must be a number' });
+  }
+
+  if (distanceMin !== undefined && isNaN(distanceMin)) {
+    return res.status(303).json({ error: 'distance min must be a number' });
+  } if (distanceMin === undefined) {
+    distanceMin = 0;
+  }
+  if (distanceMax !== undefined && isNaN(distanceMax)) {
+    return res.status(303).json({ error: 'distance max must be a number' });
+  }
+
+  if (distanceMax === undefined || scoreMax === undefined || ageMax === undefined
+    || distanceMax === null || scoreMax === null || ageMax === null) {
+    const userval = await getUserAgeDistanceScoreReportFct(req);
+    if (scoreMax === undefined || scoreMax === null) {
+      scoreMax = userval.scoreMax;
+    }
+    if (distanceMax === undefined || distanceMax === null) {
+      distanceMax = userval.distanceMax;
+    }
+    if (ageMax === undefined || ageMax === null) {
+      ageMax = userval.ageMax;
+    }
   }
   if (tags === undefined || tags === '') {
     tags = null;
-    return getUserNoTags(user, count, start, ageMin, ageMax,
-      distanceMin, distanceMax, scoreMin, scoreMax, res);
+  } else {
+    tags = tags.split(',');
+    if (tags[0] !== undefined) {
+      return getUserwithTags(user,
+        genre, orientation,
+        ageMin, ageMax,
+        distanceMin, distanceMax,
+        scoreMin, scoreMax,
+        tags,
+        trie, order,
+        count, start,
+        res);
+    }
   }
-  tags = tags.split(',');
-  return getUserwithTags(user, count, start, ageMin, ageMax,
-    distanceMin, distanceMax, scoreMin, scoreMax, tags, res);
 
+  if (trie === 'tag') {
+    return res.status(303).json({ error: 'you can not sort by tag if you do not put tags' });
+  }
+  return getUserNoTags(user,
+    genre, orientation,
+    ageMin, ageMax,
+    distanceMin, distanceMax,
+    scoreMin, scoreMax,
+    trie, order,
+    count, start,
+    res);
 };

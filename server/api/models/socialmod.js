@@ -25,7 +25,7 @@ export const getUsersVal = (user, callback) => {
   if (orientation === 'BI') {
     orientation = 'O';
   }
-  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND  "users"."idUser" != $3 AND "users"."activate" = true AND "users"."userIsComplete" = true',
+  db.query('SELECT "idUser", "score", "location", "report", EXTRACT(YEAR FROM age("dateOfBirth")) AS "age" FROM "users" where "orientation" = $1 AND "genre" = $2 AND  "idUser" != $3 AND "activate" = true AND "userIsComplete" = true',
     [genre, orientation, idUser],
     (err, res) => {
       if (err.error) {
@@ -38,30 +38,32 @@ export const getUsersVal = (user, callback) => {
 //
 // ─── GET USER FOR ME MATCHE FUNCTION ────────────────────────────────────────────
 //
-export const getUsersForMe = (user, scoreMin, scoreMax, count, start, callback) => {
-  let { genre, orientation } = user;
-  const { idUser } = user;
-  if (genre === 'O') {
-    genre = 'BI';
-  }
-  if (orientation === 'BI') {
-    orientation = 'O';
-  }
-  db.query('SELECT * FROM "users" where "users"."orientation" = $1 AND "users"."genre" = $2 AND "users"."score" >= $3 AND "users"."score" <= $4 AND "users"."idUser" != $5 AND "users"."activate" = true AND "users"."userIsComplete" = true LIMIT $6 OFFSET $7',
-    [genre, orientation, scoreMin, scoreMax, idUser, count, start],
-    (err, res) => {
-      if (err.error) {
-        callback(err, null);
-      }
-      callback(null, res);
-    });
+export const getUsersForMe = (idUser, genre, orientation, scoreMin, scoreMax,
+  ageMin, ageMax, trie, order, callback) => {
+  db.query(`SELECT "idUser", "location"  FROM "users"
+  WHERE "activate" = true AND "userIsComplete" = true
+  AND "activate" = true
+  AND "userIsComplete" = true
+  AND "idUser" != $1
+  AND "orientation" = $2
+  AND "genre" = $3
+  AND "score" >= $4 AND "score" <= $5
+  AND EXTRACT(YEAR FROM age("dateOfBirth")) >= $6 AND EXTRACT(YEAR FROM age("dateOfBirth")) <= $7
+  ORDER BY ${trie} ${order}`,
+  [idUser, genre, orientation, scoreMin, scoreMax, ageMin, ageMax],
+  (err, res) => {
+    if (err.error) {
+      callback(err, null);
+    }
+    callback(null, res);
+  });
 };
 
 //
 // ─── GET TAGS OF USER ───────────────────────────────────────────────────────────
 //
-export const getTagOfUsers = (id, tag, callback) => {
-  db.query('SELECT "tag"."userId" FROM "tag" WHERE "tag" = $1 AND "userId" != $2', [tag, id], (err, res) => {
+export const getTagOfUsers = (id, callback) => {
+  db.query('SELECT "tag" FROM "tag" WHERE "userId" = $1', [id], (err, res) => {
     if (err.error) {
       callback(err, null);
     }

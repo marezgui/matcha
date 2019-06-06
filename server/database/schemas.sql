@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS "users" (
   "username" VARCHAR(255) NULL,
   "firstName" VARCHAR(255) NULL,
   "lastName" VARCHAR(255) NULL,
-  "bio" VARCHAR(255) NULL,
+  "bio" VARCHAR(700) NULL,
   "genre" GENRE DEFAULT 'O',
   "orientation" ORIENTATION DEFAULT 'BI',
   "dateOfBirth" DATE NULL,
