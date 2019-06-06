@@ -62,6 +62,10 @@ export const edituserMail = async (req, res) => {
     res.status(303).json({ error: 'Invalid mail.' });
     return;
   }
+  if (mail.length > 950) {
+    res.status(303).json({ error: 'mail is too long.' });
+    return;
+  }
   const getuserbyMail = util.promisify(mod.getuserbyMail);
   const resultUserMail = await getuserbyMail(mail).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   if (resultUserMail !== undefined) {
@@ -88,6 +92,10 @@ export const edituserUsername = async (req, res) => {
   }
   if (!VERIF_LN_REGEX.test(username)) {
     res.status(303).json({ error: 'Invalid Username, only lettes and numbers' });
+    return;
+  }
+  if (username.length > 950) {
+    res.status(303).json({ error: 'username is too long.' });
     return;
   }
   const getuserbyUsernameFct = util.promisify(getuserbyUsername);
@@ -142,6 +150,10 @@ export const edituserFirstName = async (req, res) => {
     res.status(303).json({ error: 'Invalid Firstname, only lettes' });
     return;
   }
+  if (firstName.length > 950) {
+    res.status(303).json({ error: 'firstName is too long.' });
+    return;
+  }
   mod.edituserFirstName(req, (err, success) => {
     if (err) {
       res.status(303).json({ error: err.error });
@@ -164,6 +176,10 @@ export const edituserLastName = async (req, res) => {
     res.status(303).json({ error: 'Invalid Lastnme, only lettes' });
     return;
   }
+  if (lastName.length > 950) {
+    res.status(303).json({ error: 'lastname is too long.' });
+    return;
+  }
   mod.edituserLastName(req, (err, success) => {
     if (err) {
       res.status(303).json({ error: err.error });
@@ -184,6 +200,10 @@ export const edituserBio = async (req, res) => {
   }
   if (!VERIF_BIO.test(bio)) {
     res.status(303).json({ error: 'Invalid Bio, only lettes and numbers' });
+    return;
+  }
+  if (bio.length > 950) {
+    res.status(303).json({ error: 'bio is too long.' });
     return;
   }
   mod.edituserBio(req, (err, success) => {
@@ -317,6 +337,10 @@ export const addtag = async (req, res) => {
   }
   if (!VERIF_LN_REGEX.test(tag)) {
     res.status(303).json({ error: 'Invalid tag, only lettes and numbers' });
+    return;
+  }
+  if (tag.length > 950) {
+    res.status(303).json({ error: 'tag is too long.' });
     return;
   }
   const gettaglist = util.promisify(getusertag);

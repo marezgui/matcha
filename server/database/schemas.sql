@@ -7,7 +7,7 @@ CREATE SCHEMA IF NOT EXISTS matcha ;
 
 --
 -- ─── ENUM ───────────────────────────────────────────────────────────────────────
---
+-- ALTER TABLE foog ALTER COLUMN a TYPE varchar(1000);
 CREATE TYPE GENRE AS ENUM ('M', 'W', 'O');
 CREATE TYPE TYPENOTIF AS ENUM ('VUE', 'LIKE', 'UNLIKE', 'MATCHE', 'NEWMESSAGE', 'OTHER');
 CREATE TYPE ORIENTATION AS ENUM ('M', 'W', 'BI');

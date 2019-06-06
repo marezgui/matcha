@@ -106,6 +106,20 @@ export const adduser = async (req, res) => {
   if (!PASSWORD_REGEX.test(password)) {
     return res.status(303).json({ error: 'Invalid password. (must length > 5 and include 1 number & uppercase at least)' });
   }
+
+  if (mail.length > 950) {
+    return res.status(303).json({ error: 'mail is too long.' });
+  }
+  if (username.length > 950) {
+    return res.status(303).json({ error: 'username is too long.' });
+  }
+  if (firstName.length > 950) {
+    return res.status(303).json({ error: 'firstName is too long.' });
+  }
+  if (lastName.length > 950) {
+    return res.status(303).json({ error: 'lastName is too long.' });
+  }
+
   const getuserbyUsername = util.promisify(mod.getuserbyUsername);
   const resultUsername = await getuserbyUsername(username).then(data => data).catch(err => err);// console.error(`[Error]: ${err}`); });
   if (resultUsername !== undefined) {
