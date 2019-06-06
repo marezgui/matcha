@@ -1,290 +1,228 @@
-import { Col, Row, Container, } from 'reactstrap';
-import { Form, } from 'semantic-ui-react';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import Input from '../../components/UI/Input/Input';
+import { checkInputValidity } from '../../shared/utility';
 import './Profile.css';
 
 class Profile extends Component {
   state = {
-    user: [],
+    values: {},
+    errors: {},
   }
 
   componentDidMount() {
     this._isMounted = true;
     const { user } = this.props;
-    this.setState({ user });
+    this.setState({ values: { ...user, password: '' } });
   }
 
   componentWillUnmount() {
     this._isMounted = false;
   }
 
-  handelChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    const { user } = this.state;
-    const newValues = { ...user };
-    if (type === 'checkbox') {
-      newValues[name] = checked;
-    } else {
-      newValues[name] = value;
+  addError = (field, msg) => {
+    const { errors } = this.state;
+    this.setState({ errors: { ...errors, [field]: msg } });
+  };
+
+  clearError = (field) => {
+    const { errors } = this.state;
+    this.setState({ errors: { ...errors, [field]: null } });
+  };
+
+  handleInput = (e, min, max) => {
+    const { name, value } = e.target;
+    const { token } = this.props;
+    const { values } = this.state;
+
+    this.clearError(name);
+    const error = checkInputValidity(name, value, min, max);
+    if (error) {
+      this.addError(name, error);
     }
-    this.setState({ user: newValues });
+    this.setState({ values: { ...values, [name]: value } }, () => {
+      console.log(error);
+      if (!error) {
+        console.log(values);
+        axios
+          .put(`http://localhost:8080/api/edit/${name}`, { [name]: value }, { headers: { Authorization: `bearer ${token}` } })
+          .then((res) => { console.log(res); })
+          .catch((err) => { console.log(err.response); });
+      }
+    });
   }
 
   render() {
-    const { user } = this.state;
-    const { firstName, lastName, username, mail, bio, dateOfBirth, genre,
-      orientation, notifications } = user;
-    const PersonelInfo = (
-      <Form className="bloc" onSubmit={this.editPerso}>
-        <h4 className="ui dividing header">Personal Information</h4>
-        <Form.Input
-          fluid
-          id="fistName"
-          label="First name"
-          placeholder="First name"
-          iconPosition="left"
-          icon="user"
+    const { values: { firstName,
+      lastName, username, mail, password, genre, orientation, bio }, errors } = this.state;
+
+    const perso = (
+      <form className="box">
+        <Input
+          error={errors.firstName}
+          inputtype="input"
+          label="First Name"
+          type="text"
           name="firstName"
-          value={firstName}
-          onChange={e => this.handelChange(e)}
+          placeholder="First Name"
+          value={firstName || ''}
+          onChange={e => this.handleInput(e, 2, 15)}
         />
-        <Form.Input
-          fluid
-          id="lastName"
-          label="Last name"
-          placeholder="Last name"
-          iconPosition="left"
-          icon="user"
-          value={lastName}
+        <Input
+          error={errors.lastName}
+          inputtype="input"
+          label="Last Name"
+          type="text"
           name="lastName"
-          onChange={e => this.handelChange(e)}
-
+          placeholder="First Name"
+          value={lastName || ''}
+          onChange={e => this.handleInput(e, 2, 15)}
         />
-        <Form.Input
-          fluid
-          id="dateOfBirth"
-          label="Date of Birth"
-          type="date"
-          iconPosition="left"
-          icon="calendar alternate"
-          value={dateOfBirth}
-          name="dateOfBirth"
-          onChange={e => this.handelChange(e)}
+      </form>
+    );
 
-        />
-        <h4 className="ui dividing header">Account Information</h4>
-        <Form.Input
-          fluid
-          id="mail"
-          label="Email"
-          placeholder="Email"
-          type="email"
-          iconPosition="left"
-          icon="at"
-          value={mail}
-          name="mail"
-          onChange={e => this.handelChange(e)}
-
-        />
-        <Form.Input
-          fluid
-          id="username"
+    const account = (
+      <form className="box">
+        <Input
+          error={errors.username}
+          inputtype="input"
           label="Username"
-          placeholder="Username"
-          iconPosition="left"
-          icon="user"
-          value={username}
+          type="text"
           name="username"
-          onChange={e => this.handelChange(e)}
+          placeholder="Username"
+          value={username || ''}
+          onChange={e => this.handleInput(e, 3, 15)}
         />
-        <Form.Input
-          fluid
-          id="password"
-          label="Password"
-          placeholder="Password"
+        <Input
+          error={errors.mail}
+          inputtype="input"
+          label="Mail"
+          type="mail"
+          name="mail"
+          placeholder="Mail"
+          value={mail || ''}
+          onChange={e => this.handleInput(e, null, 40)}
+        />
+        <Input
+          error={errors.password}
+          inputtype="input"
+          label="New Password"
           type="password"
-          iconPosition="left"
-          icon="key"
           name="password"
-          onChange={e => this.handelChange(e)}
-
+          placeholder="Password"
+          value={password || ''}
+          onChange={e => this.handleInput(e, null, 40)}
         />
-        <Form.Input
-          fluid
-          id="confirmPassword"
-          label="Confirm Password"
-          placeholder="Confirm Password"
-          type="password"
-          iconPosition="left"
-          icon="key"
-          name="confirmPassword"
-          onChange={e => this.handelChange(e)}
-
-        />
-      </Form>
+      </form>
     );
 
-    const ProfilInfo = (
-      <Form className="bloc" onSubmit={this.editProfil}>
-        <h4 className="ui dividing header">Profile Information</h4>
-        <Form.TextArea
-          className="textplain"
-          id="bio"
+    const profile = (
+      <form className="box">
+        <div className="ProfileMatch">
+          <div>
+            <FormLabel component="legend"><strong style={{ color: 'black' }}>Gender</strong></FormLabel>
+            <RadioGroup
+              aria-label="Gender"
+              name="genre"
+              value={genre || ''}
+              onChange={e => this.handleInput(e)}
+            >
+              <FormControlLabel value="W" control={<Radio checked={genre === 'W'} color="primary" />} label="Female" />
+              <FormControlLabel value="M" control={<Radio checked={genre === 'M'} color="primary" />} label="Male" />
+              <FormControlLabel value="O" control={<Radio checked={genre === 'O'} color="primary" />} label="Other" />
+            </RadioGroup>
+          </div>
+          <div>
+            <FormLabel component="legend"><strong style={{ color: 'black' }}>Orientation</strong></FormLabel>
+            <RadioGroup
+              aria-label="Orientation"
+              name="orientation"
+              value={orientation || ''}
+              onChange={e => this.handleInput(e)}
+            >
+              <FormControlLabel value="W" control={<Radio checked={orientation === 'W'} />} label="Female" />
+              <FormControlLabel value="M" control={<Radio checked={orientation === 'M'} />} label="Male" />
+              <FormControlLabel value="BI" control={<Radio checked={orientation === 'BI'} />} label="Other" />
+            </RadioGroup>
+          </div>
+        </div>
+      </form>
+    );
+
+    const biography = (
+      <form className="box">
+        <Input
+          error={errors.bio}
+          inputtype="textarea"
           label="Describe your self"
-          placeholder="Write a cool description of your self"
-          maxLength="500"
-          rows="5"
-          style={{ resize: 'none' }}
-          value={bio}
+          type="text"
           name="bio"
-          onChange={e => this.handelChange(e)}
+          placeholder="Biography"
+          rows="5"
+          value={bio || ''}
+          onChange={e => this.handleInput(e, null, 500)}
         />
-        <div className="radio-group">
-          <h4 className="ui dividing header">Genre</h4>
-          <div className="form-check">
-            <label htmlFor="man">
-              <input
-                id="man"
-                type="radio"
-                name="genre"
-                value="M"
-                className="form-check-input"
-                checked={genre === 'M'}
-                onChange={e => this.handelChange(e)}
-              />
-              Man
-            </label>
-          </div>
-          <div className="form-check">
-            <label htmlFor="women">
-              <input
-                id="women"
-                type="radio"
-                name="genre"
-                value="W"
-                className="form-check-input"
-                checked={genre === 'W'}
-                onChange={e => this.handelChange(e)}
-              />
-              Women
-            </label>
-          </div>
-          <div className="form-check">
-            <label htmlFor="other">
-              <input
-                id="other"
-                type="radio"
-                name="genre"
-                value="O"
-                className="form-check-input"
-                checked={genre === 'O'}
-                onChange={e => this.handelChange(e)}
-              />
-              Other
-            </label>
-          </div>
-        </div>
-
-        <div className="radio-group">
-          <h4 className="ui dividing header">Orientation</h4>
-          <div className="form-check">
-            <label htmlFor="orim">
-              <input
-                id="orim"
-                type="radio"
-                name="orientation"
-                value="M"
-                className="form-check-input"
-                checked={orientation === 'M'}
-                onChange={e => this.handelChange(e)}
-              />
-              Man
-            </label>
-          </div>
-          <div className="form-check">
-            <label htmlFor="oriw">
-              <input
-                id="oriw"
-                type="radio"
-                name="orientation"
-                value="W"
-                className="form-check-input"
-                checked={orientation === 'W'}
-                onChange={e => this.handelChange(e)}
-              />
-              Women
-            </label>
-          </div>
-          <div className="form-check">
-            <label htmlFor="bi">
-              <input
-                id="bi"
-                type="radio"
-                name="orientation"
-                value="BI"
-                className="form-check-input"
-                checked={orientation === 'BI'}
-                onChange={e => this.handelChange(e)}
-              />
-              Bisexuel
-            </label>
-          </div>
-        </div>
-        <hr />
-        <Form.Checkbox
-          toggle
-          id="notif"
-          name="notifications"
-          label="Receive notifications by email"
-          checked={notifications}
-          onChange={e => this.handelChange(e)}
-        />
-        <hr />
-        <Form.Input
-          fluid
-          id="localisation"
-          label="Localisation"
-          placeholder="Localisation"
-          iconPosition="left"
-          icon="location arrow"
-          name="localisation"
-          onChange={e => this.handelChange(e)}
-        />
-      </Form>
+      </form>
     );
 
-    const PhotoProfile = (
-      <div className="bloc">
-        <img
-          alt="photoDeProfile"
-          src="data:image/jpeg;base64, "
-          className="photo profile"
+    const other = (
+      <form className="box">
+        <Input
+          error={errors.lastName}
+          inputtype="input"
+          label="Localisation"
+          type="text"
+          name="location"
+          placeholder="Localisation"
+          value={lastName || ''}
+          onChange={e => this.handleInput(e, 2, 15)}
         />
-        <img
-          alt="galerie"
-          src="#"
-          className="photo"
-        />
-      </div>
+      </form>
     );
 
     return (
-      <Container>
-        <Row>
-          <Col>{PhotoProfile}</Col>
-        </Row>
-        <Row>
-          <Col md="6" sm="12">{PersonelInfo}</Col>
-          <Col md="6" sm="12">{ProfilInfo}</Col>
-        </Row>
-      </Container>
+      <section className="Profile">
+        <section className="Profile1">
+          <div className="box-container">
+            <div className="inner-container">
+              <div className="header"> Perso </div>
+              {perso}
+            </div>
+          </div>
+          <div className="box-container">
+            <div className="inner-container">
+              <div className="header"> Account </div>
+              {account}
+            </div>
+          </div>
+        </section>
+        <section className="Profile2">
+          <div className="box-container">
+            <div className="inner-container">
+              <div className="header"> Profile </div>
+              {profile}
+              {biography}
+            </div>
+          </div>
+          <div className="box-container">
+            <div className="inner-container">
+              {other}
+            </div>
+          </div>
+        </section>
+      </section>
     );
   }
 }
 
 const mapStateToProps = state => ({
   user: state.auth.user,
+  token: state.auth.token,
 });
 
 export default connect(mapStateToProps)(Profile);

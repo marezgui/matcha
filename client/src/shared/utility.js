@@ -10,12 +10,14 @@ export const updateObject = (oldObject, newProperties) => ({
 const checkRegexMatch = (name, value) => {
   let regex = /^[A-Z]*(?:-[A-Z]+)*$/i; // FirstName, LastName
 
-  if (name === 'login') {
+  if (name === 'username') {
     regex = /^[A-Z][A-Z0-9]*(?:[-_][A-Z0-9]+)*$/i;
   } else if (name === 'mail') {
     regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
   } else if (name === 'password') {
     regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
+  } else if (name === 'bio') {
+    regex = /^[a-zA-Z0-9_.,'"-\s]*$/;
   }
   return regex.test(value);
 };

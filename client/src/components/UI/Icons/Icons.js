@@ -33,11 +33,12 @@ export const Alert = ({ badge }) => (
 );
 
 export const Account = ({ data }) => (
-  data.length === 1
+  data ? data.length === 1
     ? (
       <Avatar style={{ backgroundColor: 'grey' }}>
         {data}
       </Avatar>
     )
     : <Avatar alt="Remy Sharp" src={`data:image/png;base64,${data}`} />
+    : null
 );

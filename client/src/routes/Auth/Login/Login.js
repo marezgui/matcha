@@ -12,7 +12,7 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 
 class Login extends Component {
   state = {
-    login: '',
+    username: '',
     password: '',
     errors: {},
     formIsValid: false,
@@ -85,8 +85,8 @@ class Login extends Component {
       this.addError(name, error);
     }
 
-    this.setState(({ login, password, errors }) => {
-      if (login && password && Object.getOwnPropertyNames(errors).length === 0) {
+    this.setState(({ username, password, errors }) => {
+      if (username && password && Object.getOwnPropertyNames(errors).length === 0) {
         return { [name]: value, formIsValid: true };
       }
       return { [name]: value };
@@ -95,9 +95,9 @@ class Login extends Component {
 
   submitLogin = (event) => {
     event.preventDefault();
-    const { login, password } = this.state;
+    const { username, password } = this.state;
     const { onAuth } = this.props;
-    onAuth(login, password);
+    onAuth(username, password);
   };
 
   restored = () => {
@@ -115,9 +115,9 @@ class Login extends Component {
 
   submitRestore = (event) => {
     event.preventDefault();
-    const { login } = this.state;
+    const { username } = this.state;
     axios
-      .post('http://localhost:8080/api/users/forgotpassword/', { username: login })
+      .post('http://localhost:8080/api/users/forgotpassword/', { username })
       .then(() => {
         if (this._isMounted) {
           this.setState({ errorRestore: '', checkMail: true });
@@ -137,25 +137,25 @@ class Login extends Component {
   }
 
   autoLog = () => { // To remove
-    const [login, password] = ['saddog622', 'Password1234'];
+    const [username, password] = ['saddog622', 'Password1234'];
     const { onAuth } = this.props;
-    onAuth(login, password);
+    onAuth(username, password);
   };
 
   autoLog2 = () => { // To remove
-    const [login, password] = ['yellowzebra609', 'Password1234'];
+    const [username, password] = ['yellowzebra609', 'Password1234'];
     const { onAuth } = this.props;
-    onAuth(login, password);
+    onAuth(username, password);
   };
 
   autoLog3 = () => { // To remove
-    const [login, password] = ['test', 'Password1234'];
+    const [username, password] = ['test', 'Password1234'];
     const { onAuth } = this.props;
-    onAuth(login, password);
+    onAuth(username, password);
   };
 
   render() {
-    const { errors, login, password, formIsValid,
+    const { errors, username, password, formIsValid,
       restore, checkMail, errorRestore, restoreKey,
       snackbar, snackbar: { vertical, horizontal, open, message } } = this.state;
     const { error, loading, isAuthenticated } = this.props;
@@ -175,13 +175,13 @@ class Login extends Component {
             <div className="header"> Restore </div>
             <form onSubmit={this.submitRestore} className="box">
               <Input
-                error={errors.login}
+                error={errors.username}
                 inputtype="input"
                 label="Username"
                 type="text"
-                name="login"
+                name="username"
                 placeholder="Username"
-                value={login}
+                value={username}
                 onChange={e => this.checkValidity(e, null, 40)}
               />
 
@@ -202,13 +202,13 @@ class Login extends Component {
           <div className="header"> Login </div>
           <form onSubmit={this.submitLogin} className="box">
             <Input
-              error={errors.login}
+              error={errors.username}
               inputtype="input"
               label="Username"
               type="text"
-              name="login"
+              name="username"
               placeholder="Username"
-              value={login}
+              value={username}
               onChange={e => this.checkValidity(e, null, 40)}
             />
             <Input

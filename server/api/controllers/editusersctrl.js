@@ -10,7 +10,7 @@ const MAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 const VERIF_LN_REGEX = /^[a-zA-Z0-9_.-]*$/;
 const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
-const VERIF_BIO = /^[a-zA-Z0-9_.-\s]*$/;
+const VERIF_BIO = /^[a-zA-Z0-9_.,'"-\s]*$/;
 const VERIF_BD = /^((?:0[1-9])|(?:1[0-2]))\/((?:0[0-9])|(?:[1-2][0-9])|(?:3[0-1]))\/(\d{4})$/; // ex : 04/25/1987 month/day/year
 
 //

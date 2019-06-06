@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { TextArea } from 'semantic-ui-react';
 import './Input.scss';
 
 class Input extends Component {
@@ -15,7 +16,7 @@ class Input extends Component {
         inputElement = <input className="InputElement" {...this.props} />;
         break;
       case 'textarea':
-        inputElement = <textarea className="InputElement" {...this.props} />;
+        inputElement = <TextArea className="TextAreaElement" {...this.props} />;
         break;
       default:
         inputElement = <input className="InputElement" {...this.props} />;

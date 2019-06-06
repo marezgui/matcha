@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -15,8 +16,13 @@ class People extends Component {
     hasMore: true,
   };
 
-  componentDidMount() {
+  componentDidMount = async () => {
     this._isMounted = true;
+    const { user: { userIsComplete } } = this.props;
+
+    if (!userIsComplete) {
+      return;
+    }
     const { count, start } = this.state;
     const { token } = this.props;
 
@@ -56,10 +62,12 @@ class People extends Component {
   };
 
   render() {
+    const { user: { userIsComplete } } = this.props;
     const { users, hasMore } = this.state;
-
+    const redirect = <Redirect to="/profile" />;
     return (
       <section className="People">
+        {!userIsComplete && redirect}
         <aside className="PeopleFilterBox">
           <Filter />
         </aside>

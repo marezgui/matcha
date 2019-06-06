@@ -26,6 +26,17 @@ $blue_theme: #40a4c8;
     background: rgba(15, 15, 15, 0.01);
 }
 
+.TextAreaElement {
+    border-radius: 3px;
+    border: 1px solid $blue_theme;
+    transition: border 0.4s ease-out;
+    padding: 13px;
+    font-family: Oxygen, sans-serif;
+    font-size: 15px;
+    color: #3e3e42;
+    background: rgba(15, 15, 15, 0.01);
+}
+
 .InputElement:hover {
     border: 2px solid $blue_theme;
 }

@@ -1,24 +1,25 @@
-.bloc {
-    width: 100%;
-    padding: 20px;
-    margin: auto;
-    margin-top: 20px;
-    box-shadow: 0px 7px 5px 7px lightgrey;
-    border-radius: 7px;
+.Profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.photo {
-    width: 100%;
+.Profile > section > .box-container {
+    margin: 10px;
 }
 
-.profile {
-    border:2px solid red;
+.Profile1, .Profile2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
 }
 
-.radio-group h4 {
-    text-align: left;
-}
 
-.left-title {
-    text-align: left;
+
+
+.ProfileMatch {
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: space-around;
 }
