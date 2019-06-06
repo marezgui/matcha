@@ -240,6 +240,28 @@ export const edituserOrientation = async (req, res) => {
 };
 
 //
+// ─── EDIT USER NOTIF ────────────────────────────────────────────────────────────
+//
+export const edituserNotif = async (req, res) => {
+  const { notif } = req.body;
+  if (!notif) {
+    res.status(303).json({ error: 'Missing parameters.' });
+    return;
+  }
+  if (notif !== true && notif !== false) {
+    res.status(303).json({ error: 'Invalid notif' });
+    return;
+  }
+  mod.edituserNotif(notif, req, (err, success) => {
+    if (err) {
+      res.status(303).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ message: `User Edit dateOfBirth ${success}` });
+  });
+};
+
+//
 // ─── EDIT USER DATE OF BIRTH ────────────────────────────────────────────────────
 //
 export const edituserDateOfBirth = async (req, res) => {

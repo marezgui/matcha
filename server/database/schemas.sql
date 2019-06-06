@@ -47,12 +47,12 @@ SET timezone='europe/paris';
 
 CREATE TABLE IF NOT EXISTS "users" (
   "idUser" SERIAL PRIMARY KEY,
-  "mail" VARCHAR(255) NULL,
-  "password" VARCHAR(255) NULL,
-  "username" VARCHAR(255) NULL,
-  "firstName" VARCHAR(255) NULL,
-  "lastName" VARCHAR(255) NULL,
-  "bio" VARCHAR(700) NULL,
+  "mail" VARCHAR(1000) NULL,
+  "password" VARCHAR(1000) NULL,
+  "username" VARCHAR(1000) NULL,
+  "firstName" VARCHAR(1000) NULL,
+  "lastName" VARCHAR(1000) NULL,
+  "bio" VARCHAR(1000) NULL,
   "genre" GENRE DEFAULT 'O',
   "orientation" ORIENTATION DEFAULT 'BI',
   "dateOfBirth" DATE NULL,
@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS "users" (
   "activate" boolean DEFAULT '0',
   "userIsComplete" boolean DEFAULT '0',
   "notifications" boolean DEFAULT '1',
-  "confirmKey" VARCHAR(255) NULL,
-  "restoreKey" VARCHAR(255) NULL,
+  "confirmKey" VARCHAR(1000) NULL,
+  "restoreKey" VARCHAR(1000) NULL,
   "score" INT DEFAULT '0',
   "report" INT DEFAULT '0',
   "isOnline" boolean DEFAULT '0',
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS "message" (
   "matcheId" INT NOT NULL,
   "sendUserId" INT NOT NULL,
   "date" TIMESTAMP DEFAULT NOW(),
-  "message" VARCHAR(255) NULL,
+  "message" VARCHAR(1000) NULL,
   FOREIGN KEY ("matcheId") REFERENCES "matche" ("idMatche") ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY ("sendUserId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
@@ -100,14 +100,14 @@ CREATE TABLE IF NOT EXISTS "notification" (
   "userIdSender" INT DEFAULT NULL,
   "vue" boolean DEFAULT '0',
   "type" TYPENOTIF DEFAULT 'OTHER',
-  "message" VARCHAR(255) NULL,
+  "message" VARCHAR(1000) NULL,
   FOREIGN KEY ("userId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY ("userIdSender") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
 CREATE TABLE IF NOT EXISTS "tag" (
   "idTag" SERIAL PRIMARY KEY,
   "userId" INT NOT NULL,
-  "tag" VARCHAR(255) NULL,
+  "tag" VARCHAR(1000) NULL,
   FOREIGN KEY ("userId") REFERENCES "users" ("idUser") ON DELETE CASCADE ON UPDATE CASCADE);
 
 CREATE TABLE IF NOT EXISTS "blocked" (

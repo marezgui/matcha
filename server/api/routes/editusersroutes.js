@@ -31,6 +31,8 @@ editUsersRoute.route('/photo')
   .put(checklog, usersCtrl.edituserPhoto);
 editUsersRoute.route('/location')
   .put(checklog, usersCtrl.edituserLocation);
+editUsersRoute.route('/notif')
+  .put(checklog, usersCtrl.edituserNotif);
 editUsersRoute.route('/tag')
   .post(checklog, usersCtrl.addtag)
   .delete(checklog, usersCtrl.removetag);

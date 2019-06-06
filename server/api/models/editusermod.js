@@ -145,6 +145,21 @@ export const edituserOrientation = (request, callback) => {
 };
 
 //
+// ─── EDIT USER NOTIF ────────────────────────────────────────────────────────────
+//
+export const edituserNotif = (enable, request, callback) => {
+  const { idUser } = request.user;
+  db.query('UPDATE "users" SET "notifications" = $1 WHERE "idUser" = $2',
+    [enable, idUser],
+    (err, res) => {
+      if (err.error) {
+        callback(err, null);
+      }
+      callback(null, 'ok');
+    });
+};
+
+//
 // ─── EDIT USER DATE OF BIRTH ────────────────────────────────────────────────────
 //
 export const edituserDateOfBirth = (request, callback) => {
