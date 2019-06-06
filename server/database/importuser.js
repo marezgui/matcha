@@ -83,14 +83,18 @@ const importuser = async (numberuser) => {
     } else {
       userIsComplete = Boolean(Math.round(Math.random()));
     }
+    const type = ['M', 'W', 'O'];
+    const genre = type[Math.floor(Math.random() * 3) + 1];
+    const orientation = type[Math.floor(Math.random() * 3) + 1];
+
 
     if (!MAIL_REGEX.test(mail)) {
       continue;
     }
 
-    db.query('INSERT INTO "users" ("password", "firstName", "lastName", "mail", "username", "bio", "activate", "photo", "dateOfBirth", "location", "score", "report", "userIsComplete") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 ,$13)',
+    db.query('INSERT INTO "users" ("password", "firstName", "lastName", "mail", "username", "bio", "activate", "photo", "dateOfBirth", "location", "score", "report", "userIsComplete", "genre", "orientation") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)',
       [password, firstName, lastName, mail, username, bio,
-        activate, photo, dateOfBirth, location, score, report, userIsComplete], (err) => {
+        activate, photo, dateOfBirth, location, score, report, userIsComplete, genre, orientation], (err) => {
         if (err.error) {
         //  console.log(err.error);
 
