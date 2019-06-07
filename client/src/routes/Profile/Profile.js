@@ -7,6 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Input from '../../components/UI/Input/Input';
 import { checkInputValidity } from '../../shared/utility';
+import Map from './Map/Map';
 import './Profile.css';
 
 class Profile extends Component {
@@ -46,20 +47,41 @@ class Profile extends Component {
       this.addError(name, error);
     }
     this.setState({ values: { ...values, [name]: value } }, () => {
-      console.log(error);
+      // console.log(error);
       if (!error) {
-        console.log(values);
+        // console.log(values);
         axios
           .put(`http://localhost:8080/api/edit/${name}`, { [name]: value }, { headers: { Authorization: `bearer ${token}` } })
-          .then((res) => { console.log(res); })
-          .catch((err) => { console.log(err.response); });
+          .then(() => {
+            // console.log(res);
+          })
+          .catch(() => {
+            // console.log(err.response);
+          });
       }
     });
   }
 
+  changeUserLocation = ({ lat, lng }) => {
+    const { token } = this.props;
+
+    if (lat >= -85 && lat <= 85 && lng >= -180 && lng <= 180) {
+      console.log('location Changed', lat, lng);
+      axios
+        .put('http://localhost:8080/api/edit/location', { latitude: lat, longitude: lng }, { headers: { Authorization: `bearer ${token}` } })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log('error: ', err.response.data.error);
+        });
+    }
+  }
+
   render() {
     const { values: { firstName,
-      lastName, username, mail, password, genre, orientation, bio }, errors } = this.state;
+      lastName, username, mail, password, genre, orientation, bio,
+      location }, errors } = this.state;
 
     const perso = (
       <form className="box">
@@ -121,7 +143,12 @@ class Profile extends Component {
       </form>
     );
 
-    const profile = (
+    const photo = (
+      <>
+      </>
+    );
+
+    const match = (
       <form className="box">
         <div className="ProfileMatch">
           <div>
@@ -170,17 +197,16 @@ class Profile extends Component {
       </form>
     );
 
-    const other = (
+    const tags = (
+      <>
+      </>
+    );
+
+    const localisation = (
       <form className="box">
-        <Input
-          error={errors.lastName}
-          inputtype="input"
-          label="Localisation"
-          type="text"
-          name="location"
-          placeholder="Localisation"
-          value={lastName || ''}
-          onChange={e => this.handleInput(e, 2, 15)}
+        <Map
+          changeUserLocation={this.changeUserLocation}
+          location={location}
         />
       </form>
     );
@@ -205,13 +231,16 @@ class Profile extends Component {
           <div className="box-container">
             <div className="inner-container">
               <div className="header"> Profile </div>
-              {profile}
+              {photo}
+              {match}
               {biography}
+              {tags}
             </div>
           </div>
           <div className="box-container">
             <div className="inner-container">
-              {other}
+              <div className="header"> Your location </div>
+              {localisation}
             </div>
           </div>
         </section>

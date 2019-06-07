@@ -1,4 +1,5 @@
 import moment from 'moment';
+import Geocode from 'react-geocode';
 
 // eslint-disable-next-line import/prefer-default-export
 
@@ -67,3 +68,63 @@ export const getLastLog = (lastLog) => {
 
   return moment(date).from(Date.now());
 };
+
+// const getAddressInfo = async (lat, lng) => {
+//   let item = null;
+
+//   Geocode.setApiKey('AIzaSyDZVkh6w_8zsKgHrE5_2LesCRtx72QMI4M');
+//   Geocode.enableDebug();
+//   await Geocode.fromLatLng(lat, lng)
+//     .then(
+//       (response) => {
+//         item = response.results;
+//       },
+//       (error) => {
+//         console.error(error);
+//       }
+//     );
+//   return item;
+// };
+
+// export const getCity = async (lat, lng) => {
+//   const item = await getAddressInfo(lat, lng);
+//   console.log(item);
+//   const arrAddress = item;
+//   let itemRoute = '';
+//   let itemLocality = '';
+//   let itemCountry = '';
+//   let itemPc = '';
+//   let itemSnumber = '';
+
+//   item.forEach((address_components, id) => {
+//     item[id].address_components.forEach((i, address_component) => {
+//       console.log(`address_component:${i}`);
+
+//       if (address_component.types[0] == 'route') {
+//         console.log(`${i}: route:${address_component.long_name}`);
+//         itemRoute = address_component.long_name;
+//       }
+
+//       if (address_component.types[0] == 'locality') {
+//         console.log(`town:${address_component.long_name}`);
+//         itemLocality = address_component.long_name;
+//       }
+
+//       if (address_component.types[0] == 'country') {
+//         console.log(`country:${address_component.long_name}`);
+//         itemCountry = address_component.long_name;
+//       }
+
+//       if (address_component.types[0] == 'postal_code_prefix') {
+//         console.log(`pc:${address_component.long_name}`);
+//         itemPc = address_component.long_name;
+//       }
+
+//       if (address_component.types[0] == 'street_number') {
+//         console.log(`street_number:${address_component.long_name}`);
+//         itemSnumber = address_component.long_name;
+//       }
+//       // return false; // break the loop
+//     });
+//   });
+// };
