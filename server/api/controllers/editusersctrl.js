@@ -411,7 +411,7 @@ export const edituserLocation = async (req, res) => {
     return res.status(303).json({ error: 'Missing arguments Location' });
   }
   location = JSON.parse(location);
-  if (typeof location.street === 'undefined') {
+  /* if (typeof location.street === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments street' });
   }
   if (typeof location.city === 'undefined') {
@@ -422,7 +422,7 @@ export const edituserLocation = async (req, res) => {
   }
   if (typeof location.postcode === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments postcode' });
-  }
+  } */
   if (typeof location.latitude === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments latitude' });
   }
