@@ -406,23 +406,22 @@ export const edituserPhoto = async (req, res) => {
 // ─── EDIT USER LOCATION ─────────────────────────────────────────────────────────
 //
 export const edituserLocation = async (req, res) => {
-  let { location } = req.body;
+  const { location } = req.body;
   if (typeof location === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments Location' });
   }
-  location = JSON.parse(location);
-  /* if (typeof location.street === 'undefined') {
-    return res.status(303).json({ error: 'Missing arguments street' });
+  if (typeof location.street === 'undefined') {
+    location.street = '';
   }
   if (typeof location.city === 'undefined') {
-    return res.status(303).json({ error: 'Missing arguments city' });
+    location.city = '';
   }
   if (typeof location.state === 'undefined') {
-    return res.status(303).json({ error: 'Missing arguments state' });
+    location.state = '';
   }
   if (typeof location.postcode === 'undefined') {
-    return res.status(303).json({ error: 'Missing arguments postcode' });
-  } */
+    location.postcode = '';
+  }
   if (typeof location.latitude === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments latitude' });
   }
