@@ -297,7 +297,17 @@ export const getusertag = async (req, res) => {
 //
 // ─── GET INFORMATIONS OF THE CURRENT USER ───────────────────────────────────────
 //
-export const getme = (req, res) => res.status(200).send(req.user);
+export const getme = async (req, res) => {
+  const { user } = req;
+  const findtag = util.promisify(mod.getusertag);
+  const result = [];
+  const resulttag = await findtag(user.idUser).then(data => data).catch(err => err);// { console.log(`[Error]: ${err}`); });
+  for (let i = 0; i < resulttag.length; i += 1) {
+    result.push(resulttag[i].tag);
+  }
+  user.tags = result;
+  res.status(200).send(user);
+};
 
 //
 // ─── DELETE A USER ──────────────────────────────────────────────────────────────
