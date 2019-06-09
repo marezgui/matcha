@@ -1,0 +1,45 @@
+.Filter {
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.FilterBox1, .FilterBox2 {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.FilterAjust {
+  margin: 5px;
+}
+
+.SliderFooter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+}
+
+.ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open) {
+  border-color: #de235b;
+}
+
+.ant-slider-track {
+  background-color: #de235b;
+}
+
+.ant-slider-handle {
+  border: solid 2px #de235b;
+} 
+
+.ant-slider-handle:focus {
+  border: solid 2px #de235b;
+}
+
+@media (max-width: 645px) {
+  .Filter {
+    flex-direction: column;
+  }
+}

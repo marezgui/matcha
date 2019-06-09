@@ -107,7 +107,7 @@ class Profile extends Component {
   };
 
   changeUserLocation = ({ lat, lng }) => {
-    const { token } = this.props;
+    const { token, onEdit } = this.props;
     const location = { location: { latitude: lat, longitude: lng } };
 
     if (lat >= -85 && lat <= 85 && lng >= -180 && lng <= 180) {
@@ -115,6 +115,7 @@ class Profile extends Component {
         .put('http://localhost:8080/api/edit/location', location, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
           console.log(res);
+          onEdit('location', { latitude: lat, longitude: lng });
         })
         .catch((err) => {
           console.log('error: ', err.response);
@@ -161,7 +162,7 @@ class Profile extends Component {
 
 
     setTimeout(() => {
-      console.log(this.props.user);
+      // console.log(this.props.user);
 
     }, 3000);
 
