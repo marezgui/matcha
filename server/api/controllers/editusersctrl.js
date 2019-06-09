@@ -11,7 +11,7 @@ const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
 const VERIF_LN_REGEX = /^[a-zA-Z0-9_.-]*$/;
 const VERIF_L_REGEX = /^[a-zA-Z_.-]*$/;
 const VERIF_BIO = /^[a-zA-Z0-9_.,'"-\s]*$/;
-const VERIF_BD = /^((?:0[1-9])|(?:1[0-2]))\/((?:0[0-9])|(?:[1-2][0-9])|(?:3[0-1]))\/(\d{4})$/; // ex : 04/25/1987 month/day/year
+const VERIF_BD = /^(\d{4})-((?:[1-9])|(?:1[0-2]))-((?:[1-2][0-9])|(?:3[0-1])|(?:[1-9]))$/; // ex : 04/25/1987 month/day/year
 
 //
 // ─── CHECK USERISCOMPLETE ───────────────────────────────────────────────────────
@@ -277,7 +277,7 @@ export const edituserNotif = async (req, res) => {
       res.status(303).json({ error: err.error });
       return;
     }
-    res.status(200).json({ message: `User Edit dateOfBirth ${success}` });
+    res.status(200).json({ message: `User Edit notif ${success}` });
   });
 };
 
