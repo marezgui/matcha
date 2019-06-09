@@ -45,7 +45,7 @@ class People extends Component {
     const { token } = this.props;
 
     this.setState({ start: start + count }, () => {
-      const { count, start } = this.state; // To REMOVE find a solution!
+      const { count, start } = this.state; // TRFAS !
       // console.log('fetch', count, start);
       axios
         .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, { scoreMin: 0, scoreMax: 1000 }, { headers: { Authorization: `bearer ${token}` } })

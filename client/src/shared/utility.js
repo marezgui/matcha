@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Geocode from 'react-geocode';
+// import Geocode from 'react-geocode';
 
 // eslint-disable-next-line import/prefer-default-export
 
@@ -23,6 +23,22 @@ const checkRegexMatch = (name, value) => {
   return regex.test(value);
 };
 
+export const dateOfBirthTester = (date, age) => {
+  const regex = /^\s*((?:19|20)\d{2})-(1[012]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])\s*$/;
+  let error = null;
+
+  if (date === '') {
+    error = 'Cannot be empty!';
+  } else if (!regex.test(date)) {
+    error = 'No match';
+  } else if (age < 16) {
+    error = 'Sorry, you are too young !';
+  } else if (age > 110) {
+    error = 'Sorry, you are too old !';
+  }
+  return error;
+};
+
 export const checkInputValidity = (name, value, min, max) => {
   let error = null;
 
@@ -35,6 +51,7 @@ export const checkInputValidity = (name, value, min, max) => {
   } else if (value.length > max) {
     error = `${max} characters max.`;
   }
+
   return error;
 };
 

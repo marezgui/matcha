@@ -6,20 +6,27 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Input from '../../components/UI/Input/Input';
-import { checkInputValidity } from '../../shared/utility';
+import { checkInputValidity, dateOfBirthTester } from '../../shared/utility';
 import Map from './Map/Map';
+import * as actions from '../../store/actions/index';
 import './Profile.css';
 
 class Profile extends Component {
   state = {
     values: {},
     errors: {},
+    selectedFile: null,
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     this._isMounted = true;
-    const { user } = this.props;
-    this.setState({ values: { ...user, password: '' } });
+    // const { fetchTags, token, user: { idUser } } = this.props;
+    // const tags = await fetchTags(token, idUser);
+    const { user, user: { dateOfBirth } } = this.props;
+    if (this._isMounted) {
+      this.setState({ values: { ...user, password: '', dateOfBirth: new Date(dateOfBirth) } });
+    }
+    // console.log(tags);
   }
 
   componentWillUnmount() {
@@ -36,9 +43,36 @@ class Profile extends Component {
     this.setState({ errors: { ...errors, [field]: null } });
   };
 
+  checkProfile = () => {
+    const { token, onEdit } = this.props;
+    axios
+      .get('http://localhost:8080/api/edit/useriscomplete', { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        console.log(res);
+        onEdit('userIsComplete', true);
+      })
+      .catch((err) => {
+        console.log(err.response);
+        onEdit('userIsComplete', false);
+      });
+  };
+
+  editData = (name, value) => {
+    const { token, onEdit } = this.props;
+
+    axios
+      .put(`http://localhost:8080/api/edit/${name}`, { [name]: value }, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        console.log(res);
+        onEdit(name, value);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
+
   handleInput = (e, min, max) => {
     const { name, value } = e.target;
-    const { token } = this.props;
     const { values } = this.state;
 
     this.clearError(name);
@@ -46,42 +80,97 @@ class Profile extends Component {
     if (error) {
       this.addError(name, error);
     }
-    this.setState({ values: { ...values, [name]: value } }, () => {
-      // console.log(error);
-      if (!error) {
-        // console.log(values);
-        axios
-          .put(`http://localhost:8080/api/edit/${name}`, { [name]: value }, { headers: { Authorization: `bearer ${token}` } })
-          .then(() => {
-            // console.log(res);
-          })
-          .catch(() => {
-            // console.log(err.response);
-          });
-      }
-    });
+
+    this.setState({ values: { ...values, [name]: value } },
+      () => {
+        if (!error) {
+          this.editData(name, value);
+          this.checkProfile();
+        }
+      });
   }
+
+  handleDatePicker = (date) => {
+    const { values } = this.state;
+    const dateObj = new Date(date);
+    const dateOfBirth = `${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`;
+    const current = new Date();
+    const year = current.getFullYear();
+    const age = year - dateObj.getFullYear();
+    this.clearError('dateOfBirth');
+
+    const error = dateOfBirthTester(dateOfBirth, age);
+    if (error) { this.addError('dateOfBirth', error); }
+
+    this.setState({ values: { ...values, dateOfBirth: date } },
+      () => { if (!error) this.editData('dateOfBirth', dateOfBirth); });
+  };
 
   changeUserLocation = ({ lat, lng }) => {
     const { token } = this.props;
+    const location = { location: { latitude: lat, longitude: lng } };
 
     if (lat >= -85 && lat <= 85 && lng >= -180 && lng <= 180) {
-      console.log('location Changed', lat, lng);
       axios
-        .put('http://localhost:8080/api/edit/location', { latitude: lat, longitude: lng }, { headers: { Authorization: `bearer ${token}` } })
+        .put('http://localhost:8080/api/edit/location', location, { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
           console.log(res);
         })
         .catch((err) => {
-          console.log('error: ', err.response.data.error);
+          console.log('error: ', err.response);
         });
     }
+  }
+
+  getBase64 = (file) => {
+    let document = '';
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      document = reader.result;
+    };
+
+    reader.onerror = (error) => {
+      console.log('Error: ', error);
+    };
+
+    return document;
+  }
+
+  fileUploadHandler = () => {
+    const { selectedFile } = this.state;
+    let base64 = '';
+    this.getBase64(selectedFile, (result) => {
+      base64 = result;
+      console.log(result);
+    });
+
+    console.log(this.state.selectedFile);
+  }
+
+  fileChangedHandler = (e) => {
+    // console.log(e.target.files[0]);
+    this.setState({ selectedFile: e.target.files[0] });
   }
 
   render() {
     const { values: { firstName,
       lastName, username, mail, password, genre, orientation, bio,
-      location }, errors } = this.state;
+      location, dateOfBirth, tags }, errors } = this.state;
+
+
+    setTimeout(() => {
+      console.log(this.props.user);
+
+    }, 3000);
+
+    const photo = (
+      <>
+        <input type="file" onChange={this.fileChangedHandler} />
+        <button onClick={this.fileUploadHandler}> Upload! </button>
+      </>
+    );
 
     const perso = (
       <form className="box">
@@ -104,6 +193,14 @@ class Profile extends Component {
           placeholder="First Name"
           value={lastName || ''}
           onChange={e => this.handleInput(e, 2, 15)}
+        />
+        <Input
+          error={errors.dateOfBirth}
+          inputtype="date"
+          label="Date of birth"
+          name="dateOfBirth"
+          selected={dateOfBirth}
+          onChange={this.handleDatePicker}
         />
       </form>
     );
@@ -141,11 +238,6 @@ class Profile extends Component {
           onChange={e => this.handleInput(e, null, 40)}
         />
       </form>
-    );
-
-    const photo = (
-      <>
-      </>
     );
 
     const match = (
@@ -190,16 +282,24 @@ class Profile extends Component {
           type="text"
           name="bio"
           placeholder="Biography"
-          rows="5"
+          rows="6"
           value={bio || ''}
           onChange={e => this.handleInput(e, null, 500)}
         />
       </form>
     );
 
-    const tags = (
-      <>
-      </>
+    const tagsBox = (
+      <form className="box">
+        <div className="tags">
+          {tags && tags.map(tag => (
+            <p>
+              {tag}
+            </p>
+          ))}
+          {tags && tags[0]}
+        </div>
+      </form>
     );
 
     const localisation = (
@@ -231,16 +331,29 @@ class Profile extends Component {
           <div className="box-container">
             <div className="inner-container">
               <div className="header"> Profile </div>
-              {photo}
               {match}
               {biography}
-              {tags}
+            </div>
+          </div>
+          <div className="box-container">
+            {/* {style={{ maxWidth: '50em', minWidth: '21em', width: '40em' }}} */}
+            <div className="inner-container">
+              <div className="header"> Your location </div>
+              {localisation}
+            </div>
+          </div>
+        </section>
+        <section className="Profile2">
+          <div className="box-container">
+            <div className="inner-container">
+              <div className="header"> Photo </div>
+              {photo}
             </div>
           </div>
           <div className="box-container">
             <div className="inner-container">
-              <div className="header"> Your location </div>
-              {localisation}
+              <div className="header"> Tags </div>
+              {tagsBox}
             </div>
           </div>
         </section>
@@ -254,4 +367,9 @@ const mapStateToProps = state => ({
   token: state.auth.token,
 });
 
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = dispatch => ({
+  onEdit: (name, value) => dispatch(actions.authUpdate(name, value)),
+  fetchTags: (token, idUser) => dispatch(actions.getTags(token, idUser)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

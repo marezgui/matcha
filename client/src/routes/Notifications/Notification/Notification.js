@@ -51,7 +51,7 @@ class Notification extends Component {
             </div>
             <div className="NotificationInfo">
               <p>
-                {message.charAt(0).toUpperCase() + message.slice(1)}
+                {message.charAt(0).toUpperCase() + message.slice(1) || ''}
               </p>
               {/* <p>
             vue:
@@ -65,7 +65,7 @@ class Notification extends Component {
                 : (
                   <Avatar style={{ backgroundColor: 'grey' }}>
                     {' '}
-                    {firstName.charAt(0).toUpperCase()}
+                    {firstName.charAt(0).toUpperCase() || ''}
                     {' '}
                   </Avatar>
                 )}

@@ -12,9 +12,20 @@ export const authSuccess = (token, user) => ({
   user,
 });
 
+export const fetchTags = tags => ({
+  type: actionTypes.FETCH_TAGS,
+  tags,
+});
+
 export const authFail = error => ({
   type: actionTypes.AUTH_FAIL,
   error,
+});
+
+export const authUpdate = (name, value) => ({
+  type: actionTypes.AUTH_UPDATE,
+  name,
+  value,
 });
 
 export const logout = () => {
@@ -39,6 +50,20 @@ const getUser = async (token) => {
   return user;
 };
 
+export const getTags = (token, idUser) => (dispatch) => {
+  let tags = null;
+
+  axios
+    .get(`http://localhost:8080/api/users/usertag/${idUser}`, { headers: { Authorization: `bearer ${token}` } })
+    .then((res) => {
+      tags = res.data.usertag;
+      dispatch(fetchTags(tags));
+      console.log(res.data.usertag);
+    })
+    .catch(() => { tags = null; });
+  return tags;
+};
+
 export const auth = (username, password) => (dispatch) => {
   dispatch(authStart());
 
@@ -47,10 +72,13 @@ export const auth = (username, password) => (dispatch) => {
     .then(async (res) => {
       const { token } = res.data;
       const user = await getUser(token);
+      // const tags = null;
 
       if (user) {
         localStorage.setItem('token', token);
         dispatch(authSuccess(token, user));
+        // tags = await getTags(token, user.idUser);
+        // dispatch(fetchTags(tags));
         dispatch(actions.getNotif(token));
       } else {
         dispatch(
@@ -61,12 +89,13 @@ export const auth = (username, password) => (dispatch) => {
       }
     })
     .catch((err) => {
-      dispatch(authFail(err.response.data.error));
+      // dispatch(authFail(err.response.data.error));
     });
 };
 
 export const authCheckState = () => async (dispatch) => {
   const token = localStorage.getItem('token');
+  // const tags = null;
 
   if (!token) {
     dispatch(logout());
@@ -74,6 +103,8 @@ export const authCheckState = () => async (dispatch) => {
     getUser(token)
       .then(async (user) => {
         dispatch(authSuccess(token, user));
+        // tags = await getTags(token, user.idUser);
+        // dispatch(fetchTags(tags));
         dispatch(actions.getNotif(token));
       })
       .catch(() => {

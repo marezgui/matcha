@@ -137,7 +137,6 @@ class ProfilePage extends Component {
       orientation,
       connexionLog,
       location } = data;
-    const title = `${username.charAt(0).toUpperCase() + username.slice(1)}`;
 
     let reportStatus = 'Report';
     let blockStatus = 'Block';
@@ -148,7 +147,7 @@ class ProfilePage extends Component {
     return (
       <>
         <Backdrop show={showBackdrop} clicked={this.onClickHandler} />
-        <Modal clicked={this.onClickHandler} title={title}>
+        <Modal clicked={this.onClickHandler} title={`${username.charAt(0).toUpperCase() + username.slice(1)}` || ''}>
           <section className="Profile">
             <div className="ProfilePictures">
               <Slider {...settings} className="Slider">
@@ -172,7 +171,7 @@ class ProfilePage extends Component {
               </span>
               <span onClick={this.profileHandler} role="presentation" className="Pointer">
                 <p style={{ display: 'inline-block' }}>
-                  {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)}`}
+                  {`${firstName.charAt(0).toUpperCase() + firstName.slice(1)}` || ''}
                 </p>
                 <p style={{ display: 'inline-block' }}>{`, ${getAge(dateOfBirth)} years`}</p>
               </span>

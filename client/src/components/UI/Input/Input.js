@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { TextArea } from 'semantic-ui-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './Input.scss';
 
 class Input extends Component {
@@ -17,6 +19,9 @@ class Input extends Component {
         break;
       case 'textarea':
         inputElement = <TextArea className="TextAreaElement" {...this.props} />;
+        break;
+      case 'date':
+        inputElement = <DatePicker className="InputElement" {...this.props} />;
         break;
       default:
         inputElement = <input className="InputElement" {...this.props} />;

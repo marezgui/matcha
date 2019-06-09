@@ -1,7 +1,9 @@
 export {
   auth,
+  authUpdate,
   logout,
-  authCheckState
+  authCheckState,
+  getTags,
 } from './auth';
 
 export {

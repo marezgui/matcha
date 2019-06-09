@@ -111,12 +111,12 @@ class Chat extends Component {
             <div key={id} className="Pointer Channel" role="presentation" onClick={() => this.handleMatcheList(id, usermatche)}>
               {!avatar ? (
                 <Avatar style={{ backgroundColor: 'grey' }}>
-                  {username.charAt(0).toUpperCase()}
+                  {username.charAt(0).toUpperCase() || ''}
                 </Avatar>
               )
                 : <Avatar alt={username} src={`data:image/png;base64,${avatar}`} />}
               <p className="ChannelName">
-                {username.charAt(0).toUpperCase() + username.slice(1)}
+                {username.charAt(0).toUpperCase() + username.slice(1) || ''}
               </p>
             </div>
           ))}
