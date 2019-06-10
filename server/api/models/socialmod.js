@@ -49,7 +49,7 @@ export const getUsersForMe = (idUser, genre, orientation, scoreMin, scoreMax,
   AND "genre" = $3
   AND "score" >= $4 AND "score" <= $5
   AND EXTRACT(YEAR FROM age("dateOfBirth")) >= $6 AND EXTRACT(YEAR FROM age("dateOfBirth")) <= $7
-  ORDER BY ${trie} ${order}`,
+  ORDER BY "${trie}" ${order}`,
   [idUser, genre, orientation, scoreMin, scoreMax, ageMin, ageMax],
   (err, res) => {
     if (err.error) {
