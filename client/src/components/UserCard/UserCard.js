@@ -124,11 +124,16 @@ class UserCard extends Component {
   }
 
   profileHandler = () => {
+    const { clicked } = this.props;
     const { modal } = this.state;
 
     this.setState(prevState => ({ modal: !prevState.modal }), () => {
-      if (modal) document.body.classList.remove('ModalOpen'); // Prevent Body scroll
-      else document.body.classList.add('ModalOpen');
+      if (modal) {
+        document.body.classList.remove('ModalOpen'); // Prevent Body scroll
+      } else {
+        document.body.classList.add('ModalOpen');
+        clicked();
+      }
     });
   }
 

@@ -330,7 +330,7 @@ export const removetag = (req, res) => {
 //
 export const addtag = async (req, res) => {
   const { tag } = req.body;
-  const { iduser } = req.user;
+  const { idUser } = req.user;
   if (!tag) {
     res.status(303).json({ error: 'Missing parameters.' });
     return;
@@ -344,7 +344,7 @@ export const addtag = async (req, res) => {
     return;
   }
   const gettaglist = util.promisify(getusertag);
-  const taglist = await gettaglist(iduser).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
+  const taglist = await gettaglist(idUser).then(data => data).catch((err) => { console.error(`[Error]: ${err}`); });
   // si tag est dega dans taglist on return
   for (let i = 0; i < taglist.length; i += 1) {
     if (tag === taglist[i].tag) {

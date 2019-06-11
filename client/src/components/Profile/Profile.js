@@ -234,7 +234,7 @@ class ProfilePage extends Component {
                 {' '}
               Tags
               </p>
-              <div className="TagsList">
+              <div className="Tago==11sList">
                 {meta.tags.map((tag, id) => (<Chip key={id} style={{ height: '14px', marginRight: '2px' }} label={tag} />))}
               </div>
             </div>

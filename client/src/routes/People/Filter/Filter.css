@@ -1,19 +1,27 @@
 .Filter {
-  border: 1px solid black;
+  border-bottom: 1px solid #de235b;
+  border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 3px 5px;
+  margin-bottom: 5px;
 }
 
 .FilterBox1, .FilterBox2 {
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 10px;
+  
+}
+
+.FilterBox1 {
 }
 
 .FilterAjust {
   margin: 5px;
+  flex: 1;
 }
 
 .SliderFooter {

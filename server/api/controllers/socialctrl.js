@@ -968,21 +968,18 @@ export const getUsersForMe = async (req, res) => {
       ageMax = userval.ageMax;
     }
   }
-  if (tags === undefined || tags === '') {
+  if (tags === undefined || tags === []) {
     tags = null;
-  } else {
-    tags = tags.split(',');
-    if (tags[0] !== undefined) {
-      return getUserwithTags(user,
-        genre, orientation,
-        ageMin, ageMax,
-        distanceMin, distanceMax,
-        scoreMin, scoreMax,
-        tags,
-        trie, order,
-        count, start,
-        res);
-    }
+  } else if (tags[0] !== undefined) { // tags = tags.split(',');
+    return getUserwithTags(user,
+      genre, orientation,
+      ageMin, ageMax,
+      distanceMin, distanceMax,
+      scoreMin, scoreMax,
+      tags,
+      trie, order,
+      count, start,
+      res);
   }
 
   if (trie === 'tag') {

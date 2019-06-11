@@ -5,6 +5,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import { Tag } from 'antd';
 import Input from '../../components/UI/Input/Input';
 import { checkInputValidity, dateOfBirthTester } from '../../shared/utility';
 import Map from './Map/Map';
@@ -16,17 +17,23 @@ class Profile extends Component {
     values: {},
     errors: {},
     selectedFile: null,
+    addTag: '',
+    tagSuggestion: [],
   }
 
   componentDidMount = async () => {
     this._isMounted = true;
-    // const { fetchTags, token, user: { idUser } } = this.props;
-    // const tags = await fetchTags(token, idUser);
     const { user, user: { dateOfBirth } } = this.props;
     if (this._isMounted) {
       this.setState({ values: { ...user, password: '', dateOfBirth: new Date(dateOfBirth) } });
     }
-    // console.log(tags);
+    axios
+      .get('http://localhost:8080/api/users/alltag')
+      .then((res) => {
+        if (this._isMounted) {
+          this.setState({ tagSuggestion: res.data.alltag });
+        }
+      });
   }
 
   componentWillUnmount() {
@@ -155,10 +162,85 @@ class Profile extends Component {
     this.setState({ selectedFile: e.target.files[0] });
   }
 
+  onRemoveTag = (e, tag) => {
+    e.preventDefault();
+    const { token, onEdit } = this.props;
+    const { values: { tags } } = this.state;
+
+    axios
+      .delete('http://localhost:8080/api/edit/tag', { data: { tag }, headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        tags.forEach((tagState, id) => {
+          if (tagState === tag) {
+            tags.splice(id, 1);
+          }
+        });
+        onEdit('tags', tags);
+        // console.log(res);
+      })
+      .catch((err) => {
+        // console.log(err.response);
+      });
+  }
+
+  onAddTag = (e) => {
+    e.preventDefault();
+    const { addTag: { value } } = e.target;
+    const { errors: { addTag }, values: { tags } } = this.state;
+    const { token, user: { idUser }, onEdit } = this.props;
+
+    if (!addTag) { // no-error
+      axios
+        .post('http://localhost:8080/api/edit/tag', { tag: value, idUser }, { headers: { Authorization: `bearer ${token}` } })
+        .then(() => {
+          // console.log(res);
+          tags.push(value);
+          onEdit('tags', tags);
+          if (this._isMounted) {
+            this.setState({ addTag: '' });
+          }
+        })
+        .catch((err) => {
+          this.addError('addTag', err.response.data.error);
+          // console.log(err.response.data.error);
+        });
+    }
+  }
+
+  onTagChange = (e, min, max) => {
+    const { name, value } = e.target;
+
+    this.clearError(name);
+    const error = checkInputValidity(name, value, min, max);
+    if (error) {
+      this.addError(name, error);
+    }
+
+    this.setState({ [name]: value });
+  }
+
+  handleSelectTag = (e) => {
+    const { value } = e.target;
+    const { values: { tags } } = this.state;
+    const { token, user: { idUser }, onEdit } = this.props;
+
+    if (value !== 'Suggestion') {
+      axios
+        .post('http://localhost:8080/api/edit/tag', { tag: value, idUser }, { headers: { Authorization: `bearer ${token}` } })
+        .then(() => {
+          tags.push(value);
+          onEdit('tags', tags);
+        })
+        .catch((err) => {
+          this.addError('addTag', err.response.data.error);
+        });
+    }
+  }
+
   render() {
     const { values: { firstName,
       lastName, username, mail, password, genre, orientation, bio,
-      location, dateOfBirth, tags }, errors } = this.state;
+      location, dateOfBirth, tags }, errors, addTag, tagSuggestion } = this.state;
 
 
     setTimeout(() => {
@@ -291,14 +373,38 @@ class Profile extends Component {
     );
 
     const tagsBox = (
-      <form className="box">
-        <div className="tags">
-          {tags && tags.map(tag => (
-            <p>
-              {tag}
-            </p>
-          ))}
-          {tags && tags[0]}
+      <form className="box" onSubmit={this.onAddTag}>
+        <Input
+          error={errors.addTag}
+          placeholder="Add tags"
+          type="text"
+          name="addTag"
+          value={addTag}
+          onChange={e => this.onTagChange(e, 2, 15)}
+        />
+        <div className="Suggestion">
+          <div className="Select">
+            <select className="Select" onChange={this.handleSelectTag}>
+              <option value="Suggestion">
+                Suggestion
+              </option>
+              {tagSuggestion.map((tag, id) => (
+                <option key={id} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="YourTags">
+          <p> Your tags: </p>
+          <div className="tags">
+            {tags && tags.map((tag, id) => (
+              <Tag key={id} closable onClose={e => this.onRemoveTag(e, tag)}>
+                {tag}
+              </Tag>
+            ))}
+          </div>
         </div>
       </form>
     );

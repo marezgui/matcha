@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import 'antd/dist/antd.css';
 import { Slider } from 'antd';
 
@@ -32,31 +32,3 @@ const CustomizedSlider = (props) => {
 };
 
 export default CustomizedSlider;
-
-// const StyledSlider = withStyles({
-//   thumb: {
-//     height: 24,
-//     width: 24,
-//     backgroundColor: '#fff',
-//     border: '2px solid #de235b',
-//     '&$focused, &:hover': {
-//       boxShadow: `0px 0px 0px ${8}px ${fade('#de235b', 0.16)}`,
-//     },
-//     '&$activated': {
-//       boxShadow: `0px 0px 0px ${8 * 1.5}px ${fade('#de235b', 0.16)}`,
-//     },
-//     '&$jumped': {
-//       boxShadow: `0px 0px 0px ${8 * 1.5}px ${fade('#de235b', 0.16)}`,
-//     },
-//   },
-//   track: {
-//     backgroundColor: '#de235b',
-//     height: 8,
-//   },
-//   trackAfter: {
-//     backgroundColor: '#d0d7dc',
-//   },
-//   focused: {},
-//   activated: {},
-//   jumped: {},
-// })(Slider);

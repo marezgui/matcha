@@ -19,6 +19,8 @@ const checkRegexMatch = (name, value) => {
     regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}/;
   } else if (name === 'bio') {
     regex = /^[a-zA-Z0-9_.,'"-\s]*$/;
+  } else if (name === 'addTag') {
+    regex = /^[a-zA-Z0-9_.-]*$/;
   }
   return regex.test(value);
 };
@@ -31,9 +33,9 @@ export const dateOfBirthTester = (date, age) => {
     error = 'Cannot be empty!';
   } else if (!regex.test(date)) {
     error = 'No match';
-  } else if (age < 16) {
+  } else if (age < 18) {
     error = 'Sorry, you are too young !';
-  } else if (age > 110) {
+  } else if (age > 100) {
     error = 'Sorry, you are too old !';
   }
   return error;
