@@ -983,7 +983,7 @@ export const getUsersForMe = async (req, res) => {
   }
 
   if (trie === 'tag') {
-    return res.status(303).json({ error: 'you can not sort by tag if you do not put tags' });
+    trie = 'score';
   }
   return getUserNoTags(user,
     genre, orientation,
