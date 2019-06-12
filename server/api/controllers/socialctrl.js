@@ -794,7 +794,7 @@ const getUserwithTags = async (user,
       });
     }
   }
-  console.log(tmpUsers);
+  // console.log(tmpUsers);
   const resultUser = [];
   for (let j = 0; j < tmpUsers.length; j += 1) {
     resultUser.push(tmpUsers[j][0]);

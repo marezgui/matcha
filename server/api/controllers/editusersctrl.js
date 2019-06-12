@@ -370,27 +370,26 @@ export const addtag = async (req, res) => {
 // ─── EDIT USER PHOTOS ───────────────────────────────────────────────────────────
 //
 export const edituserPhoto = async (req, res) => {
-  let { photo } = req.body;
+  const { photo } = req.body;
   if (typeof photo === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments photo' });
   }
-  photo = JSON.parse(photo);
   if (typeof photo.master === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments master' });
   }
-  if (typeof photo.image1 === 'undefined') {
+  if (typeof photo.image1 === 'undefined' && photo.master === 'image1') {
     return res.status(303).json({ error: 'Missing arguments image1' });
   }
-  if (typeof photo.image2 === 'undefined') {
+  if (typeof photo.image2 === 'undefined' && photo.master === 'image2') {
     return res.status(303).json({ error: 'Missing arguments image2' });
   }
-  if (typeof photo.image3 === 'undefined') {
+  if (typeof photo.image3 === 'undefined' && photo.master === 'image3') {
     return res.status(303).json({ error: 'Missing arguments image3' });
   }
-  if (typeof photo.image4 === 'undefined') {
+  if (typeof photo.image4 === 'undefined' && photo.master === 'image4') {
     return res.status(303).json({ error: 'Missing arguments image4' });
   }
-  if (typeof photo.image5 === 'undefined') {
+  if (typeof photo.image5 === 'undefined' && photo.master === 'image5') {
     return res.status(303).json({ error: 'Missing arguments image5' });
   }
   return mod.editPhoto(req, (err, success) => {
