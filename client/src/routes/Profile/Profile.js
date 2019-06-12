@@ -238,10 +238,11 @@ class Profile extends Component {
     const { values, values: { photo } } = this.state;
     const reader = new FileReader();
 
-    reader.readAsBinaryString(selectedFile);
+    reader.readAsDataURL(selectedFile);
     reader.onload = () => {
       this.setState({ values: { ...values, photo: { ...photo, [toChange]: reader.result, master: 'image1' } } },
         () => {
+          // console.log(reader.result);
           axios
             .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
             .then(() => { onEdit('photo', photo); })
@@ -263,7 +264,7 @@ class Profile extends Component {
       if (size && type) {
         if (type === 'image/jpeg' || type === 'image/jpg' || type === 'image/png') {
           if (size < 20000000) {
-            console.log(size, type);
+            // console.log(size, type);
             this.uploadImage(toChange, selectedFile);
           } else {
             this.newSnackbar('Too big !');
@@ -285,7 +286,7 @@ class Profile extends Component {
       () => {
         axios
           .put('http://localhost:8080/api/edit/notif', { notif: checked }, { headers: { Authorization: `bearer ${token}` } })
-          .then(() => { console.log('ok'); onEdit('notifications', checked); })
+          .then(() => { onEdit('notifications', checked); })
           .catch((err) => {
             this.newSnackbar(err.response.data.error);
           });
@@ -587,7 +588,11 @@ class Profile extends Component {
             <div>
               {blockedUser.map(({ blockedUserId, idBlocked, userId }) => (
                 <div key={idBlocked}>
-                  {blockedUserId, idBlocked, userId}
+                  <span>
+                    <i className="fas fa-times" />
+                    <p> NAME </p>
+                  </span>
+                  {`${blockedUserId}, ${idBlocked}, ${userId}`}
                 </div>
               ))}
             </div>
