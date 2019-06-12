@@ -242,7 +242,7 @@ class Profile extends Component {
     reader.onload = () => {
       this.setState({ values: { ...values, photo: { ...photo, [toChange]: reader.result, master: 'image1' } } },
         () => {
-          // console.log(reader.result);
+          console.log(reader.result);
           axios
             .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
             .then(() => { onEdit('photo', photo); })
