@@ -114,7 +114,7 @@ class Chat extends Component {
                   {username.charAt(0).toUpperCase() || ''}
                 </Avatar>
               )
-                : <Avatar alt={username} src={`data:image/png;base64,${avatar}`} />}
+                : <Avatar alt={username} src={`data:image/jpg;base64,${avatar}`} />}
               <p className="ChannelName">
                 {username.charAt(0).toUpperCase() + username.slice(1) || ''}
               </p>

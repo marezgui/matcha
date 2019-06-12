@@ -264,7 +264,7 @@ export const edituserOrientation = async (req, res) => {
 //
 export const edituserNotif = async (req, res) => {
   const { notif } = req.body;
-  if (!notif) {
+  if (notif === undefined) {
     res.status(303).json({ error: 'Missing parameters.' });
     return;
   }
@@ -370,11 +370,12 @@ export const addtag = async (req, res) => {
 // ─── EDIT USER PHOTOS ───────────────────────────────────────────────────────────
 //
 export const edituserPhoto = async (req, res) => {
-  let { photo } = req.body;
+  const { photo } = req.body;
   if (typeof photo === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments photo' });
   }
-  photo = JSON.parse(photo);
+  // photo = JSON.parse(photo);
+  console.log(photo.image1);
   if (typeof photo.master === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments master' });
   }

@@ -188,9 +188,9 @@ class UserCard extends Component {
         <section className="UserCard">
           <Card>
             <Slider {...settings}>
-              <Image className="Grabber UserCardPictures" src={`data:image/png;base64,${photo[master]}`} />
+              <Image className="Grabber UserCardPictures" src={`data:image/jpg;base64,${photo[master]}`} />
               {Object.keys(photo).map(
-                (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} className="Grabber UserCardPictures" src={`data:image/png;base64,${photo[value]}`} /> : null)
+                (value, id) => (photo[value] && photo[value].length !== 6 ? <Image key={`${photo[id]}-${idUser}`} className="Grabber UserCardPictures" src={`data:image/jpg;base64,${photo[value]}`} /> : null)
               )}
             </Slider>
             <Card.Content>

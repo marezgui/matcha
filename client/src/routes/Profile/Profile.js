@@ -3,12 +3,17 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import { Switch } from 'antd';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import { Tag } from 'antd';
+import { Tag, notification } from 'antd';
+import Slider from 'react-slick';
+import Snackbar from '@material-ui/core/Snackbar';
 import Input from '../../components/UI/Input/Input';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import { checkInputValidity, dateOfBirthTester } from '../../shared/utility';
 import Map from './Map/Map';
+import Button from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions/index';
 import './Profile.css';
 
@@ -19,11 +24,19 @@ class Profile extends Component {
     selectedFile: null,
     addTag: '',
     tagSuggestion: [],
+    uploadError: '',
+    snackbar: {
+      open: false,
+      vertical: 'top',
+      horizontal: 'center',
+      message: 'Hello !',
+    },
+    blockedUser: [],
   }
 
   componentDidMount = async () => {
     this._isMounted = true;
-    const { user, user: { dateOfBirth } } = this.props;
+    const { user, user: { dateOfBirth }, token } = this.props;
     if (this._isMounted) {
       this.setState({ values: { ...user, password: '', dateOfBirth: new Date(dateOfBirth) } });
     }
@@ -34,10 +47,21 @@ class Profile extends Component {
           this.setState({ tagSuggestion: res.data.alltag });
         }
       });
+    axios
+      .get('http://localhost:8080/api/social/getblockedlist', { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        this.setState({ blockedUser: res.data.blockedTab });
+      })
+      .catch();
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  newSnackbar = (message) => {
+    const { snackbar } = this.state;
+    this.setState({ snackbar: { ...snackbar, open: true, message } });
   }
 
   addError = (field, msg) => {
@@ -130,38 +154,6 @@ class Profile extends Component {
     }
   }
 
-  getBase64 = (file) => {
-    let document = '';
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      document = reader.result;
-    };
-
-    reader.onerror = (error) => {
-      console.log('Error: ', error);
-    };
-
-    return document;
-  }
-
-  fileUploadHandler = () => {
-    const { selectedFile } = this.state;
-    let base64 = '';
-    this.getBase64(selectedFile, (result) => {
-      base64 = result;
-      console.log(result);
-    });
-
-    console.log(this.state.selectedFile);
-  }
-
-  fileChangedHandler = (e) => {
-    // console.log(e.target.files[0]);
-    this.setState({ selectedFile: e.target.files[0] });
-  }
-
   onRemoveTag = (e, tag) => {
     e.preventDefault();
     const { token, onEdit } = this.props;
@@ -237,26 +229,127 @@ class Profile extends Component {
     }
   }
 
+  fileChangedHandler = (e) => {
+    this.setState({ selectedFile: e.target.files[0] });
+  }
+
+  uploadImage = (toChange, selectedFile) => {
+    const { token, onEdit } = this.props;
+    const { values, values: { photo } } = this.state;
+    const reader = new FileReader();
+
+    reader.readAsBinaryString(selectedFile);
+    reader.onload = () => {
+      this.setState({ values: { ...values, photo: { ...photo, [toChange]: reader.result, master: 'image1' } } },
+        () => {
+          axios
+            .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
+            .then(() => { onEdit('photo', photo); })
+            .catch((err) => {
+              this.newSnackbar(err.response.data.error);
+            });
+        });
+    };
+    reader.onerror = () => { console.log('there are some problems'); };
+  }
+
+  fileUploadHandler = (e) => {
+    e.preventDefault();
+    const { selectedFile } = this.state;
+    const toChange = e.target.photoSelect.value;
+    // clear error & check
+    if (selectedFile !== null) {
+      const { selectedFile: { size, type } } = this.state;
+      if (size && type) {
+        if (type === 'image/jpeg' || type === 'image/jpg' || type === 'image/png') {
+          if (size < 20000000) {
+            console.log(size, type);
+            this.uploadImage(toChange, selectedFile);
+          } else {
+            this.newSnackbar('Too big !');
+          }
+        } else {
+          this.newSnackbar('Invalid file !');
+        }
+      }
+    } else {
+      this.newSnackbar('Select a file first !');
+    }
+  }
+
+  onOff = (checked) => {
+    const { onEdit, token } = this.props;
+    const { values } = this.state;
+
+    this.setState({ values: { ...values, notifications: checked } },
+      () => {
+        axios
+          .put('http://localhost:8080/api/edit/notif', { notif: checked }, { headers: { Authorization: `bearer ${token}` } })
+          .then(() => { console.log('ok'); onEdit('notifications', checked); })
+          .catch((err) => {
+            this.newSnackbar(err.response.data.error);
+          });
+      });
+  }
+
   render() {
+    const settings = {
+      dots: true,
+      arrows: false,
+      responsive: [
+        {
+          breakpoint: 766,
+          settings: {
+            arrows: false,
+          },
+        },
+      ],
+    };
+    const { user: { idUser } } = this.props;
     const { values: { firstName,
       lastName, username, mail, password, genre, orientation, bio,
-      location, dateOfBirth, tags }, errors, addTag, tagSuggestion } = this.state;
+      location, dateOfBirth, tags, photo, notifications }, errors, addTag, tagSuggestion,
+    snackbar, snackbar: { vertical, horizontal, open, message }, blockedUser } = this.state;
 
+    let slider = (<Spinner />);
+    console.log(blockedUser);
+    if (photo !== undefined) {
+      slider = (
+        <Slider {...settings}>
+          <img className="Grabber UserCardPictures" alt="" src={`data:image/jpg;base64,${photo[photo.master]}`} />
+          {Object.keys(photo).map(
+            (value, id) => (photo[value] && photo[value].length !== 6 ? <img key={`${photo[id]}-${idUser}`} alt="" className="Grabber UserCardPictures" src={`data:image/jpg;base64,${photo[value]}`} /> : null)
+          )}
+        </Slider>
+      );
+    }
 
-    setTimeout(() => {
-      // console.log(this.props.user);
-
-    }, 3000);
-
-    const photo = (
+    const photos = (
       <>
-        <input type="file" onChange={this.fileChangedHandler} />
-        <button onClick={this.fileUploadHandler}> Upload! </button>
+        <div style={{ width: '220px', marginLeft: '15px' }}>
+          {slider}
+        </div>
+        <form onSubmit={this.fileUploadHandler}>
+          <div className="SelectFile">
+            <select name="photoSelect" className="Select">
+              <option value="image1"> Profile </option>
+              <option value="image2"> Picture n°2 </option>
+              <option value="image3"> Picture n°3 </option>
+              <option value="image4"> Picture n°4 </option>
+              <option value="image5"> Picture n°5 </option>
+            </select>
+            <input type="file" onChange={this.fileChangedHandler} style={{ overflow: 'auto' }} />
+          </div>
+          <div>
+            <center><Button> Upload! </Button></center>
+          </div>
+        </form>
       </>
     );
 
     const perso = (
       <form className="box">
+
         <Input
           error={errors.firstName}
           inputtype="input"
@@ -418,8 +511,31 @@ class Profile extends Component {
       </form>
     );
 
+    const switchNotif = (
+      <div className="Box SwitchNotifBox">
+        <p> Notifications </p>
+        {notifications !== undefined && <Switch defaultChecked={notifications} onChange={this.onOff} />}
+      </div>
+    );
+
     return (
       <section className="Profile">
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          key={`${vertical},${horizontal}`}
+          open={open}
+          onClose={() => this.setState({ snackbar: { ...snackbar, open: false } })}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={(
+            <span id="message-id">
+              {' '}
+              {message}
+              {' '}
+            </span>
+          )}
+        />
         <section className="Profile1">
           <div className="box-container">
             <div className="inner-container">
@@ -440,6 +556,7 @@ class Profile extends Component {
               <div className="header"> Profile </div>
               {match}
               {biography}
+              {switchNotif}
             </div>
           </div>
           <div className="box-container">
@@ -451,10 +568,10 @@ class Profile extends Component {
           </div>
         </section>
         <section className="Profile2">
-          <div className="box-container">
+          <div className="box-container" style={{ maxWidth: '294px' }}>
             <div className="inner-container">
               <div className="header"> Photo </div>
-              {photo}
+              {photos}
             </div>
           </div>
           <div className="box-container">
@@ -462,6 +579,21 @@ class Profile extends Component {
               <div className="header"> Tags </div>
               {tagsBox}
             </div>
+          </div>
+        </section>
+        <section className="Delete">
+          <div className="BlockedList">
+            <h3 style={{ borderBottom: '1px solid grey' }}> Users Blocked </h3>
+            <div>
+              {blockedUser.map(({ blockedUserId, idBlocked, userId }) => (
+                <div key={idBlocked}>
+                  {blockedUserId, idBlocked, userId}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="Bye">
+            <Button style={{ color: 'red' }}> DELETE MY ACCOUNT </Button>
           </div>
         </section>
       </section>

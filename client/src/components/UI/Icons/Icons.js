@@ -39,6 +39,6 @@ export const Account = ({ data }) => (
         {data}
       </Avatar>
     )
-    : <Avatar alt="Remy Sharp" src={`data:image/png;base64,${data}`} />
+    : <Avatar alt="Remy Sharp" src={`data:image/jpg;base64,${data}`} />
     : null
 );

@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .Profile > section > .box-container {
@@ -51,4 +52,41 @@
     box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
     border-radius: 4px;
     padding: 3px;
+}
+
+/* Photo */
+
+.SelectFile {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+    /* border: 1px solid black; */
+}
+
+.SwitchNotifBox {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    padding: 5px;
+    border-bottom: 1px solid grey;
+}
+
+.Delete {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%;
+    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.BlockedList {
+    
+}
+
+.Bye {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -269,7 +269,7 @@ class Login extends Component {
               {message}
               {' '}
             </span>
-)}
+          )}
         />
 
         {form}
