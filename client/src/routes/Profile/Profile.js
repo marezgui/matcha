@@ -240,12 +240,13 @@ class Profile extends Component {
 
     reader.readAsDataURL(selectedFile);
     reader.onload = () => {
-      console.log(toChange);
+      // console.log(reader.result);
       this.setState({ values: { ...values, photo: { ...photo, [toChange]: reader.result, master: 'image1' } } },
         () => {
-          const { photo } = this.state;
-          const test = JSON.stringify(photo);
-
+          let { values: { photo } } = this.state;
+          console.log(photo);
+          photo = JSON.stringify(photo);
+          // console.log(photo);
           /* const data = new FormData();
           data.append('photo', photo); */
           // console.log(reader.result);
