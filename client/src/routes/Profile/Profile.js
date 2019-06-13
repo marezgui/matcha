@@ -240,11 +240,17 @@ class Profile extends Component {
 
     reader.readAsDataURL(selectedFile);
     reader.onload = () => {
+      console.log(toChange);
       this.setState({ values: { ...values, photo: { ...photo, [toChange]: reader.result, master: 'image1' } } },
         () => {
-          console.log(reader.result);
+          const { photo } = this.state;
+          const test = JSON.stringify(photo);
+
+          /* const data = new FormData();
+          data.append('photo', photo); */
+          // console.log(reader.result);
           axios
-            .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
+            .put('http://localhost:8080/api/edit/photo', photo, { headers: { Authorization: `bearer ${token}` } })
             .then(() => { onEdit('photo', photo); })
             .catch((err) => {
               this.newSnackbar(err.response.data.error);
