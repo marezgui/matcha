@@ -5,7 +5,7 @@ import passport from 'passport';
 import dotenv from 'dotenv';
 import socket from 'socket.io';
 import cors from 'cors';
-import axios from 'axios'
+import axios from 'axios';
 import { db } from './database';
 import importuser from './database/importuser';
 // eslint-disable-next-line import/no-cycle
@@ -37,7 +37,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(routerApp);
