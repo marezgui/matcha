@@ -251,7 +251,7 @@ class Profile extends Component {
           data.append('photo', photo); */
           // console.log(reader.result);
           axios
-            .put('http://localhost:8080/api/edit/photo', photo, { headers: { Authorization: `bearer ${token}` } })
+            .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
             .then(() => { onEdit('photo', photo); })
             .catch((err) => {
               this.newSnackbar(err.response.data.error);

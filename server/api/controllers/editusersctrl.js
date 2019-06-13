@@ -371,7 +371,8 @@ export const addtag = async (req, res) => {
 //
 export const edituserPhoto = async (req, res) => {
   const { photo } = req.body;
-  console.log(photo);
+  /* console.log(photo);
+  photo = JSON.parse(photo); */
   if (typeof photo === 'undefined') {
     return res.status(303).json({ error: 'Missing arguments photo' });
   }
