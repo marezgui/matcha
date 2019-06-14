@@ -51,7 +51,7 @@ class Layout extends Component {
   updateNofication = () => {
     const { onNotif, token } = this.props;
 
-    console.log('notif+');
+    // console.log('notif+');
     setTimeout(() => {
       onNotif(token);
     }, 500);

@@ -46,7 +46,7 @@ class Login extends Component {
               open: true,
               message: 'Your account has been activated' } });
           }
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((err) => {
           if (this._isMounted) {
@@ -135,24 +135,6 @@ class Login extends Component {
         // console.log(err.response.data.error);
       });
   }
-
-  autoLog = () => { // To remove
-    const [username, password] = ['purpleelephant772', 'Password1234'];
-    const { onAuth } = this.props;
-    onAuth(username, password);
-  };
-
-  autoLog2 = () => { // To remove
-    const [username, password] = ['tinybird710', 'Password1234'];
-    const { onAuth } = this.props;
-    onAuth(username, password);
-  };
-
-  autoLog3 = () => { // To remove
-    const [username, password] = ['test', 'Password1234'];
-    const { onAuth } = this.props;
-    onAuth(username, password);
-  };
 
   render() {
     const { errors, username, password, formIsValid,
@@ -245,16 +227,6 @@ class Login extends Component {
 
     return (
       <div className="inner-container">
-        {/* TO REMOVE */}
-        <div>
-          <Button clicked={this.autoLog}> LogUser1 </Button>
-        </div>
-        <Button clicked={this.autoLog2}> LogUser2 </Button>
-        <div>
-          <Button clicked={this.autoLog3}> LogNewUser </Button>
-        </div>
-        {/* TO REMOVE */}
-
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}
           key={`${vertical},${horizontal}`}

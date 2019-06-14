@@ -32,13 +32,15 @@ export const Alert = ({ badge }) => (
   </span>
 );
 
-export const Account = ({ data }) => (
-  data ? data.length === 1
-    ? (
+export const Account = ({ data }) => {
+  if (data.length === 1) {
+    return (
       <Avatar style={{ backgroundColor: 'grey' }}>
         {data}
       </Avatar>
-    )
-    : <Avatar alt="Remy Sharp" src={`data:image/jpg;base64,${data}`} />
-    : null
-);
+    );
+  }
+  return (
+    <Avatar alt="Remy Sharp" src={`data:image/jpg;base64,${data}`} />
+  );
+};

@@ -30,7 +30,7 @@ class navIcons extends Component {
         </li>
         <li className={sideDrawerComponent && 'SideMyAccount'}>
           <NavLink to="/profile" className="sideProfile">
-            <Account data={photo ? photo[photo.master] : firstName ? firstName[0] : '?'} />
+            <Account data={photo[photo.master] ? photo[photo.master] : firstName ? firstName[0] : '?'} />
             {sideDrawerComponent && (
             <span style={{ paddingLeft: '10px' }}>
               {(firstName && lastName) && `${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`}

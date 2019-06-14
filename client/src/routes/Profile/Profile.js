@@ -72,7 +72,7 @@ class Profile extends Component {
               blockedUser[id].blockedUsername = resp.data.user.username;
               if (id === len - 1) {
                 if (this._isMounted) { this.setState({ blockedUser }); }
-                console.log(blockedUser);
+                // console.log(blockedUser);
               }
             });
         });
@@ -88,7 +88,7 @@ class Profile extends Component {
     axios
       .delete(`http://localhost:8080/api/social/block/${id}`, { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
 
@@ -289,7 +289,7 @@ class Profile extends Component {
         this.setState({ values: { ...values, photo: { ...photo, master: 'image1', [toChange]: base64 } } },
           () => {
             let { values: { photo } } = this.state;
-            console.log(photo);
+            // console.log(photo);
             photo = JSON.stringify(photo);
             axios
               .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
@@ -299,12 +299,14 @@ class Profile extends Component {
               })
               .catch((err) => {
                 this.newSnackbar(err.response.data.error);
-                console.log(err.response);
+                // console.log(err.response);
               });
           });
       }
     };
-    reader.onerror = () => { console.log('there are some problems'); };
+    reader.onerror = () => {
+      // console.log('there are some problems');
+    };
   }
 
   fileUploadHandler = (e) => {
@@ -336,14 +338,14 @@ class Profile extends Component {
     const { token, onEdit } = this.props;
     const { values, values: { photo } } = this.state;
     const toDel = e.target.delSelect.value;
-    console.log(toDel);
+    // console.log(toDel);
     if (toDel !== null) {
       if (toDel === 'image1' || toDel === 'image2' || toDel === 'image3' || toDel === 'image4' || toDel === 'image5') {
         if (this._isMounted) {
           this.setState({ values: { ...values, photo: { ...photo, [toDel]: '' } } },
             () => {
               let { values: { photo } } = this.state;
-              console.log(photo);
+              // console.log(photo);
               photo = JSON.stringify(photo);
               axios
                 .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
@@ -353,7 +355,7 @@ class Profile extends Component {
                 })
                 .catch((err) => {
                   this.newSnackbar(err.response.data.error);
-                  console.log(err.response);
+                  // console.log(err.response);
                 });
             });
         }

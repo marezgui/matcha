@@ -50,9 +50,9 @@ class People extends Component {
   applyFilter = (filter) => {
     const { filter: { order, trie } } = this.state;
     const filterSort = { ...filter, order, trie };
-    console.log(filterSort);
+    // console.log(filterSort);
     this.setState({ filter: filterSort, start: 0, hasMore: true, filterOpen: false }, () => {
-      console.log(this.state);
+      // console.log(this.state);
       this.componentDidMount();
     });
   }

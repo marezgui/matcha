@@ -58,7 +58,7 @@ export const getTags = (token, idUser) => (dispatch) => {
     .then((res) => {
       tags = res.data.usertag;
       dispatch(fetchTags(tags));
-      console.log(res.data.usertag);
+      // console.log(res.data.usertag);
     })
     .catch(() => { tags = null; });
   return tags;
