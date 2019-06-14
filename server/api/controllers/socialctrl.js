@@ -802,6 +802,7 @@ const getUserwithTags = async (user,
   return getUserProfile(resultUser, start, count, res);
 };
 
+
 //
 // ─── GET USER FOR ME NO TAG ─────────────────────────────────────────────────────
 //
@@ -877,6 +878,243 @@ const getUserNoTags = async (user,
     resultUser.push(tmpUsers[j][0]);
   }
   return getUserProfile(resultUser, start, count, res);
+};
+
+
+//
+// ─── GET USER FOR ME WITH TAG SUG───────────────────────────────────────────────────
+//
+const getUserwithTagsSUG = async (user,
+  genre, orientation,
+  ageMin, ageMax,
+  distanceMin, distanceMax,
+  scoreMin, scoreMax,
+  tags,
+  trie, order) => {
+
+  let c = 0;
+  let tmpUsers = [];
+
+  const blockedornot = util.promisify(mod.getUserBlockedList);
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);
+
+  const getUserFct = util.promisify(mod.getUsersForMe);
+  let getUser;
+
+  if (trie === 'distance' || trie === 'tag') {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, 'score', order).then(datauser => datauser).catch(err => err);
+  } else {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, trie, order).then(datauser => datauser).catch(err => err);
+  }
+  const getTags = util.promisify(mod.getTagOfUsers);
+  for (let i = 0; i < getUser.length; i += 1) {
+
+    const taglistuser = await getTags(getUser[i].idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err}`); });
+    if (taglistuser[0] === undefined) { continue; }
+
+    c = 1;
+    for (let k = 0; k < taglistuser.length; k += 1) {
+      for (let l = 0; l < tags.length; l += 1) {
+        if (taglistuser[k].tag === tags[l]) {
+          c = 0;
+        }
+      }
+    }
+
+    if (getUser[i] === undefined) {
+      break;
+    }
+    for (let j = 0; j < blockedTab.length; j += 1) {
+      if (blockedTab[j].blockedUserId === getUser[i].idUser
+            || blockedTab[j].userId === getUser[i].idUser) {
+        c = 1;
+        break;
+      }
+    }
+    if (c === 1) {
+      c = 0;
+      continue;
+    }
+    let distance = await geolib.getDistanceSimple(
+      { latitude: getUser[i].location.latitude, longitude: getUser[i].location.longitude },
+      { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
+    );
+    distance /= 1000;
+
+    getUser[i].distance = distance;
+    if (getUser[i].distance < distanceMin || getUser[i].distance > distanceMax) {
+      continue;
+    }
+
+    let tagofuser = '';
+
+    for (let k = 0; k < taglistuser.length; k += 1) {
+      if (k !== 0) { tagofuser += ', '; }
+      tagofuser += taglistuser[k].tag;
+    }
+
+    tmpUsers.push([getUser[i].idUser, distance, tagofuser]);
+  }
+  if (trie === 'distance') {
+    if (order === 'ASC') {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return -1;
+        if (a[1] > b[1]) return 1;
+        return 0;
+      });
+    } else {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return 1;
+        if (a[1] > b[1]) return -1;
+        return 0;
+      });
+    }
+  } else if (trie === 'tag') {
+    if (order === 'ASC') {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[2] < b[2]) return -1;
+        if (a[2] > b[2]) return 1;
+        return 0;
+      });
+    } else {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[2] < b[2]) return 1;
+        if (a[2] > b[2]) return -1;
+        return 0;
+      });
+    }
+  }
+  // console.log(tmpUsers);
+  const resultUser = [];
+  for (let j = 0; j < tmpUsers.length; j += 1) {
+    resultUser.push(tmpUsers[j][0]);
+  }
+  return resultUser;
+};
+
+
+//
+// ─── GET USER FOR ME NO TAG SUG ─────────────────────────────────────────────────────
+//
+const getUserNoTagsSUG = async (user,
+  genre, orientation,
+  ageMin, ageMax,
+  distanceMin, distanceMax,
+  scoreMin, scoreMax,
+  trie, order) => {
+
+  let c = 0;
+  let tmpUsers = [];
+
+  const blockedornot = util.promisify(mod.getUserBlockedList);
+  const blockedTab = await blockedornot(user.idUser).then(datablock => datablock).catch(err => err);
+
+  const getUserFct = util.promisify(mod.getUsersForMe);
+  let getUser;
+
+  if (trie === 'distance') {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, 'score', order).then(datauser => datauser).catch(err => err);
+  } else {
+    getUser = await getUserFct(user.idUser, genre, orientation, scoreMin, scoreMax,
+      ageMin, ageMax, trie, order).then(datauser => datauser).catch(err => err);
+  }
+  for (let i = 0; i < getUser.length; i += 1) {
+    if (getUser[i] === undefined) {
+      break;
+    }
+    for (let j = 0; j < blockedTab.length; j += 1) {
+      if (blockedTab[j].blockedUserId === getUser[i].idUser
+          || blockedTab[j].userId === getUser[i].idUser) {
+        c = 1;
+        break;
+      }
+    }
+    if (c === 1) {
+      c = 0;
+      continue;
+    }
+    let distance = await geolib.getDistanceSimple(
+      { latitude: getUser[i].location.latitude, longitude: getUser[i].location.longitude },
+      { latitude: user.location.latitude, longitude: user.location.longitude }, { unit: 'm' }
+    );
+    distance /= 1000;
+
+    getUser[i].distance = distance;
+    if (getUser[i].distance < distanceMin || getUser[i].distance > distanceMax) {
+      continue;
+    }
+    tmpUsers.push([getUser[i].idUser, distance]);
+  }
+  if (trie === 'distance') {
+    if (order === 'ASC') {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return -1;
+        if (a[1] > b[1]) return 1;
+        return 0;
+      });
+    } else {
+      tmpUsers = tmpUsers.sort((a, b) => {
+        if (a[1] < b[1]) return 1;
+        if (a[1] > b[1]) return -1;
+        return 0;
+      });
+    }
+  }
+  const resultUser = [];
+  for (let j = 0; j < tmpUsers.length; j += 1) {
+    resultUser.push(tmpUsers[j][0]);
+  }
+  return resultUser;
+};
+
+//
+// ─── GET USER SUG ───────────────────────────────────────────────────────────────────────────
+//
+const getUserSug = async (user,
+  genre, orientation,
+  ageMin, ageMax,
+  distanceMin, distanceMax,
+  scoreMin, scoreMax,
+  trie, order,
+  count, start,
+  res) => {
+  
+    const getTags = util.promisify(mod.getTagOfUsers);
+    const result = [];
+    const tags = await getTags(user.idUser).then(datablock => datablock).catch(err => err);// { console.log(`[Error]: ${err
+    for (let i = 0; i < tags.length; i += 1) {
+      result.push(tags[i].tag);
+    }
+
+const result1 = await getUserwithTagsSUG(user,
+      genre, orientation,
+      ageMin, ageMax,
+      distanceMin, distanceMax,
+      scoreMin, scoreMax,
+      result,
+      trie, order);
+const result2 = await getUserNoTagsSUG(user,
+    genre, orientation,
+    ageMin, ageMax,
+    distanceMin, distanceMax,
+    scoreMin, scoreMax,
+    trie, order);
+
+  Array.prototype.unique = function() {
+      var a = this.concat();
+      for(var i=0; i<a.length; ++i) {
+          for(var j=i+1; j<a.length; ++j) {
+              if(a[i] === a[j])
+                  a.splice(j--, 1);
+          }
+      }
+      return a;
+  };
+  let resultfinal = result1.concat(result2).unique(); 
+    return getUserProfile(resultfinal, start, count, res);
 };
 
 //
@@ -967,11 +1205,31 @@ export const getUsersForMe = async (req, res) => {
     if (ageMax === undefined || ageMax === null) {
       ageMax = userval.ageMax;
     }
+    if (tags === undefined || tags === []) {
+      tags = null;
+    } 
+    if (tags === null
+      &&  distanceMax === userval.distanceMax 
+      && ageMax === userval.ageMax
+      &&  distanceMin === 0
+      &&  scoreMin === 0
+      && ageMin === 0
+      &&  scoreMax === userval.scoreMax)
+    {
+     return getUserSug(user,
+        genre, orientation,
+        ageMin, ageMax,
+        distanceMin, distanceMax,
+        scoreMin, scoreMax,
+        trie, order,
+        count, start,
+        res);
+    }
   }
   if (tags === undefined || tags === []) {
     tags = null;
   } else if (tags[0] !== undefined) { // tags = tags.split(',');
-    return getUserwithTags(user,
+     return getUserwithTags(user,
       genre, orientation,
       ageMin, ageMax,
       distanceMin, distanceMax,

@@ -23,29 +23,44 @@ export const checkUserIsComplete = async (req, res) => {
   let err = 0;
   const checkUserComplete = util.promisify(mod.editUserIsComplete);
   if (user.bio === '' || user.bio === null) {
-    err = 2;
+    if (user.userIsComplete === true) {
+      await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
+    } res.status(303).json({ error: `Profil NOT Complite ${err}` });
+    return;
+  } else if (photo === undefined) {
+    if (user.userIsComplete === true) {
+      await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
+    } res.status(303).json({ error: `Profil NOT Complite ${err}` });
+    return;
   } else if (user.dateOfBirth === null) {
-    err = 3;
+    if (user.userIsComplete === true) {
+      await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
+    } res.status(303).json({ error: `Profil NOT Complite ${err}` });
+    return;
   } else if (photo.master === null || photo.master === undefined || photo.master === '') {
-    err = 4;
+    if (user.userIsComplete === true) {
+      await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
+    } res.status(303).json({ error: `Profil NOT Complite ${err}` });
+    return;
   } else if ((photo.image1 === '' || photo.image1 === null || photo.image1 === undefined)
     && (photo.image2 === '' || photo.image2 === null || photo.image2 === undefined)
     && (photo.image3 === '' || photo.image3 === null || photo.image3 === undefined)
     && (photo.image4 === '' || photo.image4 === null || photo.image4 === undefined)
     && (photo.image5 === '' || photo.image5 === null || photo.image5 === undefined)) {
-    err = 5;
+      if (user.userIsComplete === true) {
+        await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
+      } res.status(303).json({ error: `Profil NOT Complite ${err}` });
+      return;  
   } else if ((location.longitude === '' || location.longitude === null || location.longitude === undefined)
     || (location.latitude === '' || location.latitude === null || location.latitude === undefined)) {
-    err = 6;
-  } else if (err === 0) {
+      if (user.userIsComplete === true) {
+        await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
+      } res.status(303).json({ error: `Profil NOT Complite ${err}` });
+      return;  
+  } else {
     if (user.userIsComplete === false) {
       await checkUserComplete(user.idUser, true).then().catch(error => error);// console.log(`[Error]: ${error}`); });
     } res.status(200).json({ message: 'Profil Complite' });
-
-  } else if (err !== 0) {
-    if (user.userIsComplete === true) {
-      await checkUserComplete(user.idUser, false).then().catch(error => error);// console.log(`[Error]: ${error}`); });
-    } res.status(303).json({ error: `Profil NOT Complite ${err}` });
   }
 };
 

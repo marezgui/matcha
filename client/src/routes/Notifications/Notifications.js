@@ -12,7 +12,21 @@ class Notifications extends Component {
     this.state = {
 
     };
-    this.socket = io('localhost:8080', { transports: ['websocket'], upgrade: false });
+    const connectionOptions = {
+      Connection: 'Keep-Alive',
+      Upgrade: 'websocket',
+      'force new connection': true,
+      reconnection: true,
+      reconnectionDelay: 2000, // starts with 2 secs delay, then 4, 6, 8, until 60
+      // where it stays forever until it reconnects
+      reconnectionDelayMax: 60000, // 1 minute maximum delay between connections
+      reconnectionAttempts: 'Infinity', // to prevent dead clients, having the user to having to manually reconnect after a server restart.
+      timeout: 10000, // before connect_error and connect_timeout are emitted.
+      transports: ['websocket'], // forces the transport to be only websocket. Server needs to be setup as well/
+      // upgrade: false,
+    };
+
+    this.socket = io('localhost:8080', connectionOptions);
   }
 
   componentDidMount = () => {

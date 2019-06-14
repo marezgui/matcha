@@ -19,7 +19,12 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
 
-export const io = socket(server);
+export const io = socket(server, {
+  /*path: '/test',
+  serveClient: false,*/
+  pingTimeout: 500000,
+  cookie: false
+});
 
 const whitelist = ['http://localhost:3000'];
 const corsOptions = {
