@@ -137,13 +137,13 @@ class Login extends Component {
   }
 
   autoLog = () => { // To remove
-    const [username, password] = ['saddog622', 'Password1234'];
+    const [username, password] = ['purpleelephant772', 'Password1234'];
     const { onAuth } = this.props;
     onAuth(username, password);
   };
 
   autoLog2 = () => { // To remove
-    const [username, password] = ['yellowzebra609', 'Password1234'];
+    const [username, password] = ['tinybird710', 'Password1234'];
     const { onAuth } = this.props;
     onAuth(username, password);
   };

@@ -313,25 +313,25 @@ export const getme = async (req, res) => {
 // ─── DELETE A USER ──────────────────────────────────────────────────────────────
 //
 export const deluser = async (req, res) => {
-  const { username, password } = req.body;
-  if (!(username || password)) {
-    return res.status(303).json({ error: 'Empty form' });
-  }
-  const getuserbyUsername = util.promisify(mod.getuserbyUsername);
-  const resultUserUsername = await getuserbyUsername(username).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
-  if (resultUserUsername === undefined) {
-    return res.status(303).json({ error: 'Unknow username' });
-  }
-  const hashcmp = util.promisify(bcrypt.compare);
-  const passwdcmp = await hashcmp(password, resultUserUsername.password).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
-  if (passwdcmp === true) {
-    return mod.deluser(req.user.idUser, (err, success) => {
-      if (err) {
-        res.status(303).json({ error: err.error });
-        return;
-      }
-      res.status(200).json({ message: 'User Delete', info: success });
-    });
-  }
-  return res.status(303).json({ error: 'Passwords did not match.' });
+  // const { username, password } = req.body;
+  // if (!(username || password)) {
+  //   return res.status(303).json({ error: 'Empty form' });
+  // }
+  // const getuserbyUsername = util.promisify(mod.getuserbyUsername);
+  // const resultUserUsername = await getuserbyUsername(username).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
+  // if (resultUserUsername === undefined) {
+  //   return res.status(303).json({ error: 'Unknow username' });
+  // }
+  // const hashcmp = util.promisify(bcrypt.compare);
+  // const passwdcmp = await hashcmp(password, resultUserUsername.password).then(data => data).catch(err => err);// { err});//console.error(`[Error]: ${err}`); });
+  // if (passwdcmp === true) {
+  return mod.deluser(req.user.idUser, (err, success) => {
+    if (err) {
+      res.status(303).json({ error: err.error });
+      return;
+    }
+    res.status(200).json({ message: 'User Delete', info: success });
+  });
+  // }
+  // return res.status(303).json({ error: 'Passwords did not match.' });
 };

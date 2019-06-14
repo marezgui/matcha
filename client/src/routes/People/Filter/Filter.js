@@ -33,8 +33,13 @@ class Filter extends Component {
         .get('http://localhost:8080/api/social/getusersvar/', { headers: { Authorization: `bearer ${token}` } })
         .then((res) => {
           // console.log(res.data.distanceMax);
-          this.setState({ distance: { min: 0, max: Math.round(res.data.distanceMax + 0.5) },
-            distanceMax: Math.round(res.data.distanceMax + 0.5) });
+          if (this._isMounted) {
+            this.setState({ distance: { min: 0, max: Math.round(res.data.distanceMax + 0.5) },
+              distanceMax: Math.round(res.data.distanceMax + 0.5) });
+          }
+        })
+        .catch(() => {
+          // console.log(err.response.data.error);
         });
       axios
         .get('http://localhost:8080/api/users/alltag')

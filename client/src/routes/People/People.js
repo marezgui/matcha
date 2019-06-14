@@ -22,23 +22,25 @@ class People extends Component {
     this._isMounted = true;
     const { user: { userIsComplete } } = this.props;
     const { filter } = this.state;
-    if (!userIsComplete) {
-      return;
-    }
-    const { count, start } = this.state;
-    const { token } = this.props;
+    if (userIsComplete) {
+      const { count, start } = this.state;
+      const { token } = this.props;
 
-    axios
-      .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, filter, { headers: { Authorization: `bearer ${token}` } })
-      .then((res) => {
-        if (this._isMounted) {
-          this.setState({ users: res.data.resultData.users });
-        }
-        if (!res.data.resultData.users.length) {
-          if (this._isMounted) { this.setState({ hasMore: false }); }
-        }
-        // console.log(res.data.resultData.newStart);
-      });
+      axios
+        .post(`http://localhost:8080/api/social/getusersforme/${count}/${start}`, filter, { headers: { Authorization: `bearer ${token}` } })
+        .then((res) => {
+          if (this._isMounted) {
+            this.setState({ users: res.data.resultData.users });
+          }
+          if (!res.data.resultData.users.length) {
+            if (this._isMounted) { this.setState({ hasMore: false }); }
+          }
+          // console.log(res.data.resultData.newStart);
+        })
+        .catch(() => {
+          // console.log(err.response);
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -74,7 +76,9 @@ class People extends Component {
             if (this._isMounted) { this.setState({ hasMore: false }); }
           }
         })
-        .catch((err) => { console.log(err.response); });
+        .catch(() => {
+          // console.log(err.response);
+        });
     });
   };
 
@@ -91,7 +95,7 @@ class People extends Component {
       trie = value.substr(1);
     }
     this.setState({ filter: { ...filter, order, trie }, start: 0, hasMore: true }, () => {
-      console.log(this.state);
+      // console.log(this.state);
       this.componentDidMount();
     });
   }

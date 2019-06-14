@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { Switch } from 'antd';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import { Tag, notification } from 'antd';
+import { Tag, Switch } from 'antd';
 import Slider from 'react-slick';
 import Snackbar from '@material-ui/core/Snackbar';
 import Input from '../../components/UI/Input/Input';
@@ -24,7 +24,6 @@ class Profile extends Component {
     selectedFile: null,
     addTag: '',
     tagSuggestion: [],
-    uploadError: '',
     snackbar: {
       open: false,
       vertical: 'top',
@@ -32,6 +31,7 @@ class Profile extends Component {
       message: 'Hello !',
     },
     blockedUser: [],
+    deleted: false,
   }
 
   componentDidMount = async () => {
@@ -40,6 +40,15 @@ class Profile extends Component {
     if (this._isMounted) {
       this.setState({ values: { ...user, password: '', dateOfBirth: new Date(dateOfBirth) } });
     }
+    await this.getUserTags(token);
+    await this.getBlockedUser(token);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  getUserTags = () => {
     axios
       .get('http://localhost:8080/api/users/alltag')
       .then((res) => {
@@ -47,16 +56,40 @@ class Profile extends Component {
           this.setState({ tagSuggestion: res.data.alltag });
         }
       });
+  }
+
+  getBlockedUser = (token) => {
     axios
       .get('http://localhost:8080/api/social/getblockedlist', { headers: { Authorization: `bearer ${token}` } })
       .then((res) => {
-        this.setState({ blockedUser: res.data.blockedTab });
+        const blockedUser = res.data.blockedTab;
+        const len = blockedUser.length;
+
+        blockedUser.forEach(({ blockedUserId }, id) => {
+          axios
+            .get(`http://localhost:8080/api/users/id/${blockedUserId}`, { headers: { Authorization: `bearer ${token}` } })
+            .then((resp) => {
+              blockedUser[id].blockedUsername = resp.data.user.username;
+              if (id === len - 1) {
+                if (this._isMounted) { this.setState({ blockedUser }); }
+                console.log(blockedUser);
+              }
+            });
+        });
       })
-      .catch();
+      .catch((err) => {
+        this.newSnackbar(err.response.data.error);
+      });
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
+  unblockUser = (id) => {
+    const { token } = this.props;
+
+    axios
+      .delete(`http://localhost:8080/api/social/block/${id}`, { headers: { Authorization: `bearer ${token}` } })
+      .then((res) => {
+        console.log(res);
+      });
   }
 
   newSnackbar = (message) => {
@@ -76,14 +109,22 @@ class Profile extends Component {
 
   checkProfile = () => {
     const { token, onEdit } = this.props;
+    const { values: { userIsComplete } } = this.state;
+
     axios
       .get('http://localhost:8080/api/edit/useriscomplete', { headers: { Authorization: `bearer ${token}` } })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        // console.log(res);
+        if (userIsComplete === false) {
+          this.newSnackbar('Your profile is now completed !');
+        }
         onEdit('userIsComplete', true);
       })
-      .catch((err) => {
-        console.log(err.response);
+      .catch(() => {
+        // console.log(err.response);
+        if (userIsComplete === true) {
+          this.newSnackbar('Your profile is now un-completed !');
+        }
         onEdit('userIsComplete', false);
       });
   };
@@ -93,12 +134,13 @@ class Profile extends Component {
 
     axios
       .put(`http://localhost:8080/api/edit/${name}`, { [name]: value }, { headers: { Authorization: `bearer ${token}` } })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
+        // console.log(res);
         onEdit(name, value);
+        this.checkProfile();
       })
-      .catch((err) => {
-        console.log(err.response);
+      .catch(() => {
+        // console.log(err.response);
       });
   }
 
@@ -116,7 +158,6 @@ class Profile extends Component {
       () => {
         if (!error) {
           this.editData(name, value);
-          this.checkProfile();
         }
       });
   }
@@ -144,12 +185,13 @@ class Profile extends Component {
     if (lat >= -85 && lat <= 85 && lng >= -180 && lng <= 180) {
       axios
         .put('http://localhost:8080/api/edit/location', location, { headers: { Authorization: `bearer ${token}` } })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
           onEdit('location', { latitude: lat, longitude: lng });
+          this.checkProfile();
         })
-        .catch((err) => {
-          console.log('error: ', err.response);
+        .catch(() => {
+          // console.log('error: ', err.response);
         });
     }
   }
@@ -161,7 +203,7 @@ class Profile extends Component {
 
     axios
       .delete('http://localhost:8080/api/edit/tag', { data: { tag }, headers: { Authorization: `bearer ${token}` } })
-      .then((res) => {
+      .then(() => {
         tags.forEach((tagState, id) => {
           if (tagState === tag) {
             tags.splice(id, 1);
@@ -170,7 +212,7 @@ class Profile extends Component {
         onEdit('tags', tags);
         // console.log(res);
       })
-      .catch((err) => {
+      .catch(() => {
         // console.log(err.response);
       });
   }
@@ -188,6 +230,7 @@ class Profile extends Component {
           // console.log(res);
           tags.push(value);
           onEdit('tags', tags);
+          this.checkProfile();
           if (this._isMounted) {
             this.setState({ addTag: '' });
           }
@@ -222,6 +265,7 @@ class Profile extends Component {
         .then(() => {
           tags.push(value);
           onEdit('tags', tags);
+          this.checkProfile();
         })
         .catch((err) => {
           this.addError('addTag', err.response.data.error);
@@ -240,23 +284,25 @@ class Profile extends Component {
 
     reader.readAsDataURL(selectedFile);
     reader.onload = () => {
-      // console.log(reader.result);
-      this.setState({ values: { ...values, photo: { ...photo, [toChange]: reader.result, master: 'image1' } } },
-        () => {
-          let { values: { photo } } = this.state;
-          console.log(photo);
-          photo = JSON.stringify(photo);
-          // console.log(photo);
-          /* const data = new FormData();
-          data.append('photo', photo); */
-          // console.log(reader.result);
-          axios
-            .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
-            .then(() => { onEdit('photo', photo); })
-            .catch((err) => {
-              this.newSnackbar(err.response.data.error);
-            });
-        });
+      const base64 = reader.result.substr(reader.result.indexOf(',') + 1);
+      if (this._isMounted) {
+        this.setState({ values: { ...values, photo: { ...photo, master: 'image1', [toChange]: base64 } } },
+          () => {
+            let { values: { photo } } = this.state;
+            console.log(photo);
+            photo = JSON.stringify(photo);
+            axios
+              .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
+              .then(() => {
+                onEdit('photo', JSON.parse(photo));
+                this.checkProfile();
+              })
+              .catch((err) => {
+                this.newSnackbar(err.response.data.error);
+                console.log(err.response);
+              });
+          });
+      }
     };
     reader.onerror = () => { console.log('there are some problems'); };
   }
@@ -285,6 +331,36 @@ class Profile extends Component {
     }
   }
 
+  delPhoto = (e) => {
+    e.preventDefault();
+    const { token, onEdit } = this.props;
+    const { values, values: { photo } } = this.state;
+    const toDel = e.target.delSelect.value;
+    console.log(toDel);
+    if (toDel !== null) {
+      if (toDel === 'image1' || toDel === 'image2' || toDel === 'image3' || toDel === 'image4' || toDel === 'image5') {
+        if (this._isMounted) {
+          this.setState({ values: { ...values, photo: { ...photo, [toDel]: '' } } },
+            () => {
+              let { values: { photo } } = this.state;
+              console.log(photo);
+              photo = JSON.stringify(photo);
+              axios
+                .put('http://localhost:8080/api/edit/photo', { photo }, { headers: { Authorization: `bearer ${token}` } })
+                .then(() => {
+                  onEdit('photo', JSON.parse(photo));
+                  this.checkProfile();
+                })
+                .catch((err) => {
+                  this.newSnackbar(err.response.data.error);
+                  console.log(err.response);
+                });
+            });
+        }
+      }
+    }
+  }
+
   onOff = (checked) => {
     const { onEdit, token } = this.props;
     const { values } = this.state;
@@ -293,11 +369,26 @@ class Profile extends Component {
       () => {
         axios
           .put('http://localhost:8080/api/edit/notif', { notif: checked }, { headers: { Authorization: `bearer ${token}` } })
-          .then(() => { onEdit('notifications', checked); })
+          .then(() => {
+            onEdit('notifications', checked);
+            this.checkProfile();
+          })
           .catch((err) => {
             this.newSnackbar(err.response.data.error);
           });
       });
+  }
+
+  deleteAccount = () => {
+    const confirm = window.confirm('Press a button!');
+    if (confirm) {
+      const { token } = this.props;
+      axios
+        .delete('http://localhost:8080/api/users/me', { headers: { Authorization: `bearer ${token}` } })
+        .then(() => {
+          this.setState({ deleted: true });
+        });
+    }
   }
 
   render() {
@@ -317,20 +408,32 @@ class Profile extends Component {
     const { values: { firstName,
       lastName, username, mail, password, genre, orientation, bio,
       location, dateOfBirth, tags, photo, notifications }, errors, addTag, tagSuggestion,
-    snackbar, snackbar: { vertical, horizontal, open, message }, blockedUser } = this.state;
+    snackbar, snackbar: { vertical, horizontal, open, message }, blockedUser, deleted } = this.state;
+
+    let bye = null;
+    if (deleted) {
+      bye = <Redirect to="/logout" />;
+    }
 
     let slider = (<Spinner />);
-    console.log(blockedUser);
-    if (photo !== undefined) {
+    // console.log(blockedUser);
+    if (photo) {
       slider = (
         <Slider {...settings}>
           <img className="Grabber UserCardPictures" alt="" src={`data:image/jpg;base64,${photo[photo.master]}`} />
           {Object.keys(photo).map(
-            (value, id) => (photo[value] && photo[value].length !== 6 ? <img key={`${photo[id]}-${idUser}`} alt="" className="Grabber UserCardPictures" src={`data:image/jpg;base64,${photo[value]}`} /> : null)
+            (value, id) => (photo[value] && photo[value].length !== 6 && photo.master !== value
+              ? (<img key={`${photo[id]}-${idUser}`} alt="" className="Grabber UserCardPictures" src={`data:image/jpg;base64,${photo[value]}`} />)
+              : null)
           )}
         </Slider>
       );
     }
+
+    if (!photo) {
+      slider = null;
+    }
+    // console.log(photo);
 
     const photos = (
       <>
@@ -350,6 +453,24 @@ class Profile extends Component {
           </div>
           <div>
             <center><Button> Upload! </Button></center>
+          </div>
+        </form>
+        <form onSubmit={this.delPhoto}>
+          <div className="SelectFile">
+            <button type="submit">
+              <i className="far fa-times-circle" />
+            </button>
+            <select name="delSelect" className="Select">
+              {photo && Object.keys(photo).map(
+                (value, id) => (photo[value] && photo[value].length !== 6
+                  ? (
+                    <option key={id} value={value}>
+                      {value}
+                    </option>
+                  )
+                  : null)
+              )}
+            </select>
           </div>
         </form>
       </>
@@ -522,12 +643,14 @@ class Profile extends Component {
     const switchNotif = (
       <div className="Box SwitchNotifBox">
         <p> Notifications </p>
-        {notifications !== undefined && <Switch defaultChecked={notifications} onChange={this.onOff} />}
+        {notifications !== undefined
+          && <Switch defaultChecked={notifications} onChange={this.onOff} />}
       </div>
     );
 
     return (
       <section className="Profile">
+        {bye}
         <Snackbar
           anchorOrigin={{ vertical, horizontal }}
           key={`${vertical},${horizontal}`}
@@ -590,22 +713,18 @@ class Profile extends Component {
           </div>
         </section>
         <section className="Delete">
-          <div className="BlockedList">
-            <h3 style={{ borderBottom: '1px solid grey' }}> Users Blocked </h3>
-            <div>
-              {blockedUser.map(({ blockedUserId, idBlocked, userId }) => (
-                <div key={idBlocked}>
-                  <span>
-                    <i className="fas fa-times" />
-                    <p> NAME </p>
-                  </span>
-                  {`${blockedUserId}, ${idBlocked}, ${userId}`}
-                </div>
+          <div>
+            <h3 style={{ borderBottom: '1px solid grey' }}> Blocked Users</h3>
+            <div className="BlockedList">
+              {blockedUser.map(({ blockedUserId, idBlocked, blockedUsername }) => (
+                <Tag key={idBlocked} color="red" closable onClose={() => this.unblockUser(blockedUserId)}>
+                  {blockedUsername}
+                </Tag>
               ))}
             </div>
           </div>
           <div className="Bye">
-            <Button style={{ color: 'red' }}> DELETE MY ACCOUNT </Button>
+            <Button style={{ color: 'red' }} clicked={this.deleteAccount}> DELETE MY ACCOUNT </Button>
           </div>
         </section>
       </section>

@@ -89,7 +89,7 @@ export const auth = (username, password) => (dispatch) => {
       }
     })
     .catch((err) => {
-      // dispatch(authFail(err.response.data.error));
+      dispatch(authFail(err.response.data.error));
     });
 };
 

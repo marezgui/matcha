@@ -36,10 +36,9 @@ const corsOptions = {
 // Then pass them to cors:
 app.use(cors(corsOptions));
 
-app.use(express.json());
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
-app.use(bodyParser.json());
+// app.use(express.json());
+app.use(bodyParser.json({ limit: '1000mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '1000mb' }));
 app.use(passport.initialize());
 app.use(routerApp);
 socketFunction(io); // fonction socket.io

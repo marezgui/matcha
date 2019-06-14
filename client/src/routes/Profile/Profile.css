@@ -81,8 +81,8 @@
     padding: 3px;
 }
 
-.BlockedList {
-    
+.BlockedUserItem {
+    display: flex;
 }
 
 .Bye {
